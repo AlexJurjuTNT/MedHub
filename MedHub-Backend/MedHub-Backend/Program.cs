@@ -1,8 +1,11 @@
 using System.Reflection;
+using System.Text;
 using MedHub_Backend.Data;
 using MedHub_Backend.Service;
 using MedHub_Backend.Service.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +18,13 @@ builder.Services.AddControllers();
 // add services to DI container
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClinicService, ClinicService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+// add automapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 // add swagger documentation
 builder.Services.AddSwaggerGen(options =>
@@ -60,15 +70,36 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // connect to db
-var connectionString = builder.Configuration.GetConnectionString("PostgreSQLConnectionString")!;
+var connectionString = builder.Configuration["DatabaseSettings:PostgreSQLConnectionString"];
 builder.Services.AddDbContext<AppDbContext>(
     options => options
         .UseNpgsql(connectionString)
         .UseLazyLoadingProxies()
 );
 
-// add automapper
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+// add authentication using jwt bearer token
+var jwtSecretKey = builder.Configuration["JwtSettings:SECRET_KEY"];
+var issuer = builder.Configuration["JwtSettings:ISSUER"];
+var audience = builder.Configuration["JwtSettings:AUDIENCE"];
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = issuer,
+        ValidAudience = audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
+    };
+});
 
 var app = builder.Build();
 

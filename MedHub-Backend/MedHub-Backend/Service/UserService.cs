@@ -43,4 +43,16 @@ public class UserService(AppDbContext appDbContext)
         await _appDbContext.SaveChangesAsync();
         return true;
     }
+
+    public async Task<User?> GetUserByEmail(string email)
+    {
+        var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        return user;
+    }
+
+    public async Task<User?> GetUserByUsername(string username)
+    {
+        var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+        return user;
+    }
 }

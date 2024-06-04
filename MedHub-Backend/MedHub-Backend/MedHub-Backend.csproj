@@ -7,6 +7,7 @@
         <RootNamespace>MedHub_Backend</RootNamespace>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1591</NoWarn>
+        <UserSecretsId>502f51d6-062f-4503-b56e-77d9a943835b</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
