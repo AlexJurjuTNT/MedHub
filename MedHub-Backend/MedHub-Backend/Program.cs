@@ -1,5 +1,7 @@
 using System.Reflection;
 using MedHub_Backend.Data;
+using MedHub_Backend.Service;
+using MedHub_Backend.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -9,6 +11,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
+
+// add services to DI container
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IClinicService, ClinicService>();
 
 // add swagger documentation
 builder.Services.AddSwaggerGen(options =>
@@ -49,7 +55,8 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
-    options.AddServer(new OpenApiServer { Url = "http://localhost:5076", Description = "Local server" });
+    // possible bug - when using swagger ui with a different port number than the one noted below all requests will show CORS error
+    options.AddServer(new OpenApiServer { Url = "http://localhost:5210", Description = "Local server" });
 });
 
 // connect to db
