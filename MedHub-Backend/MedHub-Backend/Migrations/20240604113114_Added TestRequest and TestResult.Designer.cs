@@ -3,6 +3,7 @@ using System;
 using MedHub_Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedHub_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240604113114_Added TestRequest and TestResult")]
+    partial class AddedTestRequestandTestResult
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,25 +133,6 @@ namespace MedHub_Backend.Migrations
                     b.ToTable("test_result");
                 });
 
-            modelBuilder.Entity("MedHub_Backend.Model.TestType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("test_type");
-                });
-
             modelBuilder.Entity("MedHub_Backend.Model.User", b =>
                 {
                     b.Property<int>("Id")
@@ -164,7 +148,8 @@ namespace MedHub_Backend.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("email");
 
                     b.Property<string>("PasswordHash")
@@ -178,8 +163,8 @@ namespace MedHub_Backend.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("username");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
@@ -192,33 +177,20 @@ namespace MedHub_Backend.Migrations
                     b.UseTptMappingStrategy();
                 });
 
-            modelBuilder.Entity("TestRequestTestType", b =>
-                {
-                    b.Property<int>("TestRequestsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TestTypesId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("TestRequestsId", "TestTypesId");
-
-                    b.HasIndex("TestTypesId");
-
-                    b.ToTable("TestRequestTestType");
-                });
-
             modelBuilder.Entity("MedHub_Backend.Model.Patient", b =>
                 {
                     b.HasBaseType("MedHub_Backend.Model.User");
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("city");
 
                     b.Property<string>("Cnp")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)")
                         .HasColumnName("cnp");
 
                     b.Property<DateOnly>("DateOfBirth")
@@ -235,7 +207,8 @@ namespace MedHub_Backend.Migrations
 
                     b.Property<string>("Street")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("street");
 
                     b.Property<int>("Weight")
@@ -292,21 +265,6 @@ namespace MedHub_Backend.Migrations
                     b.Navigation("Clinic");
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("TestRequestTestType", b =>
-                {
-                    b.HasOne("MedHub_Backend.Model.TestRequest", null)
-                        .WithMany()
-                        .HasForeignKey("TestRequestsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MedHub_Backend.Model.TestType", null)
-                        .WithMany()
-                        .HasForeignKey("TestTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("MedHub_Backend.Model.Patient", b =>

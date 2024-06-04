@@ -8,12 +8,11 @@ namespace MedHub_Backend.Controller;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class ClinicController(IClinicService clinicService, IMapper mapper)
-    : ControllerBase
+public class ClinicController(
+    IClinicService clinicService,
+    IMapper mapper
+) : ControllerBase
 {
-    private readonly IClinicService _clinicService = clinicService ?? throw new ArgumentNullException(nameof(clinicService));
-    private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-
     /// <summary>
     /// Retrieves all Clinics
     /// </summary>
@@ -23,8 +22,8 @@ public class ClinicController(IClinicService clinicService, IMapper mapper)
     [ProducesResponseType(200, Type = typeof(List<ClinicDto>))]
     public async Task<IActionResult> GetAllClinicsAsync()
     {
-        var clinics = await _clinicService.GetAllClinicsAsync();
-        var clinicsDto = _mapper.Map<List<ClinicDto>>(clinics);
+        var clinics = await clinicService.GetAllClinicsAsync();
+        var clinicsDto = mapper.Map<List<ClinicDto>>(clinics);
         return Ok(clinicsDto);
     }
 
@@ -40,11 +39,11 @@ public class ClinicController(IClinicService clinicService, IMapper mapper)
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetClinicById([FromRoute] int clinicId)
     {
-        var clinic = await _clinicService.GetClinicByIdAsync(clinicId);
+        var clinic = await clinicService.GetClinicByIdAsync(clinicId);
 
         if (clinic == null) return NotFound();
 
-        return Ok(_mapper.Map<ClinicDto>(clinic));
+        return Ok(mapper.Map<ClinicDto>(clinic));
     }
 
     /// <summary>
@@ -56,9 +55,9 @@ public class ClinicController(IClinicService clinicService, IMapper mapper)
     [ProducesResponseType(201, Type = typeof(ClinicDto))]
     public async Task<IActionResult> CreateClinicAsync([FromBody] ClinicDto clinicDto)
     {
-        var clinic = _mapper.Map<Clinic>(clinicDto);
-        var createdClinic = await _clinicService.CreateClinicAsync(clinic);
-        return CreatedAtAction(nameof(GetClinicById), new { clinicId = createdClinic.Id }, _mapper.Map<ClinicDto>(createdClinic));
+        var clinic = mapper.Map<Clinic>(clinicDto);
+        var createdClinic = await clinicService.CreateClinicAsync(clinic);
+        return CreatedAtAction(nameof(GetClinicById), new { clinicId = createdClinic.Id }, mapper.Map<ClinicDto>(createdClinic));
     }
 
     /// <summary>
@@ -71,10 +70,10 @@ public class ClinicController(IClinicService clinicService, IMapper mapper)
     [ProducesResponseType(200, Type = typeof(ClinicDto))]
     public async Task<IActionResult> UpdateClinicAsync([FromRoute] int clinicId, [FromBody] ClinicDto clinicDto)
     {
-        var clinic = _mapper.Map<Clinic>(clinicDto);
+        var clinic = mapper.Map<Clinic>(clinicDto);
         clinic.Id = clinicId;
-        var updatedClinic = await _clinicService.UpdateClinicAsync(clinic);
-        return Ok(_mapper.Map<ClinicDto>(updatedClinic));
+        var updatedClinic = await clinicService.UpdateClinicAsync(clinic);
+        return Ok(mapper.Map<ClinicDto>(updatedClinic));
     }
 
     /// <summary>
@@ -86,7 +85,7 @@ public class ClinicController(IClinicService clinicService, IMapper mapper)
     [ProducesResponseType(204)]
     public async Task<IActionResult> DeleteClinicAsync([FromRoute] int clinicId)
     {
-        var result = await _clinicService.DeleteClinicByIdAsync(clinicId);
+        var result = await clinicService.DeleteClinicByIdAsync(clinicId);
         if (!result) return NotFound();
         return NoContent();
     }

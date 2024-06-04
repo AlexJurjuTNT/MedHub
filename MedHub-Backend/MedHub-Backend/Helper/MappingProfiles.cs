@@ -12,5 +12,9 @@ public class MappingProfiles : Profile
         CreateMap<UserDto, User>();
         CreateMap<Clinic, ClinicDto>();
         CreateMap<ClinicDto, Clinic>();
+        CreateMap<PatientDto, Patient>();
+        CreateMap<Patient, PatientDto>();
+        CreateMap<RegisterPatientDto, Patient>();
+        CreateMap<Patient, RegisterPatientDto>();
     }
 }

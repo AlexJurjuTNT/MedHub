@@ -5,15 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedHub_Backend.Service;
 
-public class RoleService(AppDbContext appDbContext)
-    : IRoleService
+public class RoleService(
+    AppDbContext appDbContext
+) : IRoleService
 {
-    private readonly AppDbContext _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
-
-
     public async Task<Role?> GetRoleByName(string name)
     {
-        return await _appDbContext.Roles.FirstOrDefaultAsync(r => r.Name == name);
+        return await appDbContext.Roles.FirstOrDefaultAsync(r => r.Name == name);
     }
 
     public async Task<Role> AddRole(Role role)
@@ -23,7 +21,7 @@ public class RoleService(AppDbContext appDbContext)
             throw new ArgumentNullException(nameof(role));
         }
 
-        var existingRole = await _appDbContext.Roles
+        var existingRole = await appDbContext.Roles
             .Where(r => r.Name == role.Name)
             .FirstOrDefaultAsync();
 
@@ -32,8 +30,8 @@ public class RoleService(AppDbContext appDbContext)
             throw new Exception($"Role '{role.Name}' already exists.");
         }
 
-        _appDbContext.Roles.Add(role);
-        await _appDbContext.SaveChangesAsync();
+        appDbContext.Roles.Add(role);
+        await appDbContext.SaveChangesAsync();
 
         return role;
     }

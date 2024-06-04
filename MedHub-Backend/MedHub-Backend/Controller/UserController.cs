@@ -8,12 +8,11 @@ namespace MedHub_Backend.Controller;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class UserController(IUserService userService, IMapper mapper)
-    : ControllerBase
+public class UserController(
+    IUserService userService,
+    IMapper mapper
+) : ControllerBase
 {
-    private readonly IUserService _userService = userService ?? throw new ArgumentNullException(nameof(userService));
-    private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-
     /// <summary>
     /// Get all users
     /// </summary>
@@ -22,8 +21,8 @@ public class UserController(IUserService userService, IMapper mapper)
     [ProducesResponseType(200, Type = typeof(List<UserDto>))]
     public async Task<IActionResult> GetAllUsersAsync()
     {
-        var users = await _userService.GetAllUsersAsync();
-        var usersDto = _mapper.Map<List<UserDto>>(users);
+        var users = await userService.GetAllUsersAsync();
+        var usersDto = mapper.Map<List<UserDto>>(users);
         return Ok(usersDto);
     }
 
@@ -38,11 +37,11 @@ public class UserController(IUserService userService, IMapper mapper)
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetUserById([FromRoute] int userId)
     {
-        var user = await _userService.GetUserByIdAsync(userId);
+        var user = await userService.GetUserByIdAsync(userId);
 
         if (user == null) return NotFound();
 
-        return Ok(_mapper.Map<UserDto>(user));
+        return Ok(mapper.Map<UserDto>(user));
     }
 
     /// <summary>
@@ -54,9 +53,9 @@ public class UserController(IUserService userService, IMapper mapper)
     [ProducesResponseType(201, Type = typeof(UserDto))]
     public async Task<IActionResult> CreateUserAsync([FromBody] UserDto userDto)
     {
-        var user = _mapper.Map<User>(userDto);
-        var createdUser = await _userService.CreateUserAsync(user);
-        return CreatedAtAction(nameof(GetUserById), new { userId = createdUser.Id }, _mapper.Map<UserDto>(createdUser));
+        var user = mapper.Map<User>(userDto);
+        var createdUser = await userService.CreateUserAsync(user);
+        return CreatedAtAction(nameof(CreateUserAsync), new { userId = createdUser.Id }, mapper.Map<UserDto>(createdUser));
     }
 
     /// <summary>
@@ -69,10 +68,10 @@ public class UserController(IUserService userService, IMapper mapper)
     [ProducesResponseType(200, Type = typeof(UserDto))]
     public async Task<IActionResult> UpdateUserAsync([FromRoute] int userId, [FromBody] UserDto userDto)
     {
-        var user = _mapper.Map<User>(userDto);
+        var user = mapper.Map<User>(userDto);
         user.Id = userId;
-        var updatedUser = await _userService.UpdateUserAsync(user);
-        return Ok(_mapper.Map<UserDto>(updatedUser));
+        var updatedUser = await userService.UpdateUserAsync(user);
+        return Ok(mapper.Map<UserDto>(updatedUser));
     }
 
     /// <summary>
@@ -86,7 +85,7 @@ public class UserController(IUserService userService, IMapper mapper)
     [ProducesResponseType(404)]
     public async Task<IActionResult> DeleteUserAsync([FromRoute] int userId)
     {
-        var result = await _userService.DeleteUserAsync(userId);
+        var result = await userService.DeleteUserAsync(userId);
         if (!result) return NotFound();
         return NoContent();
     }

@@ -1,5 +1,6 @@
 using AutoMapper;
 using MedHub_Backend.Dto;
+using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +11,12 @@ namespace MedHub_Backend.Controller;
 public class AuthenticationController(IAuthenticationService authenticationService, IMapper mapper) : ControllerBase
 {
     [HttpPost("register-patient")]
-    [ProducesResponseType(200, Type = typeof(UserDto))]
-    public async Task<IActionResult> RegisterPatient([FromBody] RegisterRequestDto registerRequestDto)
+    [ProducesResponseType(200, Type = typeof(PatientDto))]
+    public async Task<IActionResult> RegisterPatient([FromBody] RegisterPatientDto registerPatientDto)
     {
-        var user = await authenticationService.RegisterPatientAsync(registerRequestDto);
-        return Ok(mapper.Map<UserDto>(user));
+        var patient = mapper.Map<Patient>(registerPatientDto);
+        var patientResult = await authenticationService.RegisterPatientAsync(patient);
+        return Ok(mapper.Map<PatientDto>(patientResult));
     }
 
     [HttpPost("login")]

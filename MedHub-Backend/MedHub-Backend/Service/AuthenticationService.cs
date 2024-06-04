@@ -8,36 +8,31 @@ public class AuthenticationService(
     IUserService userService,
     IRoleService roleService,
     IClinicService clinicService,
-    IJwtService jwtService
+    IJwtService jwtService,
+    IPatientService patientService
 ) : IAuthenticationService
 {
-    public async Task<User> RegisterPatientAsync(RegisterRequestDto registerRequestDto)
+    public async Task<Patient> RegisterPatientAsync(Patient patient)
     {
         // todo: send email to patient
         // todo: send sms to patient
-        var userByUsername = await userService.GetUserByUsername(registerRequestDto.Username);
-        var userByEmail = await userService.GetUserByEmail(registerRequestDto.Email);
         // todo: better exception / replace with FluentApi Result
-        if (userByUsername != null || userByEmail != null)
+        var userByUsername = await userService.GetUserByUsername(patient.Username);
+        if (userByUsername != null)
         {
             throw new Exception("User already exists");
         }
 
-        var clinic = await clinicService.GetClinicByIdAsync(registerRequestDto.ClinicId);
-        if (clinic == null) throw new Exception("The clinic doesnt exist");
+        var clinic = await clinicService.GetClinicByIdAsync(patient.ClinicId);
+        if (clinic == null) throw new Exception($"Clinic with it {patient.ClinicId} doesnt exist");
 
         var patientRole = await roleService.GetRoleByName("Patient");
+        if (patientRole == null) throw new Exception("Role with name Patient doesn't exist");
 
-        var user = new User()
-        {
-            Username = registerRequestDto.Username,
-            Email = registerRequestDto.Email,
-            Role = patientRole!,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerRequestDto.Password),
-            Clinic = clinic
-        };
+        patient.Role = patientRole;
+        patient.PasswordHash = BCrypt.Net.BCrypt.HashPassword(patient.PasswordHash);
 
-        return await userService.CreateUserAsync(user);
+        return await patientService.CreatePatientAsync(patient);
     }
 
     public async Task<AuthenticationResponse> LoginUserAsync(LoginRequestDto loginRequestDto)
