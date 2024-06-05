@@ -21,7 +21,10 @@ builder.Services.AddScoped<IClinicService, ClinicService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<ITestRequestService, TestRequestService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<ITestTypeService, TestTypeService>();
+builder.Services.AddScoped<IDoctorService, DoctorService>();
 
 // add automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

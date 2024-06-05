@@ -10,6 +10,7 @@ public class ClinicService(
     ) : IClinicService
 {
     
+    // todo: for big lists no call to ToList -> paging in datasource 
     public async Task<List<Clinic>> GetAllClinicsAsync()
     {
         return await appDbContext.Clinics.ToListAsync();

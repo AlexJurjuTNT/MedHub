@@ -8,6 +8,5 @@ public class TestType
 {
     [Key] [Column("id")] public int Id { get; set; }
     [Column("name")] public string Name { get; set; }
-    
     public virtual ICollection<TestRequest> TestRequests { get; set; }
 }

@@ -11,12 +11,17 @@ public class MappingProfiles : Profile
         CreateMap<User, UserDto>();
         CreateMap<UserDto, User>();
         CreateMap<UserRegisterDto, User>();
-        
+
         CreateMap<Clinic, ClinicDto>();
         CreateMap<ClinicDto, Clinic>();
-        
+
         CreateMap<PatientDto, Patient>();
-        CreateMap<Patient, PatientDto>();
         CreateMap<PatientDto, Patient>();
+
+        CreateMap<TestRequest, TestRequestDto>();
+        CreateMap<TestRequestDto, TestRequest>();
+
+        CreateMap<TestTypeDto, TestType>();
+        CreateMap<TestType, TestTypeDto>();
     }
 }

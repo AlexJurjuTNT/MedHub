@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Role> Roles { get; set; }
     public DbSet<TestRequest> TestRequests { get; set; }
     public DbSet<TestResult> TestResults { get; set; }
+    public DbSet<TestType> TestTypes { get; set; }
 
     public AppDbContext(DbContextOptions options) : base(options)
     {

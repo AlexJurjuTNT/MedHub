@@ -43,7 +43,7 @@ public class PatientController(
 
     [HttpPut("{patientId}")]
     [ProducesResponseType(200, Type = typeof(PatientDto))]
-    public async Task<IActionResult> UpdatePatientAsync([FromRoute] int patientId, [FromBody] PatientDto patientDto)
+    public async Task<IActionResult> UpdatePatient([FromRoute] int patientId, [FromBody] PatientDto patientDto)
     {
         var patient = mapper.Map<Patient>(patientDto);
         patient.Id = patientId;
@@ -55,7 +55,7 @@ public class PatientController(
     [HttpDelete("{patientId}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> DeletePatientAsync([FromRoute] int patientId)
+    public async Task<IActionResult> DeletePatient([FromRoute] int patientId)
     {
         var result = await patientService.DeletePatientAsync(patientId);
         if (!result) return NotFound();

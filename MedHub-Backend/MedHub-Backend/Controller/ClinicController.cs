@@ -20,7 +20,7 @@ public class ClinicController(
     /// <response code="200">Successful response</response>
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(List<ClinicDto>))]
-    public async Task<IActionResult> GetAllClinicsAsync()
+    public async Task<IActionResult> GetAllClinics()
     {
         var clinics = await clinicService.GetAllClinicsAsync();
         var clinicsDto = mapper.Map<List<ClinicDto>>(clinics);
@@ -53,7 +53,7 @@ public class ClinicController(
     /// <returns>Created clinic</returns>
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(ClinicDto))]
-    public async Task<IActionResult> CreateClinicAsync([FromBody] ClinicDto clinicDto)
+    public async Task<IActionResult> CreateClinic([FromBody] ClinicDto clinicDto)
     {
         var clinic = mapper.Map<Clinic>(clinicDto);
         var createdClinic = await clinicService.CreateClinicAsync(clinic);
@@ -68,7 +68,7 @@ public class ClinicController(
     /// <returns>Updated clinic</returns>
     [HttpPut("{clinicId}")]
     [ProducesResponseType(200, Type = typeof(ClinicDto))]
-    public async Task<IActionResult> UpdateClinicAsync([FromRoute] int clinicId, [FromBody] ClinicDto clinicDto)
+    public async Task<IActionResult> UpdateClinic([FromRoute] int clinicId, [FromBody] ClinicDto clinicDto)
     {
         var clinic = mapper.Map<Clinic>(clinicDto);
         clinic.Id = clinicId;
@@ -83,7 +83,7 @@ public class ClinicController(
     /// <returns>No content</returns>
     [HttpDelete("{clinicId}")]
     [ProducesResponseType(204)]
-    public async Task<IActionResult> DeleteClinicAsync([FromRoute] int clinicId)
+    public async Task<IActionResult> DeleteClinic([FromRoute] int clinicId)
     {
         var result = await clinicService.DeleteClinicByIdAsync(clinicId);
         if (!result) return NotFound();
