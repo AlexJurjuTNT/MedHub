@@ -89,4 +89,38 @@ public class ClinicController(
         if (!result) return NotFound();
         return NoContent();
     }
+
+    /// <summary>
+    /// Retrive all patients of a clinic
+    /// </summary>
+    /// <param name="clinicId">ID of the clinic where the patients are</param>
+    /// <returns>List of all patients that belong to that clinic</returns>
+    [HttpGet("{clinicId}/patients")]
+    [ProducesResponseType(200, Type = typeof(List<UserDto>))]
+    public async Task<IActionResult> GetAllPatientsOfClinic([FromRoute] int clinicId)
+    {
+        var clinic = await clinicService.GetClinicByIdAsync(clinicId);
+        if (clinic == null) return NotFound();
+
+        var patients = clinic.Users.Where(u => u.Role.Name == "Patient").ToList();
+
+        return Ok(mapper.Map<List<UserDto>>(patients));
+    }
+    
+    /// <summary>
+    /// Retrive all doctors of a clinic
+    /// </summary>
+    /// <param name="clinicId">ID of the clinic where the doctors are</param>
+    /// <returns>List of all doctors that belong to that clinic</returns>
+    [HttpGet("{clinicId}/doctors")]
+    [ProducesResponseType(200, Type = typeof(List<UserDto>))]
+    public async Task<IActionResult> GetAllDoctorsOfClinic([FromRoute] int clinicId)
+    {
+        var clinic = await clinicService.GetClinicByIdAsync(clinicId);
+        if (clinic == null) return NotFound();
+
+        var patients = clinic.Users.Where(u => u.Role.Name == "Doctor").ToList();
+
+        return Ok(mapper.Map<List<UserDto>>(patients));
+    }
 }

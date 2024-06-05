@@ -7,4 +7,5 @@ public interface IAuthenticationService
 {
     Task<Patient> RegisterPatientAsync(Patient patient);
     Task<AuthenticationResponse> LoginUserAsync(LoginRequestDto loginRequestDto);
+    Task<User> RegisterDoctor(User user);
 }

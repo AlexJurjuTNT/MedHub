@@ -12,9 +12,9 @@ public class AuthenticationController(IAuthenticationService authenticationServi
 {
     [HttpPost("register-patient")]
     [ProducesResponseType(200, Type = typeof(PatientDto))]
-    public async Task<IActionResult> RegisterPatient([FromBody] RegisterPatientDto registerPatientDto)
+    public async Task<IActionResult> RegisterPatient([FromBody] PatientDto patientDto)
     {
-        var patient = mapper.Map<Patient>(registerPatientDto);
+        var patient = mapper.Map<Patient>(patientDto);
         var patientResult = await authenticationService.RegisterPatientAsync(patient);
         return Ok(mapper.Map<PatientDto>(patientResult));
     }
@@ -25,5 +25,14 @@ public class AuthenticationController(IAuthenticationService authenticationServi
     {
         var authenticationResponse = await authenticationService.LoginUserAsync(loginRequestDto);
         return Ok(authenticationResponse);
+    }
+
+    [HttpPost("register-doctor")]
+    [ProducesResponseType(200, Type = typeof(UserDto))]
+    public async Task<IActionResult> RegisterDoctor([FromBody] UserRegisterDto userRegisterDto)
+    {
+        var user = mapper.Map<User>(userRegisterDto);
+        var doctor = await authenticationService.RegisterDoctor(user);
+        return Ok(mapper.Map<UserDto>(doctor));
     }
 }

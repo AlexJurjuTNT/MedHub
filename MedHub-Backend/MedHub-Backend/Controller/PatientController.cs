@@ -32,14 +32,14 @@ public class PatientController(
         return Ok(mapper.Map<PatientDto>(patient));
     }
 
-    [HttpPost]
-    [ProducesResponseType(201, Type = typeof(PatientDto))]
-    public async Task<IActionResult> CreatePatientAsync([FromBody] PatientDto patientDto)
-    {
-        var patient = mapper.Map<Patient>(patientDto);
-        var createdPatient = await patientService.CreatePatientAsync(patient);
-        return CreatedAtAction(nameof(CreatePatientAsync), new { userId = patient.Id }, mapper.Map<PatientDto>(createdPatient));
-    }
+    // [HttpPost]
+    // [ProducesResponseType(201, Type = typeof(PatientDto))]
+    // public async Task<IActionResult> CreatePatientAsync([FromBody] PatientDto patientDto)
+    // {
+    //     var patient = mapper.Map<Patient>(patientDto);
+    //     var createdPatient = await patientService.CreatePatientAsync(patient);
+    //     return CreatedAtAction(nameof(CreatePatientAsync), new { userId = patient.Id }, mapper.Map<PatientDto>(createdPatient));
+    // }
 
     [HttpPut("{patientId}")]
     [ProducesResponseType(200, Type = typeof(PatientDto))]

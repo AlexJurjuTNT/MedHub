@@ -11,7 +11,6 @@ public class PatientService(
 {
     public async Task<Patient> CreatePatientAsync(Patient patient)
     {
-        Console.WriteLine(patient);
         await appDbContext.Patients.AddAsync(patient);
         await appDbContext.SaveChangesAsync();
         return patient;

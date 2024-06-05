@@ -13,7 +13,7 @@ public class TestRequest
     [Column("patient_id")]
     [ForeignKey("Patient")]
     public int PatientId { get; set; }
-    public virtual User Patient { get; set; }
+    public virtual Patient Patient { get; set; }
 
     [Column("doctor_id")]
     [ForeignKey("Doctor")]

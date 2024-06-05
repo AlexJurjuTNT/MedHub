@@ -15,7 +15,7 @@ public class User
     public string Email { get; set; }
 
     [Column("password_hash")]
-    public string PasswordHash { get; set; }
+    public string Password { get; set; }
 
     [Column("clinic_id")]
     [ForeignKey("Clinic")]
