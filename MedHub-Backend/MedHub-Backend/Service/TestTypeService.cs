@@ -25,7 +25,7 @@ public class TestTypeService(
         await appDbContext.SaveChangesAsync();
         return testType;
     }
-    
+
     public async Task<TestType> UpdateTestTypeAsync(TestType testType)
     {
         appDbContext.TestTypes.Update(testType);
@@ -37,9 +37,18 @@ public class TestTypeService(
     {
         var testType = await appDbContext.TestTypes.FindAsync(testTypeId);
         if (testType == null) return false;
-        
+
         appDbContext.TestTypes.Remove(testType);
         await appDbContext.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<List<TestType>> GetTestTypesFromIdList(List<int> testTypesId)
+    {
+        var testTypes = await appDbContext.TestTypes
+            .Where(tt => testTypesId.Contains(tt.Id))
+            .ToListAsync();
+
+        return testTypes;
     }
 }

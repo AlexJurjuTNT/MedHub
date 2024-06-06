@@ -19,7 +19,7 @@ public class UserController(
     /// <returns>List of all users</returns>
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(List<UserDto>))]
-    public async Task<IActionResult> GetAllUsersAsync()
+    public async Task<IActionResult> GetAllUsers()
     {
         var users = await userService.GetAllUsersAsync();
         var usersDto = mapper.Map<List<UserDto>>(users);
@@ -51,11 +51,11 @@ public class UserController(
     /// <returns>Created user</returns>
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(UserDto))]
-    public async Task<IActionResult> CreateUserAsync([FromBody] UserDto userDto)
+    public async Task<IActionResult> CreateUser([FromBody] UserDto userDto)
     {
         var user = mapper.Map<User>(userDto);
         var createdUser = await userService.CreateUserAsync(user);
-        return CreatedAtAction(nameof(CreateUserAsync), new { userId = createdUser.Id }, mapper.Map<UserDto>(createdUser));
+        return CreatedAtAction(nameof(GetUserById), new { userId = createdUser.Id }, mapper.Map<UserDto>(createdUser));
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class UserController(
     /// <returns>Updated user</returns>
     [HttpPut("{userId}")]
     [ProducesResponseType(200, Type = typeof(UserDto))]
-    public async Task<IActionResult> UpdateUserAsync([FromRoute] int userId, [FromBody] UserDto userDto)
+    public async Task<IActionResult> UpdateUser([FromRoute] int userId, [FromBody] UserDto userDto)
     {
         var user = mapper.Map<User>(userDto);
         user.Id = userId;
@@ -83,7 +83,7 @@ public class UserController(
     [HttpDelete("{userId}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> DeleteUserAsync([FromRoute] int userId)
+    public async Task<IActionResult> DeleteUser([FromRoute] int userId)
     {
         var result = await userService.DeleteUserAsync(userId);
         if (!result) return NotFound();

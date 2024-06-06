@@ -9,4 +9,5 @@ public interface ITestRequestService
     Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest);
     Task<TestRequest> UpdateTestRequestAsync(TestRequest testRequest);
     Task<bool> DeleteTestRequestAsync(int testRequestId);
+    Task<TestRequest> AddTestTypesAsync(TestRequest testRequest, List<TestType> testTypes);
 }

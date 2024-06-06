@@ -10,10 +10,10 @@ public class TestRequest
 
     [Column("request_date")] public DateTime RequestDate { get; set; }
 
-    [Column("patient_id")]
+    [Column("patient_id1")]
     [ForeignKey("Patient")]
     public int PatientId { get; set; }
-    public virtual Patient Patient { get; set; }
+    public virtual User Patient { get; set; }
 
     [Column("doctor_id")]
     [ForeignKey("Doctor")]

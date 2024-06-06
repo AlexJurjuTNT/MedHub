@@ -20,6 +20,7 @@ public class MappingProfiles : Profile
 
         CreateMap<TestRequest, TestRequestDto>();
         CreateMap<TestRequestDto, TestRequest>();
+        CreateMap<AddTestRequestDto, TestRequest>();
 
         CreateMap<TestTypeDto, TestType>();
         CreateMap<TestType, TestTypeDto>();

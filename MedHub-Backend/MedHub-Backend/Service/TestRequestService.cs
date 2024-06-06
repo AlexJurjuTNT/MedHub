@@ -42,4 +42,12 @@ public class TestRequestService(
         await appDbContext.SaveChangesAsync();
         return true;
     }
+
+    public async Task<TestRequest> AddTestTypesAsync(TestRequest testRequest, List<TestType> testTypes)
+    {
+        testRequest.TestTypes = testTypes;
+        appDbContext.TestRequests.Update(testRequest);
+        await appDbContext.SaveChangesAsync();
+        return testRequest;
+    }
 }

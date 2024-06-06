@@ -13,7 +13,7 @@ public class DoctorService(
         return users.Where(u => u.Role.Name == "Doctor").ToList();
     }
 
-    public async Task<User?> GetDoctorByIdAsync(int id)
+    public async Task<User?> GetDoctorById(int id)
     {
         var doctor = await userService.GetUserByIdAsync(id);
         if (doctor == null || doctor.Role.Name != "Doctor") return null;

@@ -26,7 +26,7 @@ public class DoctorController(
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetDoctorById([FromRoute] int doctorId)
     {
-        var doctor = await doctorService.GetDoctorByIdAsync(doctorId);
+        var doctor = await doctorService.GetDoctorById(doctorId);
         if (doctor == null) return NotFound();
         return Ok(mapper.Map<UserDto>(doctor));
     }

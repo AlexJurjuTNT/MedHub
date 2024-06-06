@@ -10,6 +10,7 @@ namespace MedHub_Backend.Controller;
 [Route("api/v1/[controller]")]
 public class TestRequestController(
     ITestRequestService testRequestService,
+    ITestTypeService testTypeService,
     IMapper mapper
 ) : ControllerBase
 {
@@ -35,11 +36,17 @@ public class TestRequestController(
     }
 
     [HttpPost]
-    [ProducesResponseType(201, Type = typeof(TestRequestDto))]
-    public async Task<IActionResult> CreateTestRequest([FromBody] TestRequestDto testRequestDto)
+    [ProducesResponseType(201, Type = typeof(AddTestRequestDto))]
+    public async Task<IActionResult> CreateTestRequest([FromBody] AddTestRequestDto testRequestDto)
     {
         var testRequest = mapper.Map<TestRequest>(testRequestDto);
+        
         var createdTestRequest = await testRequestService.CreateNewTestRequestAsync(testRequest);
+        
+        var testTypes = await testTypeService.GetTestTypesFromIdList(testRequestDto.TestTypesId);
+        
+        createdTestRequest = await testRequestService.AddTestTypesAsync(createdTestRequest, testTypes);
+        
         return CreatedAtAction(nameof(GetTestRequestById), new { testRequestId = createdTestRequest.Id }, mapper.Map<TestRequestDto>(createdTestRequest));
     }
 
