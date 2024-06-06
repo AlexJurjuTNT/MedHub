@@ -11,10 +11,7 @@ public class LocalStorageHelper
     private static string GetUploadsDirectory()
     {
         var result = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\Documents");
-        if (!Directory.Exists(result))
-        {
-            Directory.CreateDirectory(result);
-        }
+        if (!Directory.Exists(result)) Directory.CreateDirectory(result);
 
         return result;
     }

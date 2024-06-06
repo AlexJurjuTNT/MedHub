@@ -1,4 +1,4 @@
-using MedHub_Backend.Data;
+using MedHub_Backend.Context;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -7,9 +7,8 @@ namespace MedHub_Backend.Service;
 
 public class ClinicService(
     AppDbContext appDbContext
-    ) : IClinicService
+) : IClinicService
 {
-    
     // todo: for big lists no call to ToList -> paging in datasource 
     public async Task<List<Clinic>> GetAllClinicsAsync()
     {
@@ -39,7 +38,7 @@ public class ClinicService(
     {
         var clinic = await appDbContext.Clinics.FindAsync(clinicId);
         if (clinic == null) return false;
-        
+
         appDbContext.Clinics.Remove(clinic);
         await appDbContext.SaveChangesAsync();
         return true;

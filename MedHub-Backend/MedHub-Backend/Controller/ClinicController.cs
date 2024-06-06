@@ -104,7 +104,7 @@ public class ClinicController(
 
         return Ok(mapper.Map<List<UserDto>>(patients));
     }
-    
+
     /// <summary>
     /// Retrive all doctors of a clinic
     /// </summary>

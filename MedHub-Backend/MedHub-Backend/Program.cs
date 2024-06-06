@@ -1,6 +1,6 @@
 using System.Reflection;
 using System.Text;
-using MedHub_Backend.Data;
+using MedHub_Backend.Context;
 using MedHub_Backend.Service;
 using MedHub_Backend.Service.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -28,6 +28,7 @@ builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<ITestResultService, TestResultService>();
 builder.Services.AddScoped<IFileService, LocalFileService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 
 // add automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

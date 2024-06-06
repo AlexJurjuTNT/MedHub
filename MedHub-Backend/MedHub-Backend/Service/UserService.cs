@@ -1,4 +1,4 @@
-using MedHub_Backend.Data;
+using MedHub_Backend.Context;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,6 @@ public class UserService(
     AppDbContext appDbContext
 ) : IUserService
 {
-
     public async Task<User> CreateUserAsync(User user)
     {
         await appDbContext.Users.AddAsync(user);

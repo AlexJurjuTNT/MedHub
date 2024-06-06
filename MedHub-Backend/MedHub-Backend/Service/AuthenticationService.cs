@@ -10,7 +10,8 @@ public class AuthenticationService(
     IRoleService roleService,
     IClinicService clinicService,
     IJwtService jwtService,
-    IEmailService emailService
+    IEmailService emailService,
+    IPasswordService passwordService
 ) : IAuthenticationService
 {
     // todo: send email to user
@@ -27,13 +28,15 @@ public class AuthenticationService(
         var patientRole = await roleService.GetRoleByName("Patient");
         if (patientRole == null) throw new RoleNotFoundException("Role with name Patient doesn't exist");
 
+        var tempPassword = passwordService.GenerateRandomPassword(8);
+
         user.Role = patientRole;
-        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+        user.Password = BCrypt.Net.BCrypt.HashPassword(tempPassword);
 
         var createdUser = await userService.CreateUserAsync(user);
 
         // send the email to the user
-        // await emailService.SendEmail(user.Email, user.Username);
+        await emailService.SendEmail(user.Email, user.Username);
 
         return createdUser;
     }
@@ -43,15 +46,12 @@ public class AuthenticationService(
         var user = await userService.GetUserByEmail(loginRequestDto.Email);
         if (user == null) throw new UserNotFoundException("User doesn't exist");
 
-        if (!BCrypt.Net.BCrypt.Verify(loginRequestDto.Password, user.Password))
-        {
-            throw new PasswordMismatchException("Passwords don't match");
-        }
+        if (!BCrypt.Net.BCrypt.Verify(loginRequestDto.Password, user.Password)) throw new PasswordMismatchException("Passwords don't match");
 
         return new AuthenticationResponse()
         {
             Token = jwtService.GenerateToken(user),
-            UserId = user.Id,
+            UserId = user.Id
         };
     }
 

@@ -6,7 +6,9 @@ namespace MedHub_Backend.Model;
 [Table("clinic")]
 public class Clinic
 {
-    [Key] [Column("id")] public int Id { get; set; }
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
 
     [Column("name")]
     public string Name { get; set; }

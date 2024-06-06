@@ -1,4 +1,4 @@
-using MedHub_Backend.Data;
+using MedHub_Backend.Context;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -16,19 +16,13 @@ public class RoleService(
 
     public async Task<Role> AddRole(Role role)
     {
-        if (role == null)
-        {
-            throw new ArgumentNullException(nameof(role));
-        }
+        if (role == null) throw new ArgumentNullException(nameof(role));
 
         var existingRole = await appDbContext.Roles
             .Where(r => r.Name == role.Name)
             .FirstOrDefaultAsync();
 
-        if (existingRole != null)
-        {
-            throw new Exception($"Role '{role.Name}' already exists.");
-        }
+        if (existingRole != null) throw new Exception($"Role '{role.Name}' already exists.");
 
         appDbContext.Roles.Add(role);
         await appDbContext.SaveChangesAsync();

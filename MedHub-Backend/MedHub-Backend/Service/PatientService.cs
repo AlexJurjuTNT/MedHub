@@ -1,4 +1,4 @@
-using MedHub_Backend.Data;
+using MedHub_Backend.Context;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,7 @@ public class PatientService(
 
     public async Task<List<Patient>> GetAllPatientsAsync()
     {
-        return (await appDbContext.Patients.ToListAsync());
+        return await appDbContext.Patients.ToListAsync();
     }
 
     public async Task<Patient> UpdatePatientAsync(Patient patient)

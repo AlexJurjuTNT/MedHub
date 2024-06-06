@@ -13,7 +13,7 @@ public class LocalFileService
         string fileName;
         try
         {
-            FileInfo fileInfo = new FileInfo(file.FileName);
+            var fileInfo = new FileInfo(file.FileName);
             fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + DateTime.Now.Ticks + fileInfo.Extension;
             var filePath = LocalStorageHelper.GetUploadFilePath(fileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -35,10 +35,7 @@ public class LocalFileService
         {
             var filePath = LocalStorageHelper.GetUploadFilePath(fileName);
             var provider = new FileExtensionContentTypeProvider();
-            if (!provider.TryGetContentType(filePath, out var contentType))
-            {
-                contentType = "application/octet-stream";
-            }
+            if (!provider.TryGetContentType(filePath, out var contentType)) contentType = "application/octet-stream";
 
             var bytes = await File.ReadAllBytesAsync(filePath);
             return (bytes, contentType, Path.GetFileName(filePath));

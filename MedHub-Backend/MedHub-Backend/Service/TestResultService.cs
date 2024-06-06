@@ -1,4 +1,4 @@
-using MedHub_Backend.Data;
+using MedHub_Backend.Context;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +47,7 @@ public class TestResultService(
 
     public async Task<TestResult> UploadFile(TestResult testResult, IFormFile formFile)
     {
-        string pdfPath = await fileService.UploadFile(formFile);
+        var pdfPath = await fileService.UploadFile(formFile);
         testResult.CompletionDate = DateTime.UtcNow;
         testResult.FilePath = pdfPath;
         return await CreateTestResult(testResult);

@@ -1,9 +1,7 @@
 ﻿using MedHub_Backend.Model;
-using MedHub_Backend.Model.Enum;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace MedHub_Backend.Data;
+namespace MedHub_Backend.Context;
 
 public class AppDbContext : DbContext
 {
