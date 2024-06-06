@@ -30,7 +30,7 @@ public class TestRequestController(
     {
         var testRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
 
-        if (testRequest == null) return NotFound();
+        if (testRequest == null) return NotFound($"Test request with id {testRequestId} not found");
 
         return Ok(mapper.Map<TestRequestDto>(testRequest));
     }
@@ -40,13 +40,13 @@ public class TestRequestController(
     public async Task<IActionResult> CreateTestRequest([FromBody] AddTestRequestDto testRequestDto)
     {
         var testRequest = mapper.Map<TestRequest>(testRequestDto);
-        
+
         var createdTestRequest = await testRequestService.CreateNewTestRequestAsync(testRequest);
-        
+
         var testTypes = await testTypeService.GetTestTypesFromIdList(testRequestDto.TestTypesId);
-        
+
         createdTestRequest = await testRequestService.AddTestTypesAsync(createdTestRequest, testTypes);
-        
+
         return CreatedAtAction(nameof(GetTestRequestById), new { testRequestId = createdTestRequest.Id }, mapper.Map<TestRequestDto>(createdTestRequest));
     }
 
@@ -66,7 +66,7 @@ public class TestRequestController(
     public async Task<IActionResult> DeleteTestRequest([FromRoute] int testRequestId)
     {
         var result = await testRequestService.DeleteTestRequestAsync(testRequestId);
-        if (!result) return NotFound();
+        if (!result) return NotFound($"Test request with id {testRequestId} not found");
         return NoContent();
     }
 }

@@ -40,9 +40,7 @@ public class ClinicController(
     public async Task<IActionResult> GetClinicById([FromRoute] int clinicId)
     {
         var clinic = await clinicService.GetClinicByIdAsync(clinicId);
-
-        if (clinic == null) return NotFound();
-
+        if (clinic == null) return NotFound($"Clinic with id {clinicId} not found");
         return Ok(mapper.Map<ClinicDto>(clinic));
     }
 
@@ -100,7 +98,7 @@ public class ClinicController(
     public async Task<IActionResult> GetAllPatientsOfClinic([FromRoute] int clinicId)
     {
         var clinic = await clinicService.GetClinicByIdAsync(clinicId);
-        if (clinic == null) return NotFound();
+        if (clinic == null) return NotFound($"Clinic with id {clinicId} not found");
 
         var patients = clinic.Users.Where(u => u.Role.Name == "Patient").ToList();
 

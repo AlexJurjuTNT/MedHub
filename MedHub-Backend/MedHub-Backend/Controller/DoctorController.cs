@@ -27,7 +27,7 @@ public class DoctorController(
     public async Task<IActionResult> GetDoctorById([FromRoute] int doctorId)
     {
         var doctor = await doctorService.GetDoctorById(doctorId);
-        if (doctor == null) return NotFound();
+        if (doctor == null) NotFound($"Doctor with id {doctorId} not found");
         return Ok(mapper.Map<UserDto>(doctor));
     }
 
@@ -37,7 +37,7 @@ public class DoctorController(
     public async Task<IActionResult> DeleteDoctor([FromRoute] int doctorId)
     {
         var result = await doctorService.DeleteDoctorAsync(doctorId);
-        if (!result) return NotFound();
+        if (!result) return NotFound($"Doctor with id {doctorId} not found");
         return NoContent();
     }
 
