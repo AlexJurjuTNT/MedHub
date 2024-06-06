@@ -1,7 +1,8 @@
-﻿using MedHub_Backend.Model;
-using MedHub_Backend.Model.Enum;
+﻿using EntityFrameworkCore.EncryptColumn.Extension;
+using EntityFrameworkCore.EncryptColumn.Interfaces;
+using EntityFrameworkCore.EncryptColumn.Util;
+using MedHub_Backend.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MedHub_Backend.Data;
 
@@ -15,20 +16,22 @@ public class AppDbContext : DbContext
     public DbSet<TestResult> TestResults { get; set; }
     public DbSet<TestType> TestTypes { get; set; }
 
+    public AppDbContext()
+    {
+    }
+
     public AppDbContext(DbContextOptions options) : base(options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // modelBuilder.Entity<Patient>()
-        //     .Property(p => p.Gender)
-        //     .HasConversion(new EnumToStringConverter<Gender>());
+        modelBuilder.UseEncryption(new GenerateEncryptionProvider("1234567890123456"));
 
         // create the many-to-many link between testType and testRequest
-        modelBuilder.Entity<TestRequest>()
-            .HasMany(tr => tr.TestTypes)
-            .WithMany(tt => tt.TestRequests);
+        // modelBuilder.Entity<TestRequest>()
+        //     .HasMany(tr => tr.TestTypes)
+        //     .WithMany(tt => tt.TestRequests);
     }
 
     public async Task SeedRolesAsync()

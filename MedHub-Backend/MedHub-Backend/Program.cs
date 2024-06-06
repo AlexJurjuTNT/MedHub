@@ -84,6 +84,8 @@ builder.Services.AddDbContext<AppDbContext>(
         .UseLazyLoadingProxies()
 );
 
+
+
 // add authentication using jwt bearer token
 var jwtSecretKey = builder.Configuration["JwtSettings:SECRET_KEY"];
 var issuer = builder.Configuration["JwtSettings:ISSUER"];
