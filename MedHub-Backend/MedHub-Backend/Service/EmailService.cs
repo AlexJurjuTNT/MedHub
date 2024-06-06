@@ -8,17 +8,21 @@ public class EmailService(
     IConfiguration configuration
 ) : IEmailService
 {
-    public async Task SendEmail(string toEmail, string username)
+    private async Task SendEmail(string toEmail, string username, string subject, string content, string htmlContent)
     {
-        Console.WriteLine(configuration["SendGrid:ApiKey"]);
         var apiKey = configuration["SendGrid:ApiKey"];
         var client = new SendGridClient(apiKey);
-        var from = new EmailAddress("alexandru.i.jurju@gmail.com", "Example User");
-        var subject = "Sending with SendGrid is Fun";
+        var from = new EmailAddress("alexandru.i.jurju@gmail.com", "MedHub Program");
         var to = new EmailAddress(toEmail, username);
-        var plainTextContent = "and easy to do anywhere, even with C#";
-        var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
-        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+        var msg = MailHelper.CreateSingleEmail(from, to, subject, content, htmlContent);
         var response = await client.SendEmailAsync(msg);
+    }
+
+    public async Task SendPatientResetEmail(string toEmail, string username, string password)
+    {
+        string subject = "MedHub - Account Information";
+        string content = $"This is an automated message \n Your password is ${password} \n Use it to signin to your account and change it";
+
+        await SendEmail(toEmail, username, subject, content, "");
     }
 }

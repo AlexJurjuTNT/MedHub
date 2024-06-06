@@ -14,9 +14,9 @@ public class AuthenticationService(
     IPasswordService passwordService
 ) : IAuthenticationService
 {
-    // todo: send email to user
     // todo: send sms to user
-
+    // todo: RegisterPatient should give the patient a random username / a username based on the clinic
+    
     public async Task<User> RegisterPatientAsync(User user)
     {
         var userByUsername = await userService.GetUserByUsername(user.Username);
@@ -29,14 +29,11 @@ public class AuthenticationService(
         if (patientRole == null) throw new RoleNotFoundException("Role with name Patient doesn't exist");
 
         var tempPassword = passwordService.GenerateRandomPassword(8);
-
         user.Role = patientRole;
         user.Password = BCrypt.Net.BCrypt.HashPassword(tempPassword);
-
+        
         var createdUser = await userService.CreateUserAsync(user);
-
-        // send the email to the user
-        await emailService.SendEmail(user.Email, user.Username);
+        await emailService.SendPatientResetEmail(user.Email, user.Username, tempPassword);
 
         return createdUser;
     }
