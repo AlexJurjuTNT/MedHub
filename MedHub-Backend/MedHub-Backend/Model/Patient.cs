@@ -13,7 +13,9 @@ public class Patient
     [Column("date_of_birth")] public DateOnly DateOfBirth { get; set; }
     [Column("weight")] public int Weight { get; set; }
     [Column("height_cm")] public int Height { get; set; }
-    [Column("gender")] public Gender Gender { get; set; }
+    [Column("gender")]
+    [EnumDataType(typeof(Gender))]
+    public string Gender { get; set; }
 
     [Column("user_id")]
     [ForeignKey("User")]
