@@ -10,6 +10,7 @@ namespace MedHub_Backend.Controller;
 [Route("api/v1/[controller]")]
 public class TestResultController(
     ITestResultService testResultService,
+    IFileService fileService,
     IMapper mapper
 ) : ControllerBase
 {
@@ -31,5 +32,17 @@ public class TestResultController(
         var testResults = await testResultService.GetAllTestResultsAsync();
         var testResultsDto = mapper.Map<List<TestResultDto>>(testResults);
         return Ok(testResultsDto);
+    }
+
+    [HttpGet("{resultId}")]
+    [ProducesResponseType(200, Type = typeof(FileResult))]
+    public async Task<IActionResult> DownloadPdf([FromRoute] int resultId)
+    {
+        var testResult = await testResultService.GetTestResultByIdAsync(resultId);
+        if (testResult == null) return NotFound($"Result with id {resultId} not found");
+
+        string pdfPath = testResult.FilePath;
+        var pdf = await fileService.DownloadFile(pdfPath);
+        return File(pdf.Item1, pdf.Item2, pdf.Item3);
     }
 }
