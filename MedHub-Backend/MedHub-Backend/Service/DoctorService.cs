@@ -20,12 +20,12 @@ public class DoctorService(
         return doctor;
     }
 
-    public async Task<bool> DeleteDoctor(int id)
+    public async Task<bool> DeleteDoctorAsync(int id)
     {
         return await userService.DeleteUserAsync(id);
     }
 
-    public async Task<User> UpdateDoctor(User doctor)
+    public async Task<User> UpdateDoctorAsync(User doctor)
     {
         return await userService.UpdateUserAsync(doctor);
     }

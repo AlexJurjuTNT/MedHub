@@ -15,8 +15,8 @@ public class MappingProfiles : Profile
         CreateMap<Clinic, ClinicDto>();
         CreateMap<ClinicDto, Clinic>();
 
-        CreateMap<PatientDto, Patient>();
-        CreateMap<PatientDto, Patient>();
+        CreateMap<AddPatientDataDto, Patient>();
+        CreateMap<Patient, PatientDto>();
 
         CreateMap<TestRequest, TestRequestDto>();
         CreateMap<TestRequestDto, TestRequest>();

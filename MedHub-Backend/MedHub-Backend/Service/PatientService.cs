@@ -16,6 +16,11 @@ public class PatientService(
         return patient;
     }
 
+    public async Task<List<Patient>> GetAllPatientsAsync()
+    {
+        return (await appDbContext.Patients.ToListAsync());
+    }
+
     public async Task<Patient> UpdatePatientAsync(Patient patient)
     {
         appDbContext.Patients.Update(patient);
@@ -31,15 +36,5 @@ public class PatientService(
         appDbContext.Patients.Remove(patient);
         await appDbContext.SaveChangesAsync();
         return true;
-    }
-    
-    public async Task<List<Patient>> GetAllPatients()
-    {
-        return await appDbContext.Patients.ToListAsync();
-    }
-
-    public async Task<Patient?> GetPatientById(int patientId)
-    {
-        return await appDbContext.Patients.FindAsync(patientId);
     }
 }

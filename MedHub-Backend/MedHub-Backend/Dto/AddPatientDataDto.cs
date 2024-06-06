@@ -3,9 +3,8 @@ using MedHub_Backend.Model.Enum;
 
 namespace MedHub_Backend.Dto;
 
-public class PatientDto
+public class AddPatientDataDto
 {
-    [Required] public int Id { get; set; }
     [Required] public int Cnp { get; set; }
     [Required] public DateOnly DateOfBirth { get; set; }
     [Required] public int Weight { get; set; }

@@ -5,7 +5,7 @@ namespace MedHub_Backend.Service.Interface;
 
 public interface IAuthenticationService
 {
-    Task<Patient> RegisterPatientAsync(Patient patient);
+    Task<User> RegisterPatientAsync(User user);
     Task<AuthenticationResponse> LoginUserAsync(LoginRequestDto loginRequestDto);
-    Task<User> RegisterDoctor(User user);
+    Task<User> RegisterDoctorAsync(User user);
 }

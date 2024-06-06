@@ -21,22 +21,22 @@ public class DoctorController(
         return Ok(mapper.Map<List<UserDto>>(doctors));
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{doctorId}")]
     [ProducesResponseType(200, Type = typeof(UserDto))]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetDoctorById([FromRoute] int id)
+    public async Task<IActionResult> GetDoctorById([FromRoute] int doctorId)
     {
-        var doctor = await doctorService.GetDoctorByIdAsync(id);
+        var doctor = await doctorService.GetDoctorByIdAsync(doctorId);
         if (doctor == null) return NotFound();
         return Ok(mapper.Map<UserDto>(doctor));
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{doctorId}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> DeleteDoctor([FromRoute] int id)
+    public async Task<IActionResult> DeleteDoctor([FromRoute] int doctorId)
     {
-        var result = await doctorService.DeleteDoctor(id);
+        var result = await doctorService.DeleteDoctorAsync(doctorId);
         if (!result) return NotFound();
         return NoContent();
     }
@@ -47,7 +47,7 @@ public class DoctorController(
     {
         var doctor = mapper.Map<User>(userDto);
         doctor.Id = doctorId;
-        var updatedDoctor = await doctorService.UpdateDoctor(doctor);
+        var updatedDoctor = await doctorService.UpdateDoctorAsync(doctor);
         return Ok(mapper.Map<UserDto>(updatedDoctor));
     }
 }

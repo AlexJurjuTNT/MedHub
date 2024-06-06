@@ -5,20 +5,19 @@ using MedHub_Backend.Model.Enum;
 namespace MedHub_Backend.Model;
 
 [Table("patient")]
-public class Patient : User
+public class Patient
 {
-    [Column("cnp")]
-    [Required]
-    public string Cnp { get; set; }
+    [Key] [Column("id")] public int Id { get; set; }
 
-    [Column("street")]
-    public string Street { get; set; }
-
-    [Column("city")]
-    public string City { get; set; }
-
+    [Column("cnp")] public string Cnp { get; set; }
     [Column("date_of_birth")] public DateOnly DateOfBirth { get; set; }
     [Column("weight")] public int Weight { get; set; }
     [Column("height_cm")] public int Height { get; set; }
     [Column("gender")] public Gender Gender { get; set; }
+
+    [Column("user_id")]
+    [ForeignKey("User")]
+    public int UserId { get; set; }
+
+    public virtual User User { get; set; }
 }

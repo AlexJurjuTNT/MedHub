@@ -8,28 +8,28 @@ public class AuthenticationService(
     IUserService userService,
     IRoleService roleService,
     IClinicService clinicService,
-    IJwtService jwtService,
-    IPatientService patientService
+    IJwtService jwtService
 ) : IAuthenticationService
 {
-    public async Task<Patient> RegisterPatientAsync(Patient patient)
+    // todo: send email to user
+    // todo: send sms to user
+
+    public async Task<User> RegisterPatientAsync(User user)
     {
-        // todo: send email to patient
-        // todo: send sms to patient
-        // todo: better exception / replace with FluentApi Result
-        var userByUsername = await userService.GetUserByUsername(patient.Username);
+        var userByUsername = await userService.GetUserByUsername(user.Username);
         if (userByUsername != null) throw new Exception("User already exists");
-        
-        var clinic = await clinicService.GetClinicByIdAsync(patient.ClinicId);
-        if (clinic == null) throw new Exception($"Clinic with it {patient.ClinicId} doesnt exist");
+
+        var clinic = await clinicService.GetClinicByIdAsync(user.ClinicId);
+        if (clinic == null) throw new Exception($"Clinic with it {user.ClinicId} doesnt exist");
 
         var patientRole = await roleService.GetRoleByName("Patient");
         if (patientRole == null) throw new Exception("Role with name Patient doesn't exist");
 
-        patient.Role = patientRole;
-        patient.Password = BCrypt.Net.BCrypt.HashPassword(patient.Password);
-
-        return await patientService.CreatePatientAsync(patient);
+        user.Role = patientRole;
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+        
+        var createdUser = await userService.CreateUserAsync(user);
+        return createdUser;
     }
 
     public async Task<AuthenticationResponse> LoginUserAsync(LoginRequestDto loginRequestDto)
@@ -49,7 +49,7 @@ public class AuthenticationService(
         };
     }
 
-    public async Task<User> RegisterDoctor(User user)
+    public async Task<User> RegisterDoctorAsync(User user)
     {
         var userByUsername = await userService.GetUserByUsername(user.Username);
         if (userByUsername != null) throw new Exception("Doctor with username already exists");

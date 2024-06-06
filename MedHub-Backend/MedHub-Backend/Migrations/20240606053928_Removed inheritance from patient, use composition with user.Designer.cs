@@ -3,6 +3,7 @@ using System;
 using MedHub_Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedHub_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240606053928_Removed inheritance from patient, use composition with user")]
+    partial class Removedinheritancefrompatientusecompositionwithuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,12 +54,12 @@ namespace MedHub_Backend.Migrations
 
             modelBuilder.Entity("MedHub_Backend.Model.Patient", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("PatientId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PatientId"));
 
                     b.Property<string>("Cnp")
                         .IsRequired()
@@ -83,7 +86,7 @@ namespace MedHub_Backend.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("weight");
 
-                    b.HasKey("Id");
+                    b.HasKey("PatientId");
 
                     b.HasIndex("UserId");
 
@@ -122,7 +125,7 @@ namespace MedHub_Backend.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("doctor_id");
 
-                    b.Property<int>("Id")
+                    b.Property<int>("PatientId")
                         .HasColumnType("integer")
                         .HasColumnName("patient_id");
 
@@ -134,7 +137,7 @@ namespace MedHub_Backend.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.HasIndex("Id");
+                    b.HasIndex("PatientId");
 
                     b.ToTable("test_request");
                 });
@@ -264,7 +267,7 @@ namespace MedHub_Backend.Migrations
 
                     b.HasOne("MedHub_Backend.Model.Patient", "Patient")
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -10,36 +10,26 @@ namespace MedHub_Backend.Controller;
 [Route("api/v1/[controller]")]
 public class PatientController(
     IPatientService patientService,
+    IUserService userService,
     IMapper mapper
 ) : ControllerBase
 {
+    [HttpPost]
+    [ProducesResponseType(200, Type = typeof(PatientDto))]
+    public async Task<IActionResult> AddPatientInformation(AddPatientDataDto addPatientDataDto)
+    {
+        var patient = mapper.Map<Patient>(addPatientDataDto);
+        var createdPatient = await patientService.CreatePatientAsync(patient);
+        return Ok(mapper.Map<PatientDto>(createdPatient));
+    }
+
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(List<PatientDto>))]
-    public async Task<IActionResult> GetAllPatients()
+    public async Task<IActionResult> GetAllPatientsInformation()
     {
-        var patients = await patientService.GetAllPatients();
+        var patients = await patientService.GetAllPatientsAsync();
         return Ok(mapper.Map<List<PatientDto>>(patients));
     }
-
-    [HttpGet("{patientId}")]
-    [ProducesResponseType(200, Type = typeof(PatientDto))]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> GetPatientById([FromRoute] int patientId)
-    {
-        var patient = await patientService.GetPatientById(patientId);
-        if (patient == null) return NotFound();
-
-        return Ok(mapper.Map<PatientDto>(patient));
-    }
-
-    // [HttpPost]
-    // [ProducesResponseType(201, Type = typeof(PatientDto))]
-    // public async Task<IActionResult> CreatePatientAsync([FromBody] PatientDto patientDto)
-    // {
-    //     var patient = mapper.Map<Patient>(patientDto);
-    //     var createdPatient = await patientService.CreatePatientAsync(patient);
-    //     return CreatedAtAction(nameof(CreatePatientAsync), new { userId = patient.Id }, mapper.Map<PatientDto>(createdPatient));
-    // }
 
     [HttpPut("{patientId}")]
     [ProducesResponseType(200, Type = typeof(PatientDto))]
@@ -51,14 +41,21 @@ public class PatientController(
         return Ok(mapper.Map<PatientDto>(updatedPatient));
     }
 
-    // todo: should this also delete the user?
     [HttpDelete("{patientId}")]
-    [ProducesResponseType(204)]
-    [ProducesResponseType(404)]
     public async Task<IActionResult> DeletePatient([FromRoute] int patientId)
     {
         var result = await patientService.DeletePatientAsync(patientId);
         if (!result) return NotFound();
         return NoContent();
+    }
+
+    [HttpGet("{userId}")]
+    [ProducesResponseType(200, Type = typeof(PatientDto))]
+    public async Task<IActionResult> GetPatientInformationForUser([FromRoute] int userId)
+    {
+        var user = await userService.GetUserByIdAsync(userId);
+        if (user == null) return NotFound();
+
+        return Ok(mapper.Map<PatientDto>(user.Patient));
     }
 }
