@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 namespace MedHub_Backend.Service;
 
 public class TestResultService(
-    AppDbContext appDbContext
+    AppDbContext appDbContext,
+    IFileService fileService
 ) : ITestResultService
 {
-
     public async Task<List<TestResult>> GetAllTestResultsAsync()
     {
         return await appDbContext.TestResults.ToListAsync();
@@ -19,7 +19,7 @@ public class TestResultService(
     {
         return await appDbContext.TestResults.FindAsync(testResultId);
     }
-    
+
     // todo: upload file
     // todo: email patient
     public async Task<TestResult> CreateTestResult(TestResult testResult)
@@ -44,5 +44,13 @@ public class TestResultService(
         appDbContext.TestResults.Remove(testResult);
         await appDbContext.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<TestResult> UploadFile(TestResult testResult, IFormFile formFile)
+    {
+        string pdfPath = await fileService.UploadFile(formFile);
+        testResult.CompletionDate = DateTime.UtcNow;
+        testResult.FilePath = pdfPath;
+        return await CreateTestResult(testResult);
     }
 }

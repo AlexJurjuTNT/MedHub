@@ -1,0 +1,52 @@
+using MedHub_Backend.Helper;
+using MedHub_Backend.Service.Interface;
+using Microsoft.AspNetCore.StaticFiles;
+
+namespace MedHub_Backend.Service;
+
+public class LocalFileService
+(
+) : IFileService
+{
+    public async Task<string> UploadFile(IFormFile file)
+    {
+        string fileName;
+        try
+        {
+            FileInfo fileInfo = new FileInfo(file.FileName);
+            fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + DateTime.Now.Ticks + fileInfo.Extension;
+            var filePath = LocalStorageHelper.GetUploadFilePath(fileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("File upload failed: " + ex.Message);
+        }
+
+        return fileName;
+    }
+
+    public async Task<(byte[], string, string)> DownloadFile(string fileName)
+    {
+        try
+        {
+            var filePath = LocalStorageHelper.GetUploadFilePath(fileName);
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(filePath, out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            var bytes = await File.ReadAllBytesAsync(filePath);
+            return (bytes, contentType, Path.GetFileName(filePath));
+        }
+
+        catch (Exception ex)
+        {
+            throw new Exception("File download failed: " + ex.Message);
+        }
+    }
+}

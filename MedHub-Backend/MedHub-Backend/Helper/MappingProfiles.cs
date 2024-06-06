@@ -22,6 +22,9 @@ public class MappingProfiles : Profile
         CreateMap<TestRequestDto, TestRequest>();
         CreateMap<AddTestRequestDto, TestRequest>();
 
+        CreateMap<AddTestResultDto, TestResult>();
+        CreateMap<TestResult, AddTestResultDto>();
+
         CreateMap<TestTypeDto, TestType>();
         CreateMap<TestType, TestTypeDto>();
     }

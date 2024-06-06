@@ -25,6 +25,8 @@ builder.Services.AddScoped<ITestRequestService, TestRequestService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<ITestTypeService, TestTypeService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<ITestResultService, TestResultService>();
+builder.Services.AddScoped<IFileService, LocalFileService>();
 
 // add automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
