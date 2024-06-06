@@ -29,9 +29,7 @@ public class TestRequestController(
     public async Task<IActionResult> GetTestRequestById([FromRoute] int testRequestId)
     {
         var testRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
-
         if (testRequest == null) return NotFound($"Test request with id {testRequestId} not found");
-
         return Ok(mapper.Map<TestRequestDto>(testRequest));
     }
 

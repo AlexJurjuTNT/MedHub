@@ -9,7 +9,8 @@ public class AuthenticationService(
     IUserService userService,
     IRoleService roleService,
     IClinicService clinicService,
-    IJwtService jwtService
+    IJwtService jwtService,
+    IEmailService emailService
 ) : IAuthenticationService
 {
     // todo: send email to user
@@ -30,6 +31,10 @@ public class AuthenticationService(
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
         var createdUser = await userService.CreateUserAsync(user);
+
+        // send the email to the user
+        // await emailService.SendEmail(user.Email, user.Username);
+
         return createdUser;
     }
 

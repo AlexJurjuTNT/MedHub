@@ -20,7 +20,6 @@ public class TestResultService(
         return await appDbContext.TestResults.FindAsync(testResultId);
     }
 
-    // todo: upload file
     // todo: email patient
     public async Task<TestResult> CreateTestResult(TestResult testResult)
     {

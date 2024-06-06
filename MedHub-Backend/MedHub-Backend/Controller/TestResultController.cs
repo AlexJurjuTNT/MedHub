@@ -13,12 +13,23 @@ public class TestResultController(
     IMapper mapper
 ) : ControllerBase
 {
+    // todo: make it so a file is uploaded to a separate folder for each clinic
+    // todo: send email to the user when the test result is upload
     [HttpPost]
-    public async Task<IActionResult> Upload([FromForm] AddTestResultDto testResultDto, IFormFile formFile)
+    [ProducesResponseType(200, Type = typeof(TestResultDto))]
+    public async Task<IActionResult> AddTestResult([FromForm] AddTestResultDto testResultDto, IFormFile formFile)
     {
-        // todo: make it so a file is uploaded to a separate folder for each clinic
-        TestResult testResult = mapper.Map<TestResult>(testResultDto);
-        TestResult result = await testResultService.UploadFile(testResult, formFile);
-        return Ok(result);
+        var testResult = mapper.Map<TestResult>(testResultDto);
+        var result = await testResultService.UploadFile(testResult, formFile);
+        return Ok(mapper.Map<TestResultDto>(result));
+    }
+
+    [HttpGet]
+    [ProducesResponseType(200, Type = typeof(List<TestResultDto>))]
+    public async Task<IActionResult> GetAllTestResults()
+    {
+        var testResults = await testResultService.GetAllTestResultsAsync();
+        var testResultsDto = mapper.Map<List<TestResultDto>>(testResults);
+        return Ok(testResultsDto);
     }
 }
