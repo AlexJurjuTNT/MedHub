@@ -68,7 +68,7 @@ public class TestTypeController(
     [HttpDelete("{testTypeId}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> DeleteTestRequest([FromRoute] int testTypeId)
+    public async Task<IActionResult> DeleteTestType([FromRoute] int testTypeId)
     {
         var result = await testTypeService.DeleteClinicByIdAsync(testTypeId);
         if (!result)

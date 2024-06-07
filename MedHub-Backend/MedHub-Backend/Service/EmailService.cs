@@ -16,11 +16,11 @@ public class EmailService : IEmailService
         var response = await client.SendEmailAsync(msg);
     }
 
-    public async Task SendPatientResetEmail(Clinic clinic, User user, string tempPassword)
+    public async Task SendPatientResetPasswordEmail(Clinic clinic, User user, string tempPassword)
     {
         string subject = "MedHub - Account Information";
-        string content = $"This is an automated message from ${clinic.Name} \n " +
-                         $"Your password is ${tempPassword} \n " +
+        string content = $"This is an automated message from {clinic.Name} \n " +
+                         $"Your password is {tempPassword} \n " +
                          $"Use it to signin to your account and change it";
 
         await SendEmail(clinic.SendgridApiKey, user.Email, user.Username, subject, content, "");
@@ -33,4 +33,6 @@ public class EmailService : IEmailService
 
         await SendEmail(apiKey, toEmail, username, subject, content, "");
     }
+    
+    
 }

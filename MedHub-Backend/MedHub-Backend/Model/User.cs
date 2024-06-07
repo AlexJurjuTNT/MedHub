@@ -19,16 +19,17 @@ public class User
     [Column("password_hash")]
     public string Password { get; set; }
 
+    [Column("password_reset_code")]
+    public string? PasswordResetCode { get; set; } = string.Empty;
+
     [Column("clinic_id")]
     [ForeignKey("Clinic")]
     public int ClinicId { get; set; }
-
     public virtual Clinic Clinic { get; set; }
 
     [Column("role_id")]
     [ForeignKey("Role")]
     public int RoleId { get; set; }
-
     public virtual Role Role { get; set; }
 
 

@@ -1,15 +1,21 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using MedHub_Backend.Dto;
 using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class AuthenticationController(IAuthenticationService authenticationService, IMapper mapper) : ControllerBase
+public class AuthenticationController(
+    IAuthenticationService authenticationService,
+    IUserService userService,
+    IMapper mapper
+) : ControllerBase
 {
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
@@ -19,9 +25,9 @@ public class AuthenticationController(IAuthenticationService authenticationServi
             var authenticationResponse = await authenticationService.LoginUserAsync(loginRequestDto);
             return Ok(authenticationResponse);
         }
-        catch (UserNotFoundException)
+        catch (UserNotFoundException ex)
         {
-            return NotFound("User doesn't exist");
+            return NotFound(ex.Message);
         }
         catch (PasswordMismatchException)
         {
@@ -69,5 +75,41 @@ public class AuthenticationController(IAuthenticationService authenticationServi
         {
             return BadRequest("Role with name Patient doesn't exist");
         }
+    }
+
+
+    [AllowAnonymous]
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([Required] string email)
+    {
+        try
+        {
+            await authenticationService.ForgotPassword(email);
+        }
+        catch (UserNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+
+        return Ok();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDto resetPasswordRequestDto)
+    {
+        var existingUser = await userService.GetUserByEmail(resetPasswordRequestDto.EmailAddress);
+        if (existingUser == null)
+        {
+            return NotFound($"User with email {resetPasswordRequestDto.EmailAddress} not found");
+        }
+
+        if (existingUser.PasswordResetCode != resetPasswordRequestDto.PasswordResetCode)
+        {
+            return BadRequest($"Reset codes don't match");
+        }
+
+        await authenticationService.ResetPassword(existingUser, resetPasswordRequestDto.Password);
+        return Ok();
     }
 }

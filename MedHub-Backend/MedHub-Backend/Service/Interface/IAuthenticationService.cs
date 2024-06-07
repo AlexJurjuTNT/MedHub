@@ -8,4 +8,6 @@ public interface IAuthenticationService
     Task<User> RegisterPatientAsync(User user);
     Task<AuthenticationResponse> LoginUserAsync(LoginRequestDto loginRequestDto);
     Task<User> RegisterDoctorAsync(User user);
+    Task ForgotPassword(string email);
+    Task ResetPassword(User existingUser, string password);
 }
