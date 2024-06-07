@@ -16,9 +16,9 @@ public class TestResult
     [Column("file_path")]
     public string FilePath { get; set; }
 
-    [Column("request_id")]
+    [Column("test_request_id")]
     [ForeignKey("TestRequest")]
-    public int RequestId { get; set; }
+    public int TestRequestId { get; set; }
 
     public virtual TestRequest TestRequest { get; set; }
 }

@@ -14,5 +14,5 @@ public class TestResultDto
     public string FilePath { get; set; }
 
     [Required]
-    public int RequestId { get; set; }
+    public int TestRequestId { get; set; }
 }

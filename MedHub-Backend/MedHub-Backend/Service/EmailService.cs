@@ -25,4 +25,12 @@ public class EmailService(
 
         await SendEmail(toEmail, username, subject, content, "");
     }
+
+    public async Task SendPatientResultsCompleteEmail(string toEmail, string username)
+    {
+        string subject = "MedHub - Test Complete";
+        string content = $"This is an automated message \n Your test results have arrived";
+
+        await SendEmail(toEmail, username, subject, content, "");
+    }
 }

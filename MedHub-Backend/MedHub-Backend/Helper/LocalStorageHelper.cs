@@ -16,6 +16,15 @@ public class LocalStorageHelper
         return result;
     }
 
+    public static string GetClinicUserPath(string clinicName, string patientName)
+    {
+        var clinicPath = Path.Combine(GetUploadsDirectory(), clinicName);
+        var userPath = Path.Combine(clinicPath, patientName);
+        if (!Directory.Exists(userPath)) Directory.CreateDirectory(userPath);
+
+        return userPath;
+    }
+
     public static string GetUploadFilePath(string fileName)
     {
         var result = Path.Combine(GetUploadsDirectory(), fileName);

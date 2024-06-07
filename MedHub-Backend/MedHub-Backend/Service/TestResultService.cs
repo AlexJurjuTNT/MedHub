@@ -1,4 +1,5 @@
 using MedHub_Backend.Context;
+using MedHub_Backend.Helper;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,9 @@ namespace MedHub_Backend.Service;
 
 public class TestResultService(
     AppDbContext appDbContext,
-    IFileService fileService
+    IFileService fileService,
+    ITestRequestService testRequestService,
+    IEmailService emailService
 ) : ITestResultService
 {
     public async Task<List<TestResult>> GetAllTestResultsAsync()
@@ -18,14 +21,6 @@ public class TestResultService(
     public async Task<TestResult?> GetTestResultByIdAsync(int testResultId)
     {
         return await appDbContext.TestResults.FindAsync(testResultId);
-    }
-
-    // todo: email patient
-    public async Task<TestResult> CreateTestResult(TestResult testResult)
-    {
-        await appDbContext.TestResults.AddAsync(testResult);
-        await appDbContext.SaveChangesAsync();
-        return testResult;
     }
 
     public async Task<TestResult> UpdateTestResultAsync(TestResult testResult)
@@ -45,11 +40,37 @@ public class TestResultService(
         return true;
     }
 
-    public async Task<TestResult> UploadFile(TestResult testResult, IFormFile formFile)
+    public async Task<TestResult> CreateTestResultAsync(TestResult testResult)
     {
-        var pdfPath = await fileService.UploadFile(formFile);
-        testResult.CompletionDate = DateTime.UtcNow;
+        await appDbContext.TestResults.AddAsync(testResult);
+        await appDbContext.SaveChangesAsync();
+        // interesting detail - when i return this TestResult object, the testRequest that comes with it is null because the db is not accessed to update the fields
+        return testResult;
+    }
+
+    public async Task<TestResult> UploadResult(TestResult testResult, IFormFile formFile)
+    {
+        // upload the pdf
+        // todo: clean this, find out why lazy-loading doesnt work for testResult
+        var testRequest = await testRequestService.GetTestRequestByIdAsync(testResult.TestRequestId);
+        var patient = testRequest.Patient;
+        var clinic = patient.Clinic;
+        string pdfPath = await UploadResultFile(formFile, patient, clinic);
+
+        // insert testResult object to the db
         testResult.FilePath = pdfPath;
-        return await CreateTestResult(testResult);
+        testResult.CompletionDate = DateTime.UtcNow;
+        var createdTestResult = await CreateTestResultAsync(testResult);
+
+        await emailService.SendPatientResultsCompleteEmail(patient.Email, patient.Username);
+
+        return createdTestResult;
+    }
+
+    private async Task<string> UploadResultFile(IFormFile formFile, User patient, Clinic clinic)
+    {
+        var uploadPath = LocalStorageHelper.GetClinicUserPath(clinic.Name, patient.Username);
+        var pdfPath = await fileService.UploadFile(formFile, uploadPath);
+        return pdfPath;
     }
 }
