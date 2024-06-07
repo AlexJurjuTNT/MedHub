@@ -16,5 +16,9 @@ public class Clinic
     [Column("location")]
     public string Location { get; set; }
 
+    // todo: maybe this has to be hashed before inserting it into the db
+    [Column("sendgrid_api_key")]
+    public string SendgridApiKey { get; set; }
+
     public virtual ICollection<User> Users { get; set; }
 }

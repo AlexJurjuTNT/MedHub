@@ -16,7 +16,7 @@ public class AuthenticationService(
 {
     // todo: send sms to user
     // todo: RegisterPatient should give the patient a random username / a username based on the clinic
-    
+
     public async Task<User> RegisterPatientAsync(User user)
     {
         var userByUsername = await userService.GetUserByUsername(user.Username);
@@ -31,9 +31,9 @@ public class AuthenticationService(
         var tempPassword = passwordService.GenerateRandomPassword(8);
         user.Role = patientRole;
         user.Password = BCrypt.Net.BCrypt.HashPassword(tempPassword);
-        
+
         var createdUser = await userService.CreateUserAsync(user);
-        await emailService.SendPatientResetEmail(user.Email, user.Username, tempPassword);
+        await emailService.SendPatientResetEmail(clinic, user, tempPassword);
 
         return createdUser;
     }

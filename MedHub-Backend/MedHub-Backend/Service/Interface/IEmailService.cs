@@ -1,7 +1,9 @@
+using MedHub_Backend.Model;
+
 namespace MedHub_Backend.Service.Interface;
 
 public interface IEmailService
 {
-    Task SendPatientResetEmail(string toEmail, string username, string password);
-    Task SendPatientResultsCompleteEmail(string toEmail, string username);
+    Task SendPatientResetEmail(Clinic clinic, User user, string tempPassword);
+    Task SendPatientResultsCompleteEmail(string apiKey, string toEmail, string username);
 }

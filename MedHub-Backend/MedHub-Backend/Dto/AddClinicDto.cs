@@ -9,4 +9,7 @@ public class AddClinicDto
 
     [Required]
     public string Location { get; set; }
+
+    [Required]
+    public string SendgridApiKey { get; set; }
 }

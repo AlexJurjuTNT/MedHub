@@ -59,7 +59,7 @@ public class TestResultService(
         testResult.CompletionDate = DateTime.UtcNow;
         var createdTestResult = await CreateTestResultAsync(testResult);
 
-        await emailService.SendPatientResultsCompleteEmail(patient.Email, patient.Username);
+        await emailService.SendPatientResultsCompleteEmail(clinic.SendgridApiKey, patient.Email, patient.Username);
 
         return createdTestResult;
     }
