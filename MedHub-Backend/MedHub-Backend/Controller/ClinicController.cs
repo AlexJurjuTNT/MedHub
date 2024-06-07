@@ -40,7 +40,11 @@ public class ClinicController(
     public async Task<IActionResult> GetClinicById([FromRoute] int clinicId)
     {
         var clinic = await clinicService.GetClinicByIdAsync(clinicId);
-        if (clinic == null) return NotFound($"Clinic with id {clinicId} not found");
+        if (clinic == null)
+        {
+            return NotFound($"Clinic with id {clinicId} not found");
+        }
+
         return Ok(mapper.Map<ClinicDto>(clinic));
     }
 
@@ -68,10 +72,19 @@ public class ClinicController(
     [ProducesResponseType(200, Type = typeof(ClinicDto))]
     public async Task<IActionResult> UpdateClinic([FromRoute] int clinicId, [FromBody] ClinicDto clinicDto)
     {
-        var clinic = mapper.Map<Clinic>(clinicDto);
-        clinic.Id = clinicId;
-        var updatedClinic = await clinicService.UpdateClinicAsync(clinic);
-        return Ok(mapper.Map<ClinicDto>(updatedClinic));
+        if (clinicId != clinicDto.Id)
+        {
+            return BadRequest();
+        }
+
+        var existingClinic = await clinicService.GetClinicByIdAsync(clinicId);
+        if (existingClinic == null)
+        {
+            return NotFound($"Clinic with id {clinicId} not found");
+        }
+
+        var updatedClinic = await clinicService.UpdateClinicAsync(mapper.Map<Clinic>(clinicDto));
+        return Ok(updatedClinic);
     }
 
     /// <summary>
@@ -84,7 +97,11 @@ public class ClinicController(
     public async Task<IActionResult> DeleteClinic([FromRoute] int clinicId)
     {
         var result = await clinicService.DeleteClinicByIdAsync(clinicId);
-        if (!result) return NotFound();
+        if (!result)
+        {
+            return NotFound($"Clinic with id {clinicId} not found");
+        }
+
         return NoContent();
     }
 
@@ -98,7 +115,10 @@ public class ClinicController(
     public async Task<IActionResult> GetAllPatientsOfClinic([FromRoute] int clinicId)
     {
         var clinic = await clinicService.GetClinicByIdAsync(clinicId);
-        if (clinic == null) return NotFound($"Clinic with id {clinicId} not found");
+        if (clinic == null)
+        {
+            return NotFound($"Clinic with id {clinicId} not found");
+        }
 
         var patients = clinic.Users.Where(u => u.Role.Name == "Patient").ToList();
 
@@ -115,7 +135,10 @@ public class ClinicController(
     public async Task<IActionResult> GetAllDoctorsOfClinic([FromRoute] int clinicId)
     {
         var clinic = await clinicService.GetClinicByIdAsync(clinicId);
-        if (clinic == null) return NotFound();
+        if (clinic == null)
+        {
+            return NotFound($"Clinic with id {clinicId} not found");
+        }
 
         var patients = clinic.Users.Where(u => u.Role.Name == "Doctor").ToList();
 

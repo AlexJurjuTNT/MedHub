@@ -22,7 +22,10 @@ public class TestResultController(
     {
         var testResult = mapper.Map<TestResult>(testResultDto);
         var testRequest = await testRequestService.GetTestRequestByIdAsync(testResult.TestRequestId);
-        if (testRequest == null) return NotFound($"Test request with id {testResult.TestRequestId} not found");
+        if (testRequest == null)
+        {
+            return NotFound($"Test request with id {testResult.TestRequestId} not found");
+        }
 
         var result = await testResultService.UploadResult(testResult, testRequest, formFile);
         return Ok(mapper.Map<TestResultDto>(result));
@@ -42,7 +45,10 @@ public class TestResultController(
     public async Task<IActionResult> DownloadPdf([FromRoute] int resultId)
     {
         var testResult = await testResultService.GetTestResultByIdAsync(resultId);
-        if (testResult == null) return NotFound($"Result with id {resultId} not found");
+        if (testResult == null)
+        {
+            return NotFound($"Result with id {resultId} not found");
+        }
 
         string pdfPath = testResult.FilePath;
         var pdf = await fileService.DownloadFile(pdfPath);

@@ -29,7 +29,11 @@ public class TestRequestController(
     public async Task<IActionResult> GetTestRequestById([FromRoute] int testRequestId)
     {
         var testRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
-        if (testRequest == null) return NotFound($"Test request with id {testRequestId} not found");
+        if (testRequest == null)
+        {
+            return NotFound($"Test request with id {testRequestId} not found");
+        }
+
         return Ok(mapper.Map<TestRequestDto>(testRequest));
     }
 
@@ -52,8 +56,18 @@ public class TestRequestController(
     [ProducesResponseType(200, Type = typeof(TestRequestDto))]
     public async Task<IActionResult> UpdateTestRequest([FromRoute] int testRequestId, [FromBody] TestRequestDto testRequestDto)
     {
+        if (testRequestId != testRequestDto.Id)
+        {
+            return BadRequest();
+        }
+
+        var existingTestRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
+        if (existingTestRequest == null)
+        {
+            return NotFound($"Patient with id {testRequestId} not found");
+        }
+
         var testRequest = mapper.Map<TestRequest>(testRequestDto);
-        testRequest.Id = testRequestId;
         var updatedTestRequest = await testRequestService.UpdateTestRequestAsync(testRequest);
         return Ok(mapper.Map<TestRequestDto>(updatedTestRequest));
     }
@@ -64,7 +78,11 @@ public class TestRequestController(
     public async Task<IActionResult> DeleteTestRequest([FromRoute] int testRequestId)
     {
         var result = await testRequestService.DeleteTestRequestAsync(testRequestId);
-        if (!result) return NotFound($"Test request with id {testRequestId} not found");
+        if (!result)
+        {
+            return NotFound($"Test request with id {testRequestId} not found");
+        }
+
         return NoContent();
     }
 }

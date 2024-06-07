@@ -2,6 +2,7 @@ using AutoMapper;
 using MedHub_Backend.Dto;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;
@@ -38,8 +39,10 @@ public class UserController(
     public async Task<IActionResult> GetUserById([FromRoute] int userId)
     {
         var user = await userService.GetUserByIdAsync(userId);
-
-        if (user == null) return NotFound();
+        if (user == null)
+        {
+            return NotFound($"User with id {userId} not found");
+        }
 
         return Ok(mapper.Map<UserDto>(user));
     }
@@ -68,8 +71,18 @@ public class UserController(
     [ProducesResponseType(200, Type = typeof(UserDto))]
     public async Task<IActionResult> UpdateUser([FromRoute] int userId, [FromBody] UserDto userDto)
     {
+        if (userId != userDto.Id)
+        {
+            return BadRequest();
+        }
+
+        var existingUser = await userService.GetUserByIdAsync(userId);
+        if (existingUser == null)
+        {
+            return NotFound($"User with id {userId} not found");
+        }
+
         var user = mapper.Map<User>(userDto);
-        user.Id = userId;
         var updatedUser = await userService.UpdateUserAsync(user);
         return Ok(mapper.Map<UserDto>(updatedUser));
     }
@@ -86,7 +99,11 @@ public class UserController(
     public async Task<IActionResult> DeleteUser([FromRoute] int userId)
     {
         var result = await userService.DeleteUserAsync(userId);
-        if (!result) return NotFound();
+        if (!result)
+        {
+            return NotFound($"User with id {userId} not found");
+        }
+
         return NoContent();
     }
 }

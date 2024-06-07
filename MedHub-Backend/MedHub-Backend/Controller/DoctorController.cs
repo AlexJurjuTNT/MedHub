@@ -27,7 +27,11 @@ public class DoctorController(
     public async Task<IActionResult> GetDoctorById([FromRoute] int doctorId)
     {
         var doctor = await doctorService.GetDoctorById(doctorId);
-        if (doctor == null) NotFound($"Doctor with id {doctorId} not found");
+        if (doctor == null)
+        {
+            return NotFound($"Doctor with id {doctorId} not found");
+        }
+
         return Ok(mapper.Map<UserDto>(doctor));
     }
 
@@ -37,7 +41,11 @@ public class DoctorController(
     public async Task<IActionResult> DeleteDoctor([FromRoute] int doctorId)
     {
         var result = await doctorService.DeleteDoctorAsync(doctorId);
-        if (!result) return NotFound($"Doctor with id {doctorId} not found");
+        if (!result)
+        {
+            return NotFound($"Doctor with id {doctorId} not found");
+        }
+
         return NoContent();
     }
 
@@ -45,8 +53,18 @@ public class DoctorController(
     [ProducesResponseType(200, Type = typeof(UserDto))]
     public async Task<IActionResult> UpdateDoctor([FromRoute] int doctorId, [FromBody] UserDto userDto)
     {
+        if (doctorId != userDto.Id)
+        {
+            return BadRequest();
+        }
+
+        var existingDoctor = await doctorService.GetDoctorById(doctorId);
+        if (existingDoctor == null)
+        {
+            return NotFound($"Doctor with id {doctorId} not found");
+        }
+
         var doctor = mapper.Map<User>(userDto);
-        doctor.Id = doctorId;
         var updatedDoctor = await doctorService.UpdateDoctorAsync(doctor);
         return Ok(mapper.Map<UserDto>(updatedDoctor));
     }

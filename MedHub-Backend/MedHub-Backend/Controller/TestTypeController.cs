@@ -27,7 +27,10 @@ public class TestTypeController(
     public async Task<IActionResult> GetTestTypeById([FromRoute] int testTypeId)
     {
         var testType = await testTypeService.GetTestTypeByIdAsync(testTypeId);
-        if (testType == null) return NotFound();
+        if (testType == null)
+        {
+            return NotFound($"TestType with id {testTypeId} not found");
+        }
 
         return Ok(mapper.Map<TestTypeDto>(testType));
     }
@@ -45,11 +48,22 @@ public class TestTypeController(
     [ProducesResponseType(200, Type = typeof(TestTypeDto))]
     public async Task<IActionResult> UpdateTestType([FromRoute] int testTypeId, [FromBody] TestTypeDto testTypeDto)
     {
+        if (testTypeId != testTypeDto.Id)
+        {
+            return BadRequest();
+        }
+
+        var existingTestType = await testTypeService.GetTestTypeByIdAsync(testTypeId);
+        if (existingTestType == null)
+        {
+            return NotFound($"TestType with id {testTypeId} not found");
+        }
+
         var testType = mapper.Map<TestType>(testTypeDto);
-        testType.Id = testTypeId;
         var updatedTestType = await testTypeService.UpdateTestTypeAsync(testType);
         return Ok(mapper.Map<TestTypeDto>(updatedTestType));
     }
+
 
     [HttpDelete("{testTypeId}")]
     [ProducesResponseType(204)]
@@ -57,7 +71,11 @@ public class TestTypeController(
     public async Task<IActionResult> DeleteTestRequest([FromRoute] int testTypeId)
     {
         var result = await testTypeService.DeleteClinicByIdAsync(testTypeId);
-        if (!result) return NotFound();
+        if (!result)
+        {
+            return NotFound($"TestType with id {testTypeId} not found");
+        }
+
         return NoContent();
     }
 }

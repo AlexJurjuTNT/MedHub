@@ -1,4 +1,5 @@
 using MedHub_Backend.Context;
+using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,14 @@ public class PatientService(
         return patient;
     }
 
-    public async Task<List<Patient>> GetAllPatientsAsync()
+    public async Task<List<User>> GetAllPatientsAsync()
     {
-        return await appDbContext.Patients.ToListAsync();
+        return await appDbContext.Users.Where(u => u.Role.Name == "Patient").ToListAsync();
+    }
+
+    public async Task<Patient?> GetPatientAsync(int patientId)
+    {
+        return await appDbContext.Patients.FindAsync(patientId);
     }
 
     public async Task<Patient> UpdatePatientAsync(Patient patient)
