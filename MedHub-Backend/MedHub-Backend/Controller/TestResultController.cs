@@ -21,7 +21,10 @@ public class TestResultController(
     public async Task<IActionResult> AddTestResult([FromForm] AddTestResultDto testResultDto, IFormFile formFile)
     {
         var testResult = mapper.Map<TestResult>(testResultDto);
-        var result = await testResultService.UploadResult(testResult, formFile);
+        var testRequest = await testRequestService.GetTestRequestByIdAsync(testResult.TestRequestId);
+        if (testRequest == null) return NotFound($"Test request with id {testResult.TestRequestId} not found");
+
+        var result = await testResultService.UploadResult(testResult, testRequest, formFile);
         return Ok(mapper.Map<TestResultDto>(result));
     }
 

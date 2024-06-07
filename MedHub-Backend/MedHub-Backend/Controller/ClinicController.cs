@@ -51,7 +51,7 @@ public class ClinicController(
     /// <returns>Created clinic</returns>
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(ClinicDto))]
-    public async Task<IActionResult> CreateClinic([FromBody] ClinicDto clinicDto)
+    public async Task<IActionResult> CreateClinic([FromBody] AddClinicDto clinicDto)
     {
         var clinic = mapper.Map<Clinic>(clinicDto);
         var createdClinic = await clinicService.CreateClinicAsync(clinic);

@@ -9,5 +9,5 @@ public interface ITestResultService
     Task<TestResult> UpdateTestResultAsync(TestResult testResult);
     Task<bool> DeleteTestResult(int testResultId);
     Task<TestResult> CreateTestResultAsync(TestResult testResult);
-    Task<TestResult> UploadResult(TestResult testResult, IFormFile formFile);
+    Task<TestResult> UploadResult(TestResult testResult, TestRequest testRequest, IFormFile formFile);
 }

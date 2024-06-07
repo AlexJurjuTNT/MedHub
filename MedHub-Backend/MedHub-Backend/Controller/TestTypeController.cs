@@ -34,7 +34,7 @@ public class TestTypeController(
 
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(TestTypeDto))]
-    public async Task<IActionResult> CreateTestType([FromBody] TestTypeDto testTypeDto)
+    public async Task<IActionResult> CreateTestType([FromBody] AddTestTypeDto testTypeDto)
     {
         var testType = mapper.Map<TestType>(testTypeDto);
         var createdTestType = await testTypeService.CreateTestTypeAsync(testType);

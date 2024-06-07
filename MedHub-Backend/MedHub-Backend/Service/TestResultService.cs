@@ -9,7 +9,6 @@ namespace MedHub_Backend.Service;
 public class TestResultService(
     AppDbContext appDbContext,
     IFileService fileService,
-    ITestRequestService testRequestService,
     IEmailService emailService
 ) : ITestResultService
 {
@@ -48,11 +47,9 @@ public class TestResultService(
         return testResult;
     }
 
-    public async Task<TestResult> UploadResult(TestResult testResult, IFormFile formFile)
+    public async Task<TestResult> UploadResult(TestResult testResult, TestRequest testRequest, IFormFile formFile)
     {
         // upload the pdf
-        // todo: clean this, find out why lazy-loading doesnt work for testResult
-        var testRequest = await testRequestService.GetTestRequestByIdAsync(testResult.TestRequestId);
         var patient = testRequest.Patient;
         var clinic = patient.Clinic;
         string pdfPath = await UploadResultFile(formFile, patient, clinic);
