@@ -25,6 +25,6 @@ public class TestRequest
 
     public virtual User Doctor { get; set; }
 
-    public virtual TestResult TestResult { get; set; }
+    public virtual ICollection<TestResult> TestResults { get; set; }
     public virtual ICollection<TestType> TestTypes { get; set; }
 }

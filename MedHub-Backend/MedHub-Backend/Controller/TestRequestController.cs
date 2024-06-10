@@ -126,4 +126,18 @@ public class TestRequestController(
 
         return NoContent();
     }
+
+    [HttpGet("{testRequestId}/results")]
+    [ProducesResponseType(200, Type = typeof(List<TestResultDto>))]
+    public async Task<IActionResult> GetAllResultsOfRequest([FromRoute] int testRequestId)
+    {
+        var testRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
+        if (testRequest == null)
+        {
+            return NotFound();
+        }
+
+        var testResultsDto = mapper.Map<List<TestResultDto>>(testRequest.TestResults);
+        return Ok(testResultsDto);
+    }
 }

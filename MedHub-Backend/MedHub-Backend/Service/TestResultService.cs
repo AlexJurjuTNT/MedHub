@@ -43,7 +43,7 @@ public class TestResultService(
     {
         await appDbContext.TestResults.AddAsync(testResult);
         await appDbContext.SaveChangesAsync();
-        // interesting detail - when i return this TestResult object, the testRequest that comes with it is null because the db is not accessed to update the fields
+        // interesting detail - when i return this TestResults object, the testRequest that comes with it is null because the db is not accessed to update the fields
         return testResult;
     }
 
