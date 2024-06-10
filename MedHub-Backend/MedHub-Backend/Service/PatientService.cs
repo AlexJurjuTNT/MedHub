@@ -22,11 +22,6 @@ public class PatientService(
         return await appDbContext.Users.Where(u => u.Role.Name == "Patient").ToListAsync();
     }
 
-    public async Task<List<Patient>> GetInformationsOfAllPatientsAsync()
-    {
-        return await appDbContext.Patients.ToListAsync();
-    }
-
     public async Task<Patient?> GetPatientAsync(int patientId)
     {
         return await appDbContext.Patients.FindAsync(patientId);

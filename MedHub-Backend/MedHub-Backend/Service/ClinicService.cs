@@ -1,4 +1,5 @@
 using MedHub_Backend.Context;
+using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,6 @@ public class ClinicService(
     AppDbContext appDbContext
 ) : IClinicService
 {
-    // todo: for big lists no call to ToList -> paging in datasource 
     public async Task<List<Clinic>> GetAllClinicsAsync()
     {
         return await appDbContext.Clinics.ToListAsync();
@@ -18,6 +18,18 @@ public class ClinicService(
     public async Task<Clinic?> GetClinicByIdAsync(int clinicId)
     {
         return await appDbContext.Clinics.FindAsync(clinicId);
+    }
+
+    public async Task<IEnumerable<User>> GetAllPatientsOfClinicAsync(int clinicId)
+    {
+        var clinic = await GetClinicByIdAsync(clinicId);
+        if (clinic == null)
+        {
+            throw new ClinicNotFoundException($"Clinic with id {clinicId} not found");
+        }
+
+        var patients = clinic.Users.Where(u => u.Role.Name == "Patient");
+        return patients;
     }
 
     public async Task<Clinic> CreateClinicAsync(Clinic clinic)

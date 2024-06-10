@@ -1,5 +1,8 @@
 using AutoMapper;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.ResponseModel;
 using MedHub_Backend.Dto;
+using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -110,19 +113,20 @@ public class ClinicController(
     /// </summary>
     /// <param name="clinicId">ID of the clinic where the patients are</param>
     /// <returns>List of all patients that belong to that clinic</returns>
-    [HttpGet("{clinicId}/patients")]
-    [ProducesResponseType(200, Type = typeof(List<UserDto>))]
-    public async Task<IActionResult> GetAllPatientsOfClinic([FromRoute] int clinicId)
+    [HttpGet("patients-paged")]
+    [ProducesResponseType(200, Type = typeof(LoadResult))]
+    public async Task<IActionResult> GetAllPatientsOfClinic([FromQuery] int clinicId, [FromQuery] DataSourceLoadOptionsBase loadOptions)
     {
-        var clinic = await clinicService.GetClinicByIdAsync(clinicId);
-        if (clinic == null)
+        try
         {
-            return NotFound($"Clinic with id {clinicId} not found");
+            var users = await clinicService.GetAllPatientsOfClinicAsync(clinicId);
+            var resultingUsers = DataSourceLoader.Load(mapper.Map<IEnumerable<UserDto>>(users), loadOptions);
+            return Ok(resultingUsers);
         }
-
-        var patients = clinic.Users.Where(u => u.Role.Name == "Patient").ToList();
-
-        return Ok(mapper.Map<List<UserDto>>(patients));
+        catch (ClinicNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     /// <summary>

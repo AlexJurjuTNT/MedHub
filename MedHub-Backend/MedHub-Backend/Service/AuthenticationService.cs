@@ -14,9 +14,6 @@ public class AuthenticationService(
     IPasswordService passwordService
 ) : IAuthenticationService
 {
-    // todo: send sms to user
-    // todo: RegisterPatient should give the patient a random username / a username based on the clinic
-
     public async Task<User> RegisterPatientAsync(User user)
     {
         var userByUsername = await userService.GetUserByUsername(user.Username);

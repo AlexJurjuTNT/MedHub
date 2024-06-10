@@ -18,6 +18,7 @@ public class AuthenticationController(
 ) : ControllerBase
 {
     [HttpPost("login")]
+    [ProducesResponseType(200, Type = typeof(AuthenticationResponse))]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
     {
         try
@@ -55,11 +56,12 @@ public class AuthenticationController(
     }
 
     [HttpPost("register-patient")]
-    public async Task<IActionResult> RegisterPatient([FromBody] UserRegisterDto userDto)
+    [ProducesResponseType(200, Type = typeof(UserDto))]
+    public async Task<IActionResult> RegisterPatient([FromBody] PatientRegisterDto patientRegisterDto)
     {
         try
         {
-            var patient = mapper.Map<User>(userDto);
+            var patient = mapper.Map<User>(patientRegisterDto);
             var patientResult = await authenticationService.RegisterPatientAsync(patient);
             return Ok(mapper.Map<UserDto>(patientResult));
         }
@@ -69,7 +71,7 @@ public class AuthenticationController(
         }
         catch (ClinicNotFoundException)
         {
-            return NotFound($"Clinic with id {userDto.ClinicId} doesn't exist");
+            return NotFound($"Clinic with id {patientRegisterDto.ClinicId} doesn't exist");
         }
         catch (RoleNotFoundException)
         {

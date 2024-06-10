@@ -11,6 +11,7 @@ public class MappingProfiles : Profile
         CreateMap<User, UserDto>();
         CreateMap<UserDto, User>();
         CreateMap<UserRegisterDto, User>();
+        CreateMap<PatientRegisterDto, User>();
 
         CreateMap<AddClinicDto, Clinic>();
         CreateMap<Clinic, ClinicDto>();

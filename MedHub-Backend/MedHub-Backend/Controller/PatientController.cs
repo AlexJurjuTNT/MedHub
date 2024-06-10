@@ -43,17 +43,10 @@ public class PatientController(
         return Ok(mapper.Map<List<UserDto>>(patients));
     }
 
-    [HttpGet("patients-informations")]
-    [ProducesResponseType(200, Type = typeof(List<PatientDto>))]
-    public async Task<IActionResult> GetInformationsOfAllPatients()
-    {
-        var patients = await patientService.GetInformationsOfAllPatientsAsync();
-        return Ok(mapper.Map<List<PatientDto>>(patients));
-    }
-
+    
     [HttpPut("{patientId}")]
     [ProducesResponseType(200, Type = typeof(PatientDto))]
-    public async Task<IActionResult> UpdatePatient([FromRoute] int patientId, [FromBody] PatientDto patientDto)
+    public async Task<IActionResult> UpdatePatientInformation([FromRoute] int patientId, [FromBody] PatientDto patientDto)
     {
         if (patientId != patientDto.Id)
         {
@@ -71,7 +64,7 @@ public class PatientController(
     }
 
     [HttpDelete("{patientId}")]
-    public async Task<IActionResult> DeletePatient([FromRoute] int patientId)
+    public async Task<IActionResult> DeletePatientInformation([FromRoute] int patientId)
     {
         var result = await patientService.DeletePatientAsync(patientId);
         if (!result)
