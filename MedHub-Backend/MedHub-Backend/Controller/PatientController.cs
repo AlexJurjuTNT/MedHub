@@ -19,17 +19,36 @@ public class PatientController(
     [ProducesResponseType(200, Type = typeof(PatientDto))]
     public async Task<IActionResult> AddPatientInformation(AddPatientDataDto addPatientDataDto)
     {
+        var userResult = await userService.GetUserByIdAsync(addPatientDataDto.UserId);
+        if (userResult == null)
+        {
+            return NotFound($"User with id {addPatientDataDto.UserId} not found");
+        }
+
+        if (userResult.Role.Name != "Patient")
+        {
+            return BadRequest($"User with id {addPatientDataDto.UserId} is not a patient");
+        }
+
         var patient = mapper.Map<Patient>(addPatientDataDto);
         var createdPatient = await patientService.CreatePatientAsync(patient);
         return Ok(mapper.Map<PatientDto>(createdPatient));
     }
 
-    [HttpGet]
+    [HttpGet("user-patients")]
     [ProducesResponseType(200, Type = typeof(List<UserDto>))]
-    public async Task<IActionResult> GetAllPatients()
+    public async Task<IActionResult> GetAllUserPatients()
     {
-        var patients = await patientService.GetAllPatientsAsync();
+        var patients = await patientService.GetAllUserPatientsAsync();
         return Ok(mapper.Map<List<UserDto>>(patients));
+    }
+
+    [HttpGet("patients-informations")]
+    [ProducesResponseType(200, Type = typeof(List<PatientDto>))]
+    public async Task<IActionResult> GetInformationsOfAllPatients()
+    {
+        var patients = await patientService.GetInformationsOfAllPatientsAsync();
+        return Ok(mapper.Map<List<PatientDto>>(patients));
     }
 
     [HttpPut("{patientId}")]

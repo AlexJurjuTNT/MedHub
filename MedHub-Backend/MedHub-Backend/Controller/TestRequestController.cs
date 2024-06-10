@@ -11,6 +11,7 @@ namespace MedHub_Backend.Controller;
 public class TestRequestController(
     ITestRequestService testRequestService,
     ITestTypeService testTypeService,
+    IUserService userService,
     IMapper mapper
 ) : ControllerBase
 {
@@ -41,6 +42,26 @@ public class TestRequestController(
     [ProducesResponseType(201, Type = typeof(AddTestRequestDto))]
     public async Task<IActionResult> CreateTestRequest([FromBody] AddTestRequestDto testRequestDto)
     {
+        var patientUser = await userService.GetUserByIdAsync(testRequestDto.PatientId);
+        if (patientUser == null)
+        {
+            return NotFound($"Patient with id {testRequestDto.PatientId} not found");
+        }
+        if (patientUser.Role.Name != "Patient")
+        {
+            return BadRequest($"User with id {testRequestDto.PatientId} is not a patient");
+        }
+        
+        var doctorUser = await userService.GetUserByIdAsync(testRequestDto.DoctorId);
+        if (doctorUser == null)
+        {
+            return NotFound($"Doctor with id {testRequestDto.DoctorId} not found");
+        }
+        if (doctorUser.Role.Name != "Doctor")
+        {
+            return BadRequest($"User with id {testRequestDto.DoctorId} is not a doctor");
+        }
+
         var testRequest = mapper.Map<TestRequest>(testRequestDto);
 
         var createdTestRequest = await testRequestService.CreateNewTestRequestAsync(testRequest);
@@ -61,6 +82,26 @@ public class TestRequestController(
             return BadRequest();
         }
 
+        var patientUser = await userService.GetUserByIdAsync(testRequestDto.PatientId);
+        if (patientUser == null)
+        {
+            return NotFound($"Patient with id {testRequestDto.PatientId} not found");
+        }
+        if (patientUser.Role.Name != "Patient")
+        {
+            return BadRequest($"User with id {testRequestDto.PatientId} is not a patient");
+        }
+        
+        var doctorUser = await userService.GetUserByIdAsync(testRequestDto.DoctorId);
+        if (doctorUser == null)
+        {
+            return NotFound($"Doctor with id {testRequestDto.DoctorId} not found");
+        }
+        if (doctorUser.Role.Name != "Doctor")
+        {
+            return BadRequest($"User with id {testRequestDto.DoctorId} is not a doctor");
+        }
+        
         var existingTestRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
         if (existingTestRequest == null)
         {
