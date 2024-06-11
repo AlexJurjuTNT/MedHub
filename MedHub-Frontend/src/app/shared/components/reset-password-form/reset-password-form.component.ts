@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component, NgModule } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { DxFormModule } from 'devextreme-angular/ui/form';
-import { DxLoadIndicatorModule } from 'devextreme-angular/ui/load-indicator';
+import {CommonModule} from '@angular/common';
+import {Component, NgModule} from '@angular/core';
+import {Router, RouterModule} from '@angular/router';
+import {DxFormModule} from 'devextreme-angular/ui/form';
+import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
 import notify from 'devextreme/ui/notify';
-import { AuthService } from '../../services';
+import {AuthService} from '../../services';
 
 const notificationText = 'We\'ve sent a link to reset your password. Check your inbox.';
 
@@ -17,11 +17,12 @@ export class ResetPasswordFormComponent {
   loading = false;
   formData: any = {};
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {
+  }
 
   async onSubmit(e: Event) {
     e.preventDefault();
-    const { email } = this.formData;
+    const {email} = this.formData;
     this.loading = true;
 
     const result = await this.authService.resetPassword(email);
@@ -35,6 +36,7 @@ export class ResetPasswordFormComponent {
     }
   }
 }
+
 @NgModule({
   imports: [
     CommonModule,
@@ -45,4 +47,5 @@ export class ResetPasswordFormComponent {
   declarations: [ResetPasswordFormComponent],
   exports: [ResetPasswordFormComponent]
 })
-export class ResetPasswordFormModule { }
+export class ResetPasswordFormModule {
+}

@@ -1,27 +1,27 @@
 <app-header
-  class="layout-header"
-  [menuToggleEnabled]="true"
   (menuToggle)="menuOpened = !menuOpened;"
-  [title]="title">
+  [menuToggleEnabled]="true"
+  [title]="title"
+  class="layout-header">
 </app-header>
 
 <dx-drawer
-  class="layout-body"
-  position="before"
+  [(opened)]="menuOpened"
   [closeOnOutsideClick]="shaderEnabled"
+  [minSize]="minMenuSize"
   [openedStateMode]="menuMode"
   [revealMode]="menuRevealMode"
-  [minSize]="minMenuSize"
   [shading]="shaderEnabled"
-  [(opened)]="menuOpened">
+  class="layout-body"
+  position="before">
 
   <app-side-navigation-menu
+    (openMenu)="navigationClick()"
+    (selectedItemChanged)="navigationChanged($event)"
+    *dxTemplate="let dataMenu of 'panel'"
     [compactMode]="!menuOpened"
     [selectedItem]="selectedRoute"
-    class="dx-swatch-additional"
-    *dxTemplate="let dataMenu of 'panel'"
-    (selectedItemChanged)="navigationChanged($event)"
-    (openMenu)="navigationClick()">
+    class="dx-swatch-additional">
   </app-side-navigation-menu>
 
   <dx-scroll-view class="with-footer">

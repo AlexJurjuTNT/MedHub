@@ -1,12 +1,14 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 
-import { AppComponent } from './app.component';
-import { SideNavOuterToolbarModule, SideNavInnerToolbarModule, SingleCardModule } from './layouts';
-import { FooterModule, ResetPasswordFormModule, CreateAccountFormModule, ChangePasswordFormModule, LoginFormModule } from './shared/components';
-import { AuthService, ScreenService, AppInfoService } from './shared/services';
-import { UnauthenticatedContentModule } from './unauthenticated-content';
-import { AppRoutingModule } from './app-routing.module';
+import {AppComponent} from './app.component';
+import {SideNavInnerToolbarModule, SideNavOuterToolbarModule, SingleCardModule} from './layouts';
+import {ChangePasswordFormModule, CreateAccountFormModule, FooterModule, LoginFormModule, ResetPasswordFormModule} from './shared/components';
+import {AppInfoService, AuthService, ScreenService} from './shared/services';
+import {UnauthenticatedContentModule} from './unauthenticated-content';
+import {AppRoutingModule} from './app-routing.module';
+import {ApiModule} from "./shared/services/swagger";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { AppRoutingModule } from './app-routing.module';
     ChangePasswordFormModule,
     LoginFormModule,
     UnauthenticatedContentModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ApiModule,
+    HttpClientModule,
   ],
   providers: [
     AuthService,
@@ -32,4 +36,5 @@ import { AppRoutingModule } from './app-routing.module';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
 
 export interface IUser {
   email: string;
@@ -15,30 +15,32 @@ const defaultUser = {
 @Injectable()
 export class AuthService {
   private _user: IUser | null = defaultUser;
+
+  constructor(private router: Router) {
+  }
+
   get loggedIn(): boolean {
     return !!this._user;
   }
 
   private _lastAuthenticatedPath: string = defaultPath;
+
   set lastAuthenticatedPath(value: string) {
     this._lastAuthenticatedPath = value;
   }
-
-  constructor(private router: Router) { }
 
   async logIn(email: string, password: string) {
 
     try {
       // Send request
-      this._user = { ...defaultUser, email };
+      this._user = {...defaultUser, email};
       this.router.navigate([this._lastAuthenticatedPath]);
 
       return {
         isOk: true,
         data: this._user
       };
-    }
-    catch {
+    } catch {
       return {
         isOk: false,
         message: "Authentication failed"
@@ -54,8 +56,7 @@ export class AuthService {
         isOk: true,
         data: this._user
       };
-    }
-    catch {
+    } catch {
       return {
         isOk: false,
         data: null
@@ -71,8 +72,7 @@ export class AuthService {
       return {
         isOk: true
       };
-    }
-    catch {
+    } catch {
       return {
         isOk: false,
         message: "Failed to create account"
@@ -87,8 +87,7 @@ export class AuthService {
       return {
         isOk: true
       };
-    }
-    catch {
+    } catch {
       return {
         isOk: false,
         message: "Failed to change password"
@@ -103,8 +102,7 @@ export class AuthService {
       return {
         isOk: true
       };
-    }
-    catch {
+    } catch {
       return {
         isOk: false,
         message: "Failed to reset password"
@@ -120,7 +118,8 @@ export class AuthService {
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(private router: Router, private authService: AuthService) {
+  }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     const isLoggedIn = this.authService.loggedIn;

@@ -1,9 +1,9 @@
-import { Component, NgModule, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component, Input, NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { DxListModule } from 'devextreme-angular/ui/list';
-import { DxContextMenuModule } from 'devextreme-angular/ui/context-menu';
-import { IUser } from '../../services/auth.service';
+import {DxListModule} from 'devextreme-angular/ui/list';
+import {DxContextMenuModule} from 'devextreme-angular/ui/context-menu';
+import {IUser} from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-panel',
@@ -21,7 +21,8 @@ export class UserPanelComponent {
   @Input()
   user!: IUser | null;
 
-  constructor() {}
+  constructor() {
+  }
 }
 
 @NgModule({
@@ -30,7 +31,8 @@ export class UserPanelComponent {
     DxContextMenuModule,
     CommonModule
   ],
-  declarations: [ UserPanelComponent ],
-  exports: [ UserPanelComponent ]
+  declarations: [UserPanelComponent],
+  exports: [UserPanelComponent]
 })
-export class UserPanelModule { }
+export class UserPanelModule {
+}

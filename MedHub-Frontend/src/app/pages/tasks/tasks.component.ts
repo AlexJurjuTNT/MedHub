@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import 'devextreme/data/odata/store';
 
 @Component({
@@ -30,10 +30,10 @@ export class TasksComponent {
       ]
     };
     this.priority = [
-      { name: 'High', value: 4 },
-      { name: 'Urgent', value: 3 },
-      { name: 'Normal', value: 2 },
-      { name: 'Low', value: 1 }
+      {name: 'High', value: 4},
+      {name: 'Urgent', value: 3},
+      {name: 'Normal', value: 2},
+      {name: 'Low', value: 1}
     ];
   }
 }

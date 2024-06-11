@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, NgModule } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { ValidationCallbackData } from 'devextreme-angular/common';
-import { DxFormModule } from 'devextreme-angular/ui/form';
-import { DxLoadIndicatorModule } from 'devextreme-angular/ui/load-indicator';
+import {CommonModule} from '@angular/common';
+import {Component, NgModule} from '@angular/core';
+import {Router, RouterModule} from '@angular/router';
+import {ValidationCallbackData} from 'devextreme-angular/common';
+import {DxFormModule} from 'devextreme-angular/ui/form';
+import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
 import notify from 'devextreme/ui/notify';
-import { AuthService } from '../../services';
+import {AuthService} from '../../services';
 
 
 @Component({
@@ -17,11 +17,12 @@ export class CreateAccountFormComponent {
   loading = false;
   formData: any = {};
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {
+  }
 
   async onSubmit(e: Event) {
     e.preventDefault();
-    const { email, password } = this.formData;
+    const {email, password} = this.formData;
     this.loading = true;
 
     const result = await this.authService.createAccount(email, password);
@@ -38,6 +39,7 @@ export class CreateAccountFormComponent {
     return e.value === this.formData.password;
   }
 }
+
 @NgModule({
   imports: [
     CommonModule,
@@ -45,7 +47,8 @@ export class CreateAccountFormComponent {
     DxFormModule,
     DxLoadIndicatorModule
   ],
-  declarations: [ CreateAccountFormComponent ],
-  exports: [ CreateAccountFormComponent ]
+  declarations: [CreateAccountFormComponent],
+  exports: [CreateAccountFormComponent]
 })
-export class CreateAccountFormModule { }
+export class CreateAccountFormModule {
+}

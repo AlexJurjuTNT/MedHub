@@ -2,12 +2,12 @@
 
 <div class="menu-container">
   <dx-tree-view
+    (onItemClick)="onItemClick($event)"
+    [focusStateEnabled]="false"
     [items]="items"
+    expandEvent="click"
     keyExpr="path"
     selectionMode="single"
-    [focusStateEnabled]="false"
-    expandEvent="click"
-    (onItemClick)="onItemClick($event)"
     width="100%">
   </dx-tree-view>
 </div>

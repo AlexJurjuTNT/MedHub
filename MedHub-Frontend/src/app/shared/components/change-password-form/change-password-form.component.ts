@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, NgModule, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ValidationCallbackData } from 'devextreme-angular/common';
-import { DxFormModule } from 'devextreme-angular/ui/form';
-import { DxLoadIndicatorModule } from 'devextreme-angular/ui/load-indicator';
+import {CommonModule} from '@angular/common';
+import {Component, NgModule, OnInit} from '@angular/core';
+import {ActivatedRoute, Router, RouterModule} from '@angular/router';
+import {ValidationCallbackData} from 'devextreme-angular/common';
+import {DxFormModule} from 'devextreme-angular/ui/form';
+import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
 import notify from 'devextreme/ui/notify';
-import { AuthService } from '../../services';
+import {AuthService} from '../../services';
 
 
 @Component({
@@ -17,7 +17,8 @@ export class ChangePasswordFormComponent implements OnInit {
   formData: any = {};
   recoveryCode: string = '';
 
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {
+  }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -27,7 +28,7 @@ export class ChangePasswordFormComponent implements OnInit {
 
   async onSubmit(e: Event) {
     e.preventDefault();
-    const { password } = this.formData;
+    const {password} = this.formData;
     this.loading = true;
 
     const result = await this.authService.changePassword(password, this.recoveryCode);
@@ -44,6 +45,7 @@ export class ChangePasswordFormComponent implements OnInit {
     return e.value === this.formData.password;
   }
 }
+
 @NgModule({
   imports: [
     CommonModule,
@@ -51,7 +53,8 @@ export class ChangePasswordFormComponent implements OnInit {
     DxFormModule,
     DxLoadIndicatorModule
   ],
-  declarations: [ ChangePasswordFormComponent ],
-  exports: [ ChangePasswordFormComponent ]
+  declarations: [ChangePasswordFormComponent],
+  exports: [ChangePasswordFormComponent]
 })
-export class ChangePasswordFormModule { }
+export class ChangePasswordFormModule {
+}

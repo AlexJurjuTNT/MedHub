@@ -1,44 +1,44 @@
 <dx-drawer
-  class="drawer"
-  position="before"
+  [(opened)]="menuOpened"
   [closeOnOutsideClick]="shaderEnabled"
+  [minSize]="minMenuSize"
   [openedStateMode]="menuMode"
   [revealMode]="menuRevealMode"
-  [minSize]="minMenuSize"
   [shading]="shaderEnabled"
-  [(opened)]="menuOpened">
+  class="drawer"
+  position="before">
 
   <app-side-navigation-menu
+    (openMenu)="navigationClick()"
+    (selectedItemChanged)="navigationChanged($event)"
+    *dxTemplate="let dataMenu of 'panel'"
     [compactMode]="!menuOpened"
     [selectedItem]="selectedRoute"
-    class="dx-swatch-additional"
-    *dxTemplate="let dataMenu of 'panel'"
-    (selectedItemChanged)="navigationChanged($event)"
-    (openMenu)="navigationClick()">
-      <dx-toolbar id="navigation-header">
-        <dxi-item
-          *ngIf="minMenuSize !== 0"
-          location="before"
-          cssClass="menu-button"
-          widget="dxButton"
-          [options]="{
+    class="dx-swatch-additional">
+    <dx-toolbar id="navigation-header">
+      <dxi-item
+        *ngIf="minMenuSize !== 0"
+        [options]="{
             icon: 'menu',
             stylingMode: 'text',
             onClick: toggleMenu
-          }">
-        </dxi-item>
-        <dxi-item
-          location="before"
-          cssClass="header-title"
-          [text]="title">
-        </dxi-item>
-      </dx-toolbar>
+          }"
+        cssClass="menu-button"
+        location="before"
+        widget="dxButton">
+      </dxi-item>
+      <dxi-item
+        [text]="title"
+        cssClass="header-title"
+        location="before">
+      </dxi-item>
+    </dx-toolbar>
   </app-side-navigation-menu>
 
   <div class="container">
     <app-header
-      [menuToggleEnabled]="minMenuSize === 0"
-      (menuToggle)="menuOpened = !menuOpened;">
+      (menuToggle)="menuOpened = !menuOpened;"
+      [menuToggleEnabled]="minMenuSize === 0">
     </app-header>
 
     <dx-scroll-view class="layout-body with-footer">

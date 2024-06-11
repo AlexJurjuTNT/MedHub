@@ -1,5 +1,5 @@
-import { Output, Injectable, EventEmitter } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import {EventEmitter, Injectable, Output} from '@angular/core';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 
 @Injectable()
 export class ScreenService {
@@ -11,13 +11,6 @@ export class ScreenService {
       .subscribe(() => this.changed.next(true));
   }
 
-  private isLargeScreen() {
-    const isLarge = this.breakpointObserver.isMatched(Breakpoints.Large);
-    const isXLarge = this.breakpointObserver.isMatched(Breakpoints.XLarge);
-
-    return isLarge || isXLarge;
-  }
-
   public get sizes(): Record<string, boolean> {
     return {
       'screen-x-small': this.breakpointObserver.isMatched(Breakpoints.XSmall),
@@ -25,5 +18,12 @@ export class ScreenService {
       'screen-medium': this.breakpointObserver.isMatched(Breakpoints.Medium),
       'screen-large': this.isLargeScreen(),
     };
+  }
+
+  private isLargeScreen() {
+    const isLarge = this.breakpointObserver.isMatched(Breakpoints.Large);
+    const isXLarge = this.breakpointObserver.isMatched(Breakpoints.XLarge);
+
+    return isLarge || isXLarge;
   }
 }
