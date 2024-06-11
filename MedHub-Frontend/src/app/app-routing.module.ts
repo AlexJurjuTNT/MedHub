@@ -5,9 +5,16 @@ import {AuthGuardService} from './shared/services';
 import {HomeComponent} from './pages/home/home.component';
 import {ProfileComponent} from './pages/profile/profile.component';
 import {TasksComponent} from './pages/tasks/tasks.component';
-import {DxDataGridModule, DxFormModule} from 'devextreme-angular';
+import {DxDataGridModule, DxFormModule, DxLoadIndicatorModule} from 'devextreme-angular';
+import { PatientAddComponent } from './pages/patient-add/patient-add.component';
+import {NgIf} from "@angular/common";
 
 const routes: Routes = [
+  {
+    path: 'pages/patient-add',
+    component: PatientAddComponent,
+    canActivate: [ AuthGuardService ]
+  },
   {
     path: 'tasks',
     component: TasksComponent,
@@ -50,13 +57,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true}), DxDataGridModule, DxFormModule],
+  imports: [RouterModule.forRoot(routes, {useHash: true}), DxDataGridModule, DxFormModule, DxLoadIndicatorModule, NgIf],
   providers: [AuthGuardService],
   exports: [RouterModule],
   declarations: [
     HomeComponent,
     ProfileComponent,
-    TasksComponent
+    TasksComponent,
+    PatientAddComponent
   ]
 })
 export class AppRoutingModule {
