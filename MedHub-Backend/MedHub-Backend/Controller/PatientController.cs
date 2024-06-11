@@ -1,8 +1,10 @@
 using AutoMapper;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.ResponseModel;
 using MedHub_Backend.Dto;
+using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;
@@ -12,6 +14,7 @@ namespace MedHub_Backend.Controller;
 public class PatientController(
     IPatientService patientService,
     IUserService userService,
+    IClinicService clinicService,
     IMapper mapper
 ) : ControllerBase
 {
@@ -43,7 +46,7 @@ public class PatientController(
         return Ok(mapper.Map<List<UserDto>>(patients));
     }
 
-    
+
     [HttpPut("{patientId}")]
     [ProducesResponseType(200, Type = typeof(PatientDto))]
     public async Task<IActionResult> UpdatePatientInformation([FromRoute] int patientId, [FromBody] PatientDto patientDto)
@@ -86,5 +89,22 @@ public class PatientController(
         }
 
         return Ok(mapper.Map<PatientDto>(user.Patient));
+    }
+
+
+    [HttpGet("patients-paged")]
+    [ProducesResponseType(200, Type = typeof(LoadResult))]
+    public async Task<IActionResult> GetAllPatientsOfClinic([FromQuery] int clinicId, [FromQuery] DataSourceLoadOptionsBase loadOptions)
+    {
+        try
+        {
+            var users = await clinicService.GetAllPatientsOfClinicAsync(clinicId);
+            var resultingUsers = DataSourceLoader.Load(mapper.Map<IEnumerable<UserDto>>(users), loadOptions);
+            return Ok(resultingUsers);
+        }
+        catch (ClinicNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }

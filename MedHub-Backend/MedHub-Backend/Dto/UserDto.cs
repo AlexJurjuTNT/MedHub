@@ -13,4 +13,7 @@ public class UserDto
 
     [Required]
     public string Username { get; set; }
+
+    [Required]
+    public int ClinicId { get; set; }
 }

@@ -107,28 +107,7 @@ public class ClinicController(
 
         return NoContent();
     }
-
-    /// <summary>
-    /// Retrive all patients of a clinic
-    /// </summary>
-    /// <param name="clinicId">ID of the clinic where the patients are</param>
-    /// <returns>List of all patients that belong to that clinic</returns>
-    [HttpGet("patients-paged")]
-    [ProducesResponseType(200, Type = typeof(LoadResult))]
-    public async Task<IActionResult> GetAllPatientsOfClinic([FromQuery] int clinicId, [FromQuery] DataSourceLoadOptionsBase loadOptions)
-    {
-        try
-        {
-            var users = await clinicService.GetAllPatientsOfClinicAsync(clinicId);
-            var resultingUsers = DataSourceLoader.Load(mapper.Map<IEnumerable<UserDto>>(users), loadOptions);
-            return Ok(resultingUsers);
-        }
-        catch (ClinicNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-    }
-
+    
     /// <summary>
     /// Retrive all doctors of a clinic
     /// </summary>
