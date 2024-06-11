@@ -22,6 +22,7 @@ import {LoadResult} from '../model/loadResult';
 import {PatientDto} from '../model/patientDto';
 import {SortingInfo} from '../model/sortingInfo';
 import {SummaryInfo} from '../model/summaryInfo';
+import {TestRequestDto} from '../model/testRequestDto';
 import {UserDto} from '../model/userDto';
 
 import {BASE_PATH} from '../variables';
@@ -299,7 +300,7 @@ export class PatientService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<LoadResult>('get', `${this.basePath}/api/v1/Patient/patients-paged`,
+    return this.httpClient.request<LoadResult>('get', `${this.basePath}/api/v1/Patient/paged`,
       {
         params: queryParameters,
         withCredentials: this.configuration.withCredentials,
@@ -400,6 +401,58 @@ export class PatientService {
     const consumes: string[] = [];
 
     return this.httpClient.request<PatientDto>('get', `${this.basePath}/api/v1/Patient/${encodeURIComponent(String(userId))}`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   *
+   * @param patientId
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getTestRequestsOfPatient(patientId: number, observe?: 'body', reportProgress?: boolean): Observable<Array<TestRequestDto>>;
+
+  public getTestRequestsOfPatient(patientId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TestRequestDto>>>;
+
+  public getTestRequestsOfPatient(patientId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TestRequestDto>>>;
+
+  public getTestRequestsOfPatient(patientId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    if (patientId === null || patientId === undefined) {
+      throw new Error('Required parameter patientId was null or undefined when calling getTestRequestsOfPatient.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+    // to determine the Accept header
+    let httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.request<Array<TestRequestDto>>('get', `${this.basePath}/api/v1/Patient/${encodeURIComponent(String(patientId))}/test-requests`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,

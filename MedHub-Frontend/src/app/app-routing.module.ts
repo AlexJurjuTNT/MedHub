@@ -6,14 +6,26 @@ import {HomeComponent} from './pages/home/home.component';
 import {ProfileComponent} from './pages/profile/profile.component';
 import {TasksComponent} from './pages/tasks/tasks.component';
 import {DxDataGridModule, DxFormModule, DxLoadIndicatorModule} from 'devextreme-angular';
-import { PatientAddComponent } from './pages/patient-add/patient-add.component';
+import {PatientAddComponent} from './pages/patient-add/patient-add.component';
 import {NgIf} from "@angular/common";
+import {PatientListComponent} from './pages/patient-list/patient-list.component';
+import {PatientTestsComponent} from "./pages/patient-tests/patient-tests.component";
 
 const routes: Routes = [
   {
+    path: 'pages/patient-list',
+    component: PatientListComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'pages/patient-tests/:id',
+    component: PatientTestsComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
     path: 'pages/patient-add',
     component: PatientAddComponent,
-    canActivate: [ AuthGuardService ]
+    canActivate: [AuthGuardService]
   },
   {
     path: 'tasks',
@@ -64,7 +76,8 @@ const routes: Routes = [
     HomeComponent,
     ProfileComponent,
     TasksComponent,
-    PatientAddComponent
+    PatientAddComponent,
+    PatientListComponent
   ]
 })
 export class AppRoutingModule {

@@ -9,10 +9,14 @@ import {UnauthenticatedContentModule} from './unauthenticated-content';
 import {AppRoutingModule} from './app-routing.module';
 import {ApiModule} from "./shared/services/swagger";
 import {HttpClientModule} from "@angular/common/http";
+import { PatientTestsComponent } from './pages/patient-tests/patient-tests.component';
+import {DxDataGridModule, DxTemplateModule} from "devextreme-angular";
+import {DxiColumnModule, DxoFilterRowModule, DxoPagerModule, DxoPagingModule} from "devextreme-angular/ui/nested";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PatientTestsComponent
   ],
   imports: [
     BrowserModule,
@@ -28,6 +32,12 @@ import {HttpClientModule} from "@angular/common/http";
     AppRoutingModule,
     ApiModule,
     HttpClientModule,
+    DxDataGridModule,
+    DxTemplateModule,
+    DxiColumnModule,
+    DxoFilterRowModule,
+    DxoPagerModule,
+    DxoPagingModule,
   ],
   providers: [
     AuthService,

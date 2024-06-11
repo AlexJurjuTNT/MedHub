@@ -22,5 +22,10 @@ export const navigation = [
     text: 'Patient Add',
     path: '/pages/patient-add',
     icon: 'folder'
+  },
+  {
+    text: 'Patient List',
+    path: '/pages/patient-list',
+    icon: 'folder'
   }
 ];

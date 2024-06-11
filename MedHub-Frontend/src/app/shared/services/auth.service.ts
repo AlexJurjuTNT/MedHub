@@ -78,6 +78,20 @@ export class AuthService {
     }
   }
 
+  getUserSync() {
+    try {
+      return {
+        isOk: true,
+        data: this._user
+      }
+    } catch {
+      return {
+        isOk: false,
+        data: null
+      }
+    }
+  }
+
   async createAccount(email: string, password: string) {
     try {
       // Send request
