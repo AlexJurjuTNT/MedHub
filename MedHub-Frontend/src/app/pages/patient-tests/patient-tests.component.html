@@ -1,24 +1,25 @@
-<div class="content-block dx-card responsive-paddings">
-  <h2 class="content-block">Patient Test Requests</h2>
+<h2 class="content-block">Patient Test Requests</h2>
+<div class="content-block">
+  <div class="dx-card responsive-paddings">
+    <dx-data-grid [columnAutoWidth]="true"
+                  [columnHidingEnabled]="true"
+                  [dataSource]="dataSource"
+                  [focusedRowEnabled]="false"
+                  [showBorders]="true"
+                  class="dx-card wide-card">
 
-  <dx-data-grid [columnAutoWidth]="true"
-                [columnHidingEnabled]="true"
-                [dataSource]="dataSource"
-                [focusedRowEnabled]="false"
-                [showBorders]="true"
-                class="dx-card wide-card">
+      <dxo-paging [pageSize]="10"></dxo-paging>
+      <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
 
-    <dxo-paging [pageSize]="10"></dxo-paging>
-    <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
-    <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <!-- Define the columns for UserDto data -->
+      <dxi-column dataField="id" caption="ID" [width]="90"></dxi-column>
+      <dxi-column dataField="requestDate" caption="Request Date"></dxi-column>
+      <dxi-column cellTemplate="testTypesTemplate" caption="Test Types"></dxi-column>
 
-    <!-- Define the columns for UserDto data -->
-    <dxi-column dataField="id" caption="ID" [width]="90"></dxi-column>
-    <dxi-column dataField="requestDate" caption="Request Date"></dxi-column>
-    <dxi-column cellTemplate="testTypesTemplate" caption="Test Types"></dxi-column>
-
-    <div *dxTemplate="let data of 'testTypesTemplate'">
-      <span>{{ getTestTypeNames(data.data.testTypes) }}</span>
-    </div>
-  </dx-data-grid>
+      <div *dxTemplate="let data of 'testTypesTemplate'">
+        <span>{{ getTestTypeNames(data.data.testTypes) }}</span>
+      </div>
+    </dx-data-grid>
+  </div>
 </div>

@@ -18,6 +18,7 @@ export class PatientTestsComponent implements OnInit {
   ) {
   }
 
+  // todo: paging
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.patientId = Number(params.get('id'));

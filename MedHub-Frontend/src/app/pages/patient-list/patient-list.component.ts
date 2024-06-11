@@ -20,6 +20,7 @@ export class PatientListComponent implements OnInit {
   }
 
 
+  // todo: paging
   ngOnInit(): void {
 
     this.authService.getUser().then((e) => {

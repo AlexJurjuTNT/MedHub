@@ -13,16 +13,8 @@
       <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
       <dxo-filter-row [visible]="true"></dxo-filter-row>
 
-      <!-- Define the columns for UserDto data -->
       <dxi-column dataField="id" caption="ID" [width]="90"></dxi-column>
-      <dxi-column dataField="email" caption="Email"></dxi-column>
-      <dxi-column dataField="username" caption="Username"></dxi-column>
-
-      <dxi-column cellTemplate="viewButtonTemplate"></dxi-column>
-
-      <div *dxTemplate="let data of 'viewButtonTemplate'">
-        <button (click)="viewPatient(data.data.id)">View</button>
-      </div>
+      <dxi-column dataField="name" caption="Test Name"></dxi-column>
 
     </dx-data-grid>
   </div>

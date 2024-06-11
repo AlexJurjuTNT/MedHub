@@ -10,8 +10,14 @@ import {PatientAddComponent} from './pages/patient-add/patient-add.component';
 import {NgIf} from "@angular/common";
 import {PatientListComponent} from './pages/patient-list/patient-list.component';
 import {PatientTestsComponent} from "./pages/patient-tests/patient-tests.component";
+import { TestTypeListComponent } from './pages/test-type-list/test-type-list.component';
 
 const routes: Routes = [
+  {
+    path: 'pages/test-type-list',
+    component: TestTypeListComponent,
+    canActivate: [ AuthGuardService ]
+  },
   {
     path: 'pages/patient-list',
     component: PatientListComponent,
@@ -77,7 +83,8 @@ const routes: Routes = [
     ProfileComponent,
     TasksComponent,
     PatientAddComponent,
-    PatientListComponent
+    PatientListComponent,
+    TestTypeListComponent
   ]
 })
 export class AppRoutingModule {
