@@ -17,6 +17,7 @@ export class AuthService {
   ) {
   }
 
+  // todo: if token is set and valid get user using the token value
   get loggedIn(): boolean {
     return !!this._user;
   }

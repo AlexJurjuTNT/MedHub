@@ -5,14 +5,20 @@ import {AuthGuardService} from './shared/services';
 import {HomeComponent} from './pages/home/home.component';
 import {ProfileComponent} from './pages/profile/profile.component';
 import {TasksComponent} from './pages/tasks/tasks.component';
-import {DxDataGridModule, DxFormModule, DxLoadIndicatorModule} from 'devextreme-angular';
+import {DxDataGridModule, DxFormModule, DxLoadIndicatorModule, DxSelectBoxModule, DxTagBoxModule} from 'devextreme-angular';
 import {PatientAddComponent} from './pages/patient-add/patient-add.component';
 import {NgIf} from "@angular/common";
 import {PatientListComponent} from './pages/patient-list/patient-list.component';
 import {PatientTestsComponent} from "./pages/patient-tests/patient-tests.component";
 import { TestTypeListComponent } from './pages/test-type-list/test-type-list.component';
+import { TestRequestCreateComponent } from './pages/test-request-create/test-request-create.component';
 
 const routes: Routes = [
+  {
+    path: 'pages/test-request-create',
+    component: TestRequestCreateComponent,
+    canActivate: [ AuthGuardService ]
+  },
   {
     path: 'pages/test-type-list',
     component: TestTypeListComponent,
@@ -75,7 +81,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true}), DxDataGridModule, DxFormModule, DxLoadIndicatorModule, NgIf],
+  imports: [RouterModule.forRoot(routes, {useHash: true}), DxDataGridModule, DxFormModule, DxLoadIndicatorModule, NgIf, DxSelectBoxModule, DxTagBoxModule],
   providers: [AuthGuardService],
   exports: [RouterModule],
   declarations: [
@@ -84,7 +90,8 @@ const routes: Routes = [
     TasksComponent,
     PatientAddComponent,
     PatientListComponent,
-    TestTypeListComponent
+    TestTypeListComponent,
+    TestRequestCreateComponent
   ]
 })
 export class AppRoutingModule {

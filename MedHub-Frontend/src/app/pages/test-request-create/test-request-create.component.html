@@ -1,0 +1,53 @@
+<h2 class="content-block">Test Request Create</h2>
+<div class="content-block">
+  <div class="dx-card responsive-paddings">
+
+    <div class="dx-fieldset">
+
+      <div class="dx-field">
+        <div class="dx-field-label">
+          User
+        </div>
+
+        <div class="dx-field-value">
+          <dx-select-box
+            [searchEnabled]="true"
+            [dataSource]="users"
+            [showClearButton]="true"
+            displayExpr="username"
+            valueExpr="id"
+            (onValueChanged)="selectedUserId = $event.value"
+          ></dx-select-box>
+        </div>
+      </div>
+
+      <div class="dx-field">
+        <div class="dx-field-label">
+          Test Types
+        </div>
+
+        <div class="dx-field-value">
+          <dx-tag-box
+            [dataSource]="testTypes"
+            displayExpr="name"
+            valueExpr="id"
+            [showClearButton]="true"
+            [applyValueMode]="'useButtons'"
+            (onValueChanged)="selectedTestTypesIds = $event.value"
+            [value]="selectedTestTypesIds"
+            [searchEnabled]="true"
+            [searchMode]="'contains'"
+            [searchExpr]="['name']"
+          ></dx-tag-box>
+        </div>
+      </div>
+    </div>
+
+    <div class="dx-fieldset">
+      <button (click)="createTestRequest()" class="dx-button dx-button-success">
+        Save Test Request
+      </button>
+    </div>
+
+  </div>
+</div>
