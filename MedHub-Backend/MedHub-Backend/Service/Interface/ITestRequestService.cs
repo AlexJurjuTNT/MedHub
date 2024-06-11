@@ -10,4 +10,5 @@ public interface ITestRequestService
     Task<TestRequest> UpdateTestRequestAsync(TestRequest testRequest);
     Task<bool> DeleteTestRequestAsync(int testRequestId);
     Task<TestRequest> AddTestTypesAsync(TestRequest testRequest, List<TestType> testTypes);
+    Task<List<TestRequest>> GetAllTestRequestsOfUserAsync(int userId);
 }

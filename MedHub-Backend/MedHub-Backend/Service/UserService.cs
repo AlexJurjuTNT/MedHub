@@ -49,7 +49,7 @@ public class UserService(
         return user;
     }
 
-    public async Task<User?> GetUserByUsername(string username)
+    public async Task<User?> GetUserByUsernameAsync(string username)
     {
         var user = await appDbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
         return user;

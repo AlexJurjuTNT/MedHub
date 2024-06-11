@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MedHub_Backend.Dto;
 
 namespace MedHub_Backend.Model;
 
@@ -17,7 +18,7 @@ public class User
     public string Email { get; set; }
 
     [Column("password_hash")]
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
     [Column("password_reset_code")]
     public string? PasswordResetCode { get; set; } = string.Empty;

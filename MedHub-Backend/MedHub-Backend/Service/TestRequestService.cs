@@ -50,4 +50,9 @@ public class TestRequestService(
         await appDbContext.SaveChangesAsync();
         return testRequest;
     }
+
+    public async Task<List<TestRequest>> GetAllTestRequestsOfUserAsync(int userId)
+    {
+        return await appDbContext.TestRequests.Where(t => t.PatientId == userId).ToListAsync();
+    }
 }

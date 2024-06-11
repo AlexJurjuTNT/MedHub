@@ -15,6 +15,7 @@ public class PatientController(
     IPatientService patientService,
     IUserService userService,
     IClinicService clinicService,
+    ITestRequestService testRequestService,
     IMapper mapper
 ) : ControllerBase
 {
@@ -92,7 +93,7 @@ public class PatientController(
     }
 
 
-    [HttpGet("patients-paged")]
+    [HttpGet("paged")]
     [ProducesResponseType(200, Type = typeof(LoadResult))]
     public async Task<IActionResult> GetAllPatientsOfClinic([FromQuery] int clinicId, [FromQuery] DataSourceLoadOptionsBase loadOptions)
     {
@@ -106,5 +107,24 @@ public class PatientController(
         {
             return NotFound(ex.Message);
         }
+    }
+
+    [HttpGet("{patientId}/test-requests")]
+    [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
+    public async Task<IActionResult> GetTestRequestsOfPatient([FromRoute] int patientId)
+    {
+        var patient = await userService.GetUserByIdAsync(patientId);
+        if (patient == null)
+        {
+            return NotFound();
+        }
+
+        if (patient.Role.Name != "Patient")
+        {
+            return BadRequest();
+        }
+
+        var testRequests = await testRequestService.GetAllTestRequestsOfUserAsync(patient.Id);
+        return Ok(mapper.Map<List<TestRequestDto>>(testRequests));
     }
 }

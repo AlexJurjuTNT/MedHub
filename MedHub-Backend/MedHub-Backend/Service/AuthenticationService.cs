@@ -16,7 +16,7 @@ public class AuthenticationService(
 {
     public async Task<User> RegisterPatientAsync(User user)
     {
-        var userByUsername = await userService.GetUserByUsername(user.Username);
+        var userByUsername = await userService.GetUserByUsernameAsync(user.Username);
         if (userByUsername != null) throw new UserAlreadyExistsException("User already exists");
 
         var clinic = await clinicService.GetClinicByIdAsync(user.ClinicId);
@@ -27,8 +27,8 @@ public class AuthenticationService(
 
         var tempPassword = passwordService.GenerateRandomPassword(8);
         user.Role = patientRole;
-        user.Password = BCrypt.Net.BCrypt.HashPassword(tempPassword);
-
+        user.PasswordResetCode = tempPassword;
+        
         var createdUser = await userService.CreateUserAsync(user);
         await emailService.SendPatientResetPasswordEmail(clinic, user, tempPassword);
 
@@ -51,7 +51,7 @@ public class AuthenticationService(
 
     public async Task<User> RegisterDoctorAsync(User user)
     {
-        var userByUsername = await userService.GetUserByUsername(user.Username);
+        var userByUsername = await userService.GetUserByUsernameAsync(user.Username);
         if (userByUsername != null) throw new UserAlreadyExistsException("Doctor with username already exists");
 
         var userByEmail = await userService.GetUserByEmail(user.Email);

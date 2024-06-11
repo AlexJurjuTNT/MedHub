@@ -19,6 +19,5 @@ public class TestResult
     [Column("test_request_id")]
     [ForeignKey("TestRequest")]
     public int TestRequestId { get; set; }
-
     public virtual TestRequest TestRequest { get; set; }
 }
