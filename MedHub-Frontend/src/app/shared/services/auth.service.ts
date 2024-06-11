@@ -1,22 +1,20 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
-
-export interface IUser {
-  email: string;
-  avatarUrl?: string;
-}
+import {AuthenticationResponse, AuthenticationService, LoginRequestDto, UserDto, UserService} from "./swagger";
+import {TokenService} from "./token.service";
 
 const defaultPath = '/';
-const defaultUser = {
-  email: 'sandra@example.com',
-  avatarUrl: 'https://js.devexpress.com/Demos/WidgetsGallery/JSDemos/images/employees/06.png'
-};
 
 @Injectable()
 export class AuthService {
-  private _user: IUser | null = defaultUser;
+  private _user: UserDto | null = null;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private userService: UserService,
+    private tokenService: TokenService
+  ) {
   }
 
   get loggedIn(): boolean {
@@ -33,7 +31,23 @@ export class AuthService {
 
     try {
       // Send request
-      this._user = {...defaultUser, email};
+      const loginRequest: LoginRequestDto = ({
+        email: email,
+        password: password
+      });
+
+      this.authenticationService.login(loginRequest).subscribe({
+        next: (result: AuthenticationResponse) => {
+          this.tokenService.token = result.token;
+
+          this.userService.getUserById(result.userId).subscribe({
+            next: (result: UserDto) => {
+              this._user = result;
+            }
+          })
+        }
+      });
+
       this.router.navigate([this._lastAuthenticatedPath]);
 
       return {
