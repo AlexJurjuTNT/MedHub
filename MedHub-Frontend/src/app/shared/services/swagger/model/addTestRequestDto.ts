@@ -11,7 +11,6 @@
  */
 
 export interface AddTestRequestDto {
-  requestDate: Date;
   patientId: number;
   doctorId: number;
   testTypesId: Array<number>;

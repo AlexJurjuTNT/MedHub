@@ -58,7 +58,6 @@ export class TestRequestCreateComponent implements OnInit {
       console.log(`Selected user: ${this.selectedUserId}`);
 
       const testRequest: AddTestRequestDto = {
-        requestDate: new Date(),
         patientId: this.selectedUserId,
         doctorId: this.user.id,
         testTypesId: this.selectedTestTypesIds
