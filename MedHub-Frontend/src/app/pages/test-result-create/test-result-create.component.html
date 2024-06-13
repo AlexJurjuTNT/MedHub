@@ -1,0 +1,21 @@
+<h2 class="content-block">Test Result Upload</h2>
+<div class="content-block">
+  <div class="dx-card responsive-paddings">
+
+    <dx-file-uploader
+      selectButtonText="Select PDF"
+      labelText=""
+      accept=".pdf"
+      uploadMode="useForm"
+      [(value)]="selectedFiles"
+    >
+    </dx-file-uploader>
+
+    <dx-button
+      text="Upload"
+      (onClick)="uploadFile()"
+    >
+    </dx-button>
+
+  </div>
+</div>

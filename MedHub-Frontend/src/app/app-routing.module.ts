@@ -10,19 +10,20 @@ import {PatientAddComponent} from './pages/patient-add/patient-add.component';
 import {NgIf} from "@angular/common";
 import {PatientListComponent} from './pages/patient-list/patient-list.component';
 import {PatientTestsComponent} from "./pages/patient-tests/patient-tests.component";
-import { TestTypeListComponent } from './pages/test-type-list/test-type-list.component';
-import { TestRequestCreateComponent } from './pages/test-request-create/test-request-create.component';
+import {TestTypeListComponent} from './pages/test-type-list/test-type-list.component';
+import {TestRequestCreateComponent} from './pages/test-request-create/test-request-create.component';
+import {TestResultCreateComponent} from "./pages/test-result-create/test-result-create.component";
 
 const routes: Routes = [
   {
     path: 'pages/test-request-create',
     component: TestRequestCreateComponent,
-    canActivate: [ AuthGuardService ]
+    canActivate: [AuthGuardService]
   },
   {
     path: 'pages/test-type-list',
     component: TestTypeListComponent,
-    canActivate: [ AuthGuardService ]
+    canActivate: [AuthGuardService]
   },
   {
     path: 'pages/patient-list',
@@ -37,6 +38,11 @@ const routes: Routes = [
   {
     path: 'pages/patient-add',
     component: PatientAddComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'pages/test-result-create/:testRequestId',
+    component: TestResultCreateComponent,
     canActivate: [AuthGuardService]
   },
   {

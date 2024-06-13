@@ -16,10 +16,20 @@
       <dxi-column dataField="id" caption="ID" [width]="90"></dxi-column>
       <dxi-column dataField="requestDate" caption="Request Date"></dxi-column>
       <dxi-column cellTemplate="testTypesTemplate" caption="Test Types"></dxi-column>
+      <dxi-column cellTemplate="addTestResultTemplate" caption="Add Test Result"></dxi-column>
 
-      <div *dxTemplate="let data of 'testTypesTemplate'">
-        <span>{{ getTestTypeNames(data.data.testTypes) }}</span>
+      <div *dxTemplate="let user of 'testTypesTemplate'">
+        <span>{{ getTestTypeNames(user.data.testTypes) }}</span>
       </div>
+
+
+      <div *dxTemplate="let data of 'addTestResultTemplate'">
+        <dx-button
+          text="Add Test Result"
+          (onClick)="navigateToTestResultCreate(data.data.id)"
+        ></dx-button>
+      </div>
+
     </dx-data-grid>
   </div>
 </div>
