@@ -23,10 +23,7 @@ public class ClinicService(
     public async Task<IEnumerable<User>> GetAllPatientsOfClinicAsync(int clinicId)
     {
         var clinic = await GetClinicByIdAsync(clinicId);
-        if (clinic == null)
-        {
-            throw new ClinicNotFoundException($"Clinic with id {clinicId} not found");
-        }
+        if (clinic == null) throw new ClinicNotFoundException($"Clinic with id {clinicId} not found");
 
         var patients = clinic.Users.Where(u => u.Role.Name == "Patient");
         return patients;

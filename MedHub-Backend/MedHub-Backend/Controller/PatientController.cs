@@ -1,7 +1,9 @@
 using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
-using MedHub_Backend.Dto;
+using MedHub_Backend.Dto.Patient;
+using MedHub_Backend.Dto.TestRequest;
+using MedHub_Backend.Dto.User;
 using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
@@ -24,15 +26,9 @@ public class PatientController(
     public async Task<IActionResult> AddPatientInformation(AddPatientDataDto addPatientDataDto)
     {
         var userResult = await userService.GetUserByIdAsync(addPatientDataDto.UserId);
-        if (userResult == null)
-        {
-            return NotFound($"User with id {addPatientDataDto.UserId} not found");
-        }
+        if (userResult == null) return NotFound($"User with id {addPatientDataDto.UserId} not found");
 
-        if (userResult.Role.Name != "Patient")
-        {
-            return BadRequest($"User with id {addPatientDataDto.UserId} is not a patient");
-        }
+        if (userResult.Role.Name != "Patient") return BadRequest($"User with id {addPatientDataDto.UserId} is not a patient");
 
         var patient = mapper.Map<Patient>(addPatientDataDto);
         var createdPatient = await patientService.CreatePatientAsync(patient);
@@ -52,16 +48,10 @@ public class PatientController(
     [ProducesResponseType(200, Type = typeof(PatientDto))]
     public async Task<IActionResult> UpdatePatientInformation([FromRoute] int patientId, [FromBody] PatientDto patientDto)
     {
-        if (patientId != patientDto.Id)
-        {
-            return BadRequest();
-        }
+        if (patientId != patientDto.Id) return BadRequest();
 
         var existingPatient = await patientService.GetPatientAsync(patientId);
-        if (existingPatient == null)
-        {
-            return NotFound($"Patient with id {patientId} not found");
-        }
+        if (existingPatient == null) return NotFound($"Patient with id {patientId} not found");
 
         var updatedPatient = await patientService.UpdatePatientAsync(mapper.Map<Patient>(patientDto));
         return Ok(mapper.Map<PatientDto>(updatedPatient));
@@ -71,10 +61,7 @@ public class PatientController(
     public async Task<IActionResult> DeletePatientInformation([FromRoute] int patientId)
     {
         var result = await patientService.DeletePatientAsync(patientId);
-        if (!result)
-        {
-            return NotFound($"Patient with id ${patientId} not found");
-        }
+        if (!result) return NotFound($"Patient with id ${patientId} not found");
 
         return NoContent();
     }
@@ -84,10 +71,7 @@ public class PatientController(
     public async Task<IActionResult> GetPatientInformationForUser([FromRoute] int userId)
     {
         var user = await userService.GetUserByIdAsync(userId);
-        if (user == null)
-        {
-            return NotFound($"User with id {userId} not found");
-        }
+        if (user == null) return NotFound($"User with id {userId} not found");
 
         return Ok(mapper.Map<PatientDto>(user.Patient));
     }
@@ -114,15 +98,9 @@ public class PatientController(
     public async Task<IActionResult> GetTestRequestsOfPatient([FromRoute] int patientId)
     {
         var patient = await userService.GetUserByIdAsync(patientId);
-        if (patient == null)
-        {
-            return NotFound();
-        }
+        if (patient == null) return NotFound();
 
-        if (patient.Role.Name != "Patient")
-        {
-            return BadRequest();
-        }
+        if (patient.Role.Name != "Patient") return BadRequest();
 
         var testRequests = await testRequestService.GetAllTestRequestsOfUserAsync(patient.Id);
         return Ok(mapper.Map<List<TestRequestDto>>(testRequests));

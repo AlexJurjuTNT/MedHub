@@ -29,8 +29,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Uploads\" />
-      <Folder Include="Uploads\Documents\" />
+        <Folder Include="Dto\Doctor\"/>
+        <Folder Include="Uploads\"/>
+        <Folder Include="Uploads\Documents\"/>
     </ItemGroup>
 
 </Project>

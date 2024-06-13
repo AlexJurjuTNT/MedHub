@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MedHub_Backend.Dto;
 
 namespace MedHub_Backend.Model;
 
@@ -26,11 +25,13 @@ public class User
     [Column("clinic_id")]
     [ForeignKey("Clinic")]
     public int ClinicId { get; set; }
+
     public virtual Clinic Clinic { get; set; }
 
     [Column("role_id")]
     [ForeignKey("Role")]
     public int RoleId { get; set; }
+
     public virtual Role Role { get; set; }
 
 

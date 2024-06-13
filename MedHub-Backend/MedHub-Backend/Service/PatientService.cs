@@ -1,5 +1,4 @@
 using MedHub_Backend.Context;
-using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.EntityFrameworkCore;

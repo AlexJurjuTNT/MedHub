@@ -1,5 +1,5 @@
 using AutoMapper;
-using MedHub_Backend.Dto;
+using MedHub_Backend.Dto.TestType;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -27,10 +27,7 @@ public class TestTypeController(
     public async Task<IActionResult> GetTestTypeById([FromRoute] int testTypeId)
     {
         var testType = await testTypeService.GetTestTypeByIdAsync(testTypeId);
-        if (testType == null)
-        {
-            return NotFound($"TestType with id {testTypeId} not found");
-        }
+        if (testType == null) return NotFound($"TestType with id {testTypeId} not found");
 
         return Ok(mapper.Map<TestTypeDto>(testType));
     }
@@ -48,16 +45,10 @@ public class TestTypeController(
     [ProducesResponseType(200, Type = typeof(TestTypeDto))]
     public async Task<IActionResult> UpdateTestType([FromRoute] int testTypeId, [FromBody] TestTypeDto testTypeDto)
     {
-        if (testTypeId != testTypeDto.Id)
-        {
-            return BadRequest();
-        }
+        if (testTypeId != testTypeDto.Id) return BadRequest();
 
         var existingTestType = await testTypeService.GetTestTypeByIdAsync(testTypeId);
-        if (existingTestType == null)
-        {
-            return NotFound($"TestType with id {testTypeId} not found");
-        }
+        if (existingTestType == null) return NotFound($"TestType with id {testTypeId} not found");
 
         var testType = mapper.Map<TestType>(testTypeDto);
         var updatedTestType = await testTypeService.UpdateTestTypeAsync(testType);
@@ -71,10 +62,7 @@ public class TestTypeController(
     public async Task<IActionResult> DeleteTestType([FromRoute] int testTypeId)
     {
         var result = await testTypeService.DeleteClinicByIdAsync(testTypeId);
-        if (!result)
-        {
-            return NotFound($"TestType with id {testTypeId} not found");
-        }
+        if (!result) return NotFound($"TestType with id {testTypeId} not found");
 
         return NoContent();
     }

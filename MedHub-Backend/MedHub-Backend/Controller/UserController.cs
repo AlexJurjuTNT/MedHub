@@ -1,8 +1,7 @@
 using AutoMapper;
-using MedHub_Backend.Dto;
+using MedHub_Backend.Dto.User;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;
@@ -15,7 +14,7 @@ public class UserController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Get all users
+    ///     Get all users
     /// </summary>
     /// <returns>List of all users</returns>
     [HttpGet]
@@ -28,7 +27,7 @@ public class UserController(
     }
 
     /// <summary>
-    /// Get user by ID
+    ///     Get user by ID
     /// </summary>
     /// <param name="userId">ID of the user</param>
     /// <response code="200">User with the given ID</response>
@@ -39,16 +38,13 @@ public class UserController(
     public async Task<IActionResult> GetUserById([FromRoute] int userId)
     {
         var user = await userService.GetUserByIdAsync(userId);
-        if (user == null)
-        {
-            return NotFound($"User with id {userId} not found");
-        }
+        if (user == null) return NotFound($"User with id {userId} not found");
 
         return Ok(mapper.Map<UserDto>(user));
     }
 
     /// <summary>
-    /// Create a new user
+    ///     Create a new user
     /// </summary>
     /// <param name="userDto">User to be created</param>
     /// <returns>Created user</returns>
@@ -62,7 +58,7 @@ public class UserController(
     }
 
     /// <summary>
-    /// Update an existing user
+    ///     Update an existing user
     /// </summary>
     /// <param name="userId">ID of the user to be updated</param>
     /// <param name="userDto">Updated user</param>
@@ -71,16 +67,10 @@ public class UserController(
     [ProducesResponseType(200, Type = typeof(UserDto))]
     public async Task<IActionResult> UpdateUser([FromRoute] int userId, [FromBody] UserDto userDto)
     {
-        if (userId != userDto.Id)
-        {
-            return BadRequest();
-        }
+        if (userId != userDto.Id) return BadRequest();
 
         var existingUser = await userService.GetUserByIdAsync(userId);
-        if (existingUser == null)
-        {
-            return NotFound($"User with id {userId} not found");
-        }
+        if (existingUser == null) return NotFound($"User with id {userId} not found");
 
         var user = mapper.Map<User>(userDto);
         var updatedUser = await userService.UpdateUserAsync(user);
@@ -88,7 +78,7 @@ public class UserController(
     }
 
     /// <summary>
-    /// Delete a user
+    ///     Delete a user
     /// </summary>
     /// <param name="userId">ID of the user to be deleted</param>
     /// <returns>No content</returns>
@@ -99,10 +89,7 @@ public class UserController(
     public async Task<IActionResult> DeleteUser([FromRoute] int userId)
     {
         var result = await userService.DeleteUserAsync(userId);
-        if (!result)
-        {
-            return NotFound($"User with id {userId} not found");
-        }
+        if (!result) return NotFound($"User with id {userId} not found");
 
         return NoContent();
     }

@@ -5,6 +5,10 @@ namespace MedHub_Backend.Context;
 
 public class AppDbContext : DbContext
 {
+    public AppDbContext(DbContextOptions options) : base(options)
+    {
+    }
+
     public DbSet<User> Users { get; set; }
     public DbSet<Patient> Patients { get; set; }
     public DbSet<Clinic> Clinics { get; set; }
@@ -12,10 +16,6 @@ public class AppDbContext : DbContext
     public DbSet<TestRequest> TestRequests { get; set; }
     public DbSet<TestResult> TestResults { get; set; }
     public DbSet<TestType> TestTypes { get; set; }
-
-    public AppDbContext(DbContextOptions options) : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

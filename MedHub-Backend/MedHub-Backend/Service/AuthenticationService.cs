@@ -1,4 +1,4 @@
-using MedHub_Backend.Dto;
+using MedHub_Backend.Dto.Authentication;
 using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
@@ -28,7 +28,7 @@ public class AuthenticationService(
         var tempPassword = passwordService.GenerateRandomPassword(8);
         user.Role = patientRole;
         user.PasswordResetCode = tempPassword;
-        
+
         var createdUser = await userService.CreateUserAsync(user);
         await emailService.SendPatientResetPasswordEmail(clinic, user, tempPassword);
 
@@ -42,7 +42,7 @@ public class AuthenticationService(
 
         if (!BCrypt.Net.BCrypt.Verify(loginRequestDto.Password, user.Password)) throw new PasswordMismatchException("Passwords don't match");
 
-        return new AuthenticationResponse()
+        return new AuthenticationResponse
         {
             Token = jwtService.GenerateToken(user),
             UserId = user.Id

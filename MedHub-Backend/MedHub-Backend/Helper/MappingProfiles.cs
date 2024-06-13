@@ -1,5 +1,11 @@
 ﻿using AutoMapper;
-using MedHub_Backend.Dto;
+using MedHub_Backend.Dto.Authentication;
+using MedHub_Backend.Dto.Clinic;
+using MedHub_Backend.Dto.Patient;
+using MedHub_Backend.Dto.TestRequest;
+using MedHub_Backend.Dto.TestResult;
+using MedHub_Backend.Dto.TestType;
+using MedHub_Backend.Dto.User;
 using MedHub_Backend.Model;
 
 namespace MedHub_Backend.Helper;

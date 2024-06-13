@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MedHub_Backend.Dto;
+namespace MedHub_Backend.Dto.User;
 
 public class UserDto
 {

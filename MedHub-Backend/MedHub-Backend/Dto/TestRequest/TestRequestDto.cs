@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using MedHub_Backend.Dto.TestType;
 
-namespace MedHub_Backend.Dto;
+namespace MedHub_Backend.Dto.TestRequest;
 
 public class TestRequestDto
 {

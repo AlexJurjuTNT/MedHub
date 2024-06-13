@@ -1,6 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
-using MedHub_Backend.Dto;
+using MedHub_Backend.Dto.TestResult;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -25,10 +25,7 @@ public class TestResultController(
     {
         var testResult = mapper.Map<TestResult>(testResultDto);
         var testRequest = await testRequestService.GetTestRequestByIdAsync(testResult.TestRequestId);
-        if (testRequest == null)
-        {
-            return NotFound($"Test request with id {testResult.TestRequestId} not found");
-        }
+        if (testRequest == null) return NotFound($"Test request with id {testResult.TestRequestId} not found");
 
         var result = await testResultService.UploadResult(testResult, testRequest, formFile);
         return Ok(mapper.Map<TestResultDto>(result));
@@ -49,50 +46,33 @@ public class TestResultController(
     public async Task<IActionResult> DownloadPdf([FromRoute] int resultId)
     {
         string authHeader = Request.Headers["Authorization"];
-        if (authHeader == null || !authHeader.StartsWith("Bearer"))
-        {
-            return Unauthorized();
-        }
+        if (authHeader == null || !authHeader.StartsWith("Bearer")) return Unauthorized();
 
         var tokenString = authHeader.Substring("Bearer ".Length);
         var handler = new JwtSecurityTokenHandler();
         var token = handler.ReadJwtToken(tokenString);
 
-        string? clinicId = token.Claims.FirstOrDefault(c => c.Type == "ClinicId")?.Value;
-        string? username = token.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+        var clinicId = token.Claims.FirstOrDefault(c => c.Type == "ClinicId")?.Value;
+        var username = token.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
 
-        if (clinicId == null || username == null)
-        {
-            return Unauthorized();
-        }
+        if (clinicId == null || username == null) return Unauthorized();
 
-        var clinic = await clinicService.GetClinicByIdAsync(Int32.Parse(clinicId));
-        if (clinic == null)
-        {
-            return NotFound($"Clinic with id {clinicId} not found");
-        }
+        var clinic = await clinicService.GetClinicByIdAsync(int.Parse(clinicId));
+        if (clinic == null) return NotFound($"Clinic with id {clinicId} not found");
 
         var user = await userService.GetUserByUsernameAsync(username);
-        if (user == null)
-        {
-            return NotFound($"User with username {username} not found");
-        }
+        if (user == null) return NotFound($"User with username {username} not found");
 
         var testResult = await testResultService.GetTestResultByIdAsync(resultId);
-        if (testResult == null)
-        {
-            return NotFound($"Result with id {resultId} not found");
-        }
+        if (testResult == null) return NotFound($"Result with id {resultId} not found");
 
 
         if (testResult.TestRequest.PatientId != user.Id ||
-            testResult.TestRequest.DoctorId != user.Id || 
+            testResult.TestRequest.DoctorId != user.Id ||
             testResult.TestRequest.Patient.ClinicId != user.ClinicId)
-        {
             return Unauthorized();
-        }
 
-        string pdfPath = testResult.FilePath;
+        var pdfPath = testResult.FilePath;
         var pdf = await fileService.DownloadFile(pdfPath);
         return File(pdf.Item1, pdf.Item2, pdf.Item3);
     }

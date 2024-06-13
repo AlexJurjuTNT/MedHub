@@ -52,7 +52,7 @@ public class TestResultService(
         // upload the pdf
         var patient = testRequest.Patient;
         var clinic = patient.Clinic;
-        string pdfPath = await UploadResultFile(formFile, patient, clinic);
+        var pdfPath = await UploadResultFile(formFile, patient, clinic);
 
         // insert testResult object to the db
         testResult.FilePath = pdfPath;

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MedHub_Backend.Dto;
+namespace MedHub_Backend.Dto.Authentication;
 
 public class ResetPasswordRequestDto
 {
@@ -14,6 +14,7 @@ public class ResetPasswordRequestDto
     [Required]
     public string Password { get; set; } = string.Empty;
 
-    [Required, Compare("Password")]
+    [Required]
+    [Compare("Password")]
     public string ConfirmPassword { get; set; } = string.Empty;
 }

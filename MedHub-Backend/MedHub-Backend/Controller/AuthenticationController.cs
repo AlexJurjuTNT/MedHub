@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
-using MedHub_Backend.Dto;
+using MedHub_Backend.Dto.Authentication;
+using MedHub_Backend.Dto.User;
 using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
@@ -101,15 +102,9 @@ public class AuthenticationController(
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDto resetPasswordRequestDto)
     {
         var existingUser = await userService.GetUserByEmail(resetPasswordRequestDto.EmailAddress);
-        if (existingUser == null)
-        {
-            return NotFound($"User with email {resetPasswordRequestDto.EmailAddress} not found");
-        }
+        if (existingUser == null) return NotFound($"User with email {resetPasswordRequestDto.EmailAddress} not found");
 
-        if (existingUser.PasswordResetCode != resetPasswordRequestDto.PasswordResetCode)
-        {
-            return BadRequest($"Reset codes don't match");
-        }
+        if (existingUser.PasswordResetCode != resetPasswordRequestDto.PasswordResetCode) return BadRequest("Reset codes don't match");
 
         await authenticationService.ResetPassword(existingUser, resetPasswordRequestDto.Password);
         return Ok();
