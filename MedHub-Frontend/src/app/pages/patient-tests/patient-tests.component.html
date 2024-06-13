@@ -24,9 +24,15 @@
 
 
       <div *dxTemplate="let data of 'addTestResultTemplate'">
-        <dx-button
-          (onClick)="navigateToTestResultCreate(data.data.id)"
-          text="Add Test Result"
+
+        <dx-button *ngIf="data.data.testResults.length > 0"
+                   (onClick)="navigateToViewTestResults(data.data.id)"
+                   [text]="'View Test Results'"
+        ></dx-button>
+
+        <dx-button *ngIf="data.data.testResults.length == 0"
+                   (onClick)="navigateToTestResultCreate(data.data.id)"
+                   [text]="'Add Test Result'"
         ></dx-button>
       </div>
 

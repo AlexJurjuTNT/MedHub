@@ -21,7 +21,10 @@
       <dxi-column cellTemplate="viewButtonTemplate"></dxi-column>
 
       <div *dxTemplate="let data of 'viewButtonTemplate'">
-        <button (click)="viewPatient(data.data.id)">View</button>
+        <dx-button
+          (click)="viewPatient(data.data.id)"
+          [text]="'View Patient'"
+        ></dx-button>
       </div>
 
     </dx-data-grid>

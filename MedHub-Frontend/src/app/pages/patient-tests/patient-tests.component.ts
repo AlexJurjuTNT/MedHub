@@ -10,7 +10,7 @@ import {PatientDto, PatientService, TestRequestDto, TestTypeDto} from "../../sha
 export class PatientTestsComponent implements OnInit {
   userId: number = 0;
   patient: PatientDto = {} as PatientDto;
-  dataSource: any;
+  dataSource: TestRequestDto[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -23,13 +23,13 @@ export class PatientTestsComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.userId = Number(params.get('id'));
+      this.patientService.getTestRequestsOfPatient(this.userId).subscribe({
+        next: (result: TestRequestDto[]) => {
+          this.dataSource = result;
+          console.log(this.dataSource)
+        }
+      });
     });
-
-    this.patientService.getTestRequestsOfPatient(this.userId).subscribe({
-      next: (result: TestRequestDto[]) => {
-        this.dataSource = result;
-      }
-    })
   }
 
   getTestTypeNames(testTypes: TestTypeDto[]): string {
@@ -38,5 +38,10 @@ export class PatientTestsComponent implements OnInit {
 
   navigateToTestResultCreate(testRequestId: number) {
     this.router.navigate(['pages/test-result-create', testRequestId]);
+  }
+
+  // todo: do something for multiple pdfs for a request
+  navigateToViewTestResults(testRequestId: number) {
+    this.router.navigate(['pages/test-result-view', this.dataSource.find(d => d.id == testRequestId)?.testResults[0].id]);
   }
 }

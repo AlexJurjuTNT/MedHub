@@ -9,6 +9,7 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import {TestResultDto} from './testResultDto';
 import {TestTypeDto} from './testTypeDto';
 
 export interface TestRequestDto {
@@ -17,4 +18,5 @@ export interface TestRequestDto {
   patientId: number;
   doctorId: number;
   testTypes: Array<TestTypeDto>;
+  testResults: Array<TestResultDto>;
 }

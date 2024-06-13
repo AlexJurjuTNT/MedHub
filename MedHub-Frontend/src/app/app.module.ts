@@ -8,17 +8,20 @@ import {AppInfoService, AuthService, ScreenService} from './shared/services';
 import {UnauthenticatedContentModule} from './unauthenticated-content';
 import {AppRoutingModule} from './app-routing.module';
 import {ApiModule} from "./shared/services/swagger";
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule, provideHttpClient, withInterceptors} from "@angular/common/http";
 import {PatientTestsComponent} from './pages/patient-tests/patient-tests.component';
 import {DxButtonModule, DxDataGridModule, DxFileUploaderModule, DxTemplateModule} from "devextreme-angular";
 import {DxiColumnModule, DxoFilterRowModule, DxoPagerModule, DxoPagingModule} from "devextreme-angular/ui/nested";
 import {TestResultCreateComponent} from './pages/test-result-create/test-result-create.component';
+import {TestResultView} from './pages/test-result-view/test-result-view';
+import {httpTokenInterceptor} from "./shared/services/http-token.interceptor";
 
 @NgModule({
   declarations: [
     AppComponent,
     PatientTestsComponent,
-    TestResultCreateComponent
+    TestResultCreateComponent,
+    TestResultView
   ],
   imports: [
     BrowserModule,
@@ -46,7 +49,8 @@ import {TestResultCreateComponent} from './pages/test-result-create/test-result-
   providers: [
     AuthService,
     ScreenService,
-    AppInfoService
+    AppInfoService,
+    provideHttpClient(withInterceptors([httpTokenInterceptor]))
   ],
   bootstrap: [AppComponent]
 })
