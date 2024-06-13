@@ -22,6 +22,16 @@ export class AuthService {
     return !!this._user;
   }
 
+  public updateUserToken() {
+    if (this.tokenService.isTokenValid()) {
+      this.userService.getUserById(this.tokenService.getUserId()).subscribe({
+        next: (result) => {
+          this._user = result;
+        }
+      })
+    }
+  }
+
   private _lastAuthenticatedPath: string = defaultPath;
 
   set lastAuthenticatedPath(value: string) {

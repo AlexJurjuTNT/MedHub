@@ -62,5 +62,16 @@ export class TokenService {
     throw new Error("Username not found");
   }
 
+  public getUserId(): number {
+    const token = this.token;
+    if (token) {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      return Number(decodedToken.UserId);
+
+    }
+    throw new Error("UserId not found");
+  }
+
 }
 

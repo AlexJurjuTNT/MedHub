@@ -1,4 +1,4 @@
-import {Component, HostBinding} from '@angular/core';
+import {Component, HostBinding, OnInit} from '@angular/core';
 import {AppInfoService, AuthService, ScreenService} from './shared/services';
 
 @Component({
@@ -6,8 +6,19 @@ import {AppInfoService, AuthService, ScreenService} from './shared/services';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  constructor(private authService: AuthService, private screen: ScreenService, public appInfo: AppInfoService) {
+export class AppComponent implements OnInit {
+
+  constructor(
+    private authService: AuthService,
+    private screen: ScreenService,
+    public appInfo: AppInfoService
+  ) {
+  }
+
+  ngOnInit(): void {
+    if (!this.authService.loggedIn) {
+      this.authService.updateUserToken();
+    }
   }
 
   @HostBinding('class') get getClass() {
