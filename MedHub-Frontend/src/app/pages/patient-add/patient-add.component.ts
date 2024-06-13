@@ -31,7 +31,6 @@ export class PatientAddComponent implements OnInit {
 
     if (user.isOk) {
       const registerPatientRequest: PatientRegisterDto = {
-        username: this.formData.username,
         email: this.formData.email,
         clinicId: user.data?.clinicId!,
       };
