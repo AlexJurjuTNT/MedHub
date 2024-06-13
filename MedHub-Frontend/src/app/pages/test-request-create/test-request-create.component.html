@@ -11,12 +11,12 @@
 
         <div class="dx-field-value">
           <dx-select-box
-            [searchEnabled]="true"
+            (onValueChanged)="selectedUserId = $event.value"
             [dataSource]="users"
+            [searchEnabled]="true"
             [showClearButton]="true"
             displayExpr="username"
             valueExpr="id"
-            (onValueChanged)="selectedUserId = $event.value"
           ></dx-select-box>
         </div>
       </div>
@@ -28,16 +28,16 @@
 
         <div class="dx-field-value">
           <dx-tag-box
+            (onValueChanged)="selectedTestTypesIds = $event.value"
+            [applyValueMode]="'useButtons'"
             [dataSource]="testTypes"
+            [searchEnabled]="true"
+            [searchExpr]="['name']"
+            [searchMode]="'contains'"
+            [showClearButton]="true"
+            [value]="selectedTestTypesIds"
             displayExpr="name"
             valueExpr="id"
-            [showClearButton]="true"
-            [applyValueMode]="'useButtons'"
-            (onValueChanged)="selectedTestTypesIds = $event.value"
-            [value]="selectedTestTypesIds"
-            [searchEnabled]="true"
-            [searchMode]="'contains'"
-            [searchExpr]="['name']"
           ></dx-tag-box>
         </div>
       </div>

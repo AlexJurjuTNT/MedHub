@@ -1,7 +1,7 @@
 import themes from 'devextreme/ui/themes';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
-import { AppModule } from './app/app.module';
+import {AppModule} from './app/app.module';
 
 
 themes.initialized(() => {

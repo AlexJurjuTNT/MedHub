@@ -14,9 +14,9 @@
       <dxo-filter-row [visible]="true"></dxo-filter-row>
 
       <!-- Define the columns for UserDto data -->
-      <dxi-column dataField="id" caption="ID" [width]="90"></dxi-column>
-      <dxi-column dataField="email" caption="Email"></dxi-column>
-      <dxi-column dataField="username" caption="Username"></dxi-column>
+      <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
+      <dxi-column caption="Email" dataField="email"></dxi-column>
+      <dxi-column caption="Username" dataField="username"></dxi-column>
 
       <dxi-column cellTemplate="viewButtonTemplate"></dxi-column>
 

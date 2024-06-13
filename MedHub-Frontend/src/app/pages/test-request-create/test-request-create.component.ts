@@ -34,23 +34,6 @@ export class TestRequestCreateComponent implements OnInit {
     });
   }
 
-  private getUsers() {
-    this.patientService.getAllPatientsOfClinic(this.user.clinicId).subscribe({
-      next: (result) => {
-        this.users = result.data!;
-      }
-    })
-  }
-
-  private getTestTypes() {
-    this.testTypeService.getAllTestTypes().subscribe({
-      next: (result) => {
-        this.testTypes = result;
-      }
-    })
-  }
-
-
   createTestRequest() {
     if (this.selectedUserId && this.selectedTestTypesIds.length > 0) {
 
@@ -65,5 +48,21 @@ export class TestRequestCreateComponent implements OnInit {
 
       this.testRequestService.createTestRequest(testRequest).subscribe({})
     }
+  }
+
+  private getUsers() {
+    this.patientService.getAllPatientsOfClinic(this.user.clinicId).subscribe({
+      next: (result) => {
+        this.users = result.data!;
+      }
+    })
+  }
+
+  private getTestTypes() {
+    this.testTypeService.getAllTestTypes().subscribe({
+      next: (result) => {
+        this.testTypes = result;
+      }
+    })
   }
 }

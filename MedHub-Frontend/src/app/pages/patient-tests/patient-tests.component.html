@@ -13,10 +13,10 @@
       <dxo-filter-row [visible]="true"></dxo-filter-row>
 
       <!-- Define the columns for UserDto data -->
-      <dxi-column dataField="id" caption="ID" [width]="90"></dxi-column>
-      <dxi-column dataField="requestDate" caption="Request Date"></dxi-column>
-      <dxi-column cellTemplate="testTypesTemplate" caption="Test Types"></dxi-column>
-      <dxi-column cellTemplate="addTestResultTemplate" caption="Add Test Result"></dxi-column>
+      <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
+      <dxi-column caption="Request Date" dataField="requestDate"></dxi-column>
+      <dxi-column caption="Test Types" cellTemplate="testTypesTemplate"></dxi-column>
+      <dxi-column caption="Add Test Result" cellTemplate="addTestResultTemplate"></dxi-column>
 
       <div *dxTemplate="let user of 'testTypesTemplate'">
         <span>{{ getTestTypeNames(user.data.testTypes) }}</span>
@@ -25,8 +25,8 @@
 
       <div *dxTemplate="let data of 'addTestResultTemplate'">
         <dx-button
-          text="Add Test Result"
           (onClick)="navigateToTestResultCreate(data.data.id)"
+          text="Add Test Result"
         ></dx-button>
       </div>
 

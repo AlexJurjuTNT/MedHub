@@ -3,17 +3,17 @@
   <div class="dx-card responsive-paddings">
 
     <dx-file-uploader
-      selectButtonText="Select PDF"
-      labelText=""
-      accept=".pdf"
-      uploadMode="useForm"
       [(value)]="selectedFiles"
+      accept=".pdf"
+      labelText=""
+      selectButtonText="Select PDF"
+      uploadMode="useForm"
     >
     </dx-file-uploader>
 
     <dx-button
-      text="Upload"
       (onClick)="uploadFile()"
+      text="Upload"
     >
     </dx-button>
 
