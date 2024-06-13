@@ -31,6 +31,15 @@ public class TestResultController(
         return Ok(mapper.Map<TestResultDto>(result));
     }
 
+    [HttpDelete("{testResultId}")]
+    public async Task<IActionResult> DeleteTestResult([FromRoute] int testResultId)
+    {
+        bool result = await testResultService.DeleteTestResultAsync(testResultId);
+        if (!result) return NotFound($"Test result with id {testResultId} not found");
+
+        return Ok();
+    }
+
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(List<TestResultDto>))]
     public async Task<IActionResult> GetAllTestResults()
@@ -67,10 +76,9 @@ public class TestResultController(
         if (testResult == null) return NotFound($"Result with id {resultId} not found");
 
 
-        if (testResult.TestRequest.PatientId != user.Id ||
-            testResult.TestRequest.DoctorId != user.Id ||
-            testResult.TestRequest.Patient.ClinicId != user.ClinicId)
-            return Unauthorized();
+        if (user.Role.Name == "Patient" && testResult.TestRequest.PatientId != user.Id) return Unauthorized();
+        if (user.Role.Name == "Doctor" && testResult.TestRequest.DoctorId != user.Id) return Unauthorized();
+
 
         var pdfPath = testResult.FilePath;
         var pdf = await fileService.DownloadFile(pdfPath);

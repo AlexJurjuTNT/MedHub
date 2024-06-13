@@ -29,7 +29,7 @@ public class TestResultService(
         return testResult;
     }
 
-    public async Task<bool> DeleteTestResult(int testResultId)
+    public async Task<bool> DeleteTestResultAsync(int testResultId)
     {
         var testResult = await appDbContext.TestResults.FindAsync(testResultId);
         if (testResult == null) return false;
