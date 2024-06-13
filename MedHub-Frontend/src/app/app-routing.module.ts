@@ -5,7 +5,7 @@ import {AuthGuardService} from './shared/services';
 import {HomeComponent} from './pages/home/home.component';
 import {ProfileComponent} from './pages/profile/profile.component';
 import {TasksComponent} from './pages/tasks/tasks.component';
-import {DxButtonModule, DxDataGridModule, DxFormModule, DxLoadIndicatorModule, DxSelectBoxModule, DxTagBoxModule} from 'devextreme-angular';
+import {DxButtonModule, DxDataGridModule, DxFormModule, DxLoadIndicatorModule, DxPopupModule, DxSelectBoxModule, DxTagBoxModule} from 'devextreme-angular';
 import {PatientAddComponent} from './pages/patient-add/patient-add.component';
 import {NgIf} from "@angular/common";
 import {PatientListComponent} from './pages/patient-list/patient-list.component';
@@ -93,7 +93,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true}), DxDataGridModule, DxFormModule, DxLoadIndicatorModule, NgIf, DxSelectBoxModule, DxTagBoxModule, DxButtonModule],
+  imports: [RouterModule.forRoot(routes, {useHash: true}), DxDataGridModule, DxFormModule, DxLoadIndicatorModule, NgIf, DxSelectBoxModule, DxTagBoxModule, DxButtonModule, DxPopupModule],
   providers: [AuthGuardService],
   exports: [RouterModule],
   declarations: [

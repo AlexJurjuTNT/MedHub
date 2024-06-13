@@ -36,17 +36,21 @@ export class TestRequestCreateComponent implements OnInit {
 
   createTestRequest() {
     if (this.selectedUserId && this.selectedTestTypesIds.length > 0) {
-
-      console.log(`Selected test types: ${this.selectedTestTypesIds}`);
-      console.log(`Selected user: ${this.selectedUserId}`);
-
       const testRequest: AddTestRequestDto = {
         patientId: this.selectedUserId,
         doctorId: this.user.id,
         testTypesId: this.selectedTestTypesIds
       };
 
-      this.testRequestService.createTestRequest(testRequest).subscribe({})
+      this.testRequestService.createTestRequest(testRequest).subscribe({
+        next: result => {
+          alert("Test Request Created");
+          location.reload();
+        },
+        error: err => {
+          alert("Failed to create test request")
+        }
+      })
     }
   }
 

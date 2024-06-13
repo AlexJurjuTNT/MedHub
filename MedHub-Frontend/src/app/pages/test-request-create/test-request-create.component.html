@@ -44,9 +44,10 @@
     </div>
 
     <div class="dx-fieldset">
-      <button (click)="createTestRequest()" class="dx-button dx-button-success">
-        Save Test Request
-      </button>
+      <dx-button
+        (click)="createTestRequest()"
+        [text]="'Create Test Request'"
+      ></dx-button>
     </div>
 
   </div>

@@ -38,40 +38,31 @@ export class AuthService {
     this._lastAuthenticatedPath = value;
   }
 
-  async logIn(email: string, password: string) {
+  async logIn(email: string, password: string): Promise<{ isOk: boolean; data?: UserDto; message?: string }> {
+    const loginRequest: LoginRequestDto = {
+      email: email,
+      password: password
+    };
 
-    try {
-      // Send request
-      const loginRequest: LoginRequestDto = ({
-        email: email,
-        password: password
-      });
-
+    return new Promise((resolve) => {
       this.authenticationService.login(loginRequest).subscribe({
-        next: (result: AuthenticationResponse) => {
-          this.tokenService.token = result.token;
+        next: (authResponse: AuthenticationResponse) => {
+          this.tokenService.token = authResponse.token;
 
-          this.userService.getUserById(result.userId).subscribe({
-            next: (result: UserDto) => {
-              this._user = result;
-            }
-          })
-        }
+          this.userService.getUserById(authResponse.userId).subscribe({
+            next: (user: UserDto) => {
+              this._user = user;
+              this.router.navigate([this._lastAuthenticatedPath]);
+              resolve({isOk: true, data: this._user});
+            },
+            error: () => resolve({isOk: false, message: "Failed to retrieve user details"})
+          });
+        },
+        error: () => resolve({isOk: false, message: "Authentication failed"})
       });
-
-      this.router.navigate([this._lastAuthenticatedPath]);
-
-      return {
-        isOk: true,
-        data: this._user
-      };
-    } catch {
-      return {
-        isOk: false,
-        message: "Authentication failed"
-      };
-    }
+    });
   }
+
 
   async getUser() {
     try {

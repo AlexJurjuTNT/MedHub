@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {PatientService} from "../../shared/services/swagger";
+import {PatientService, UserDto, UserService} from "../../shared/services/swagger";
 import {AuthService} from "../../shared/services";
 import {Router} from "@angular/router";
 
@@ -9,11 +9,12 @@ import {Router} from "@angular/router";
   styleUrls: ['./patient-list.component.css']
 })
 export class PatientListComponent implements OnInit {
-
   dataSource: any;
+  doctor: UserDto = {} as UserDto;
 
   constructor(
     private patientService: PatientService,
+    private userService: UserService,
     private authService: AuthService,
     private router: Router
   ) {
@@ -22,24 +23,35 @@ export class PatientListComponent implements OnInit {
 
   // todo: paging
   ngOnInit(): void {
+    this.loadDoctorAndPatients();
+  }
 
-    this.authService.getUser().then((e) => {
-      if (e.data) {
-        const user = e.data;
-        console.log(e.data);
+  private loadDoctorAndPatients() {
+    this.loadCurrentUser();
+    this.loadPatientsOfClinic();
+  }
 
-        this.patientService.getAllPatientsOfClinic(user.clinicId).subscribe({
-          next: (result) => {
-            this.dataSource = result.data;
-          }
-        })
+  private loadCurrentUser() {
+    let result = this.authService.getUserSync();
+    if (result.isOk) {
+      this.doctor = result.data!;
+    }
+  }
+
+  private loadPatientsOfClinic() {
+    this.patientService.getAllPatientsOfClinic(this.doctor.clinicId).subscribe({
+      next: (result) => {
+        this.dataSource = result.data;
       }
     });
-
-
   }
 
   viewPatient(patientId: number): void {
     this.router.navigate(['pages/patient-tests', patientId]);
+  }
+
+  deleteUser(currentUserId: number | null) {
+    this.userService.deleteUser(currentUserId!).subscribe({});
+    this.loadPatientsOfClinic();
   }
 }

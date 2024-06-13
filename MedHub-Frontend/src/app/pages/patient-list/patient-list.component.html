@@ -17,8 +17,15 @@
       <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
       <dxi-column caption="Email" dataField="email"></dxi-column>
       <dxi-column caption="Username" dataField="username"></dxi-column>
-
       <dxi-column cellTemplate="viewButtonTemplate"></dxi-column>
+      <dxi-column cellTemplate="deleteButtonTemplate"></dxi-column>
+
+      <div *dxTemplate="let data of 'deleteButtonTemplate'">
+        <dx-button
+          [text]="'Delete'"
+          (click)="deleteUser(data.data.id)"
+        ></dx-button>
+      </div>
 
       <div *dxTemplate="let data of 'viewButtonTemplate'">
         <dx-button
@@ -30,3 +37,5 @@
     </dx-data-grid>
   </div>
 </div>
+
+

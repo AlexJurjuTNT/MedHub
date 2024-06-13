@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService, PatientRegisterDto} from "../../shared/services/swagger";
-import {Router} from "@angular/router";
 import {AuthService} from "../../shared/services";
 
 @Component({
@@ -15,7 +14,6 @@ export class PatientAddComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private authService: AuthService,
-    private router: Router
   ) {
   }
 
@@ -27,8 +25,6 @@ export class PatientAddComponent implements OnInit {
 
     const user = await this.authService.getUser();
 
-    console.log(user);
-
     if (user.isOk) {
       const registerPatientRequest: PatientRegisterDto = {
         email: this.formData.email,
@@ -39,7 +35,11 @@ export class PatientAddComponent implements OnInit {
 
       this.authenticationService.registerPatient(registerPatientRequest).subscribe({
         next: result => {
-
+          alert("Created new patient");
+          location.reload();
+        },
+        error: err => {
+          alert("Failed to create new patient");
         }
       })
 

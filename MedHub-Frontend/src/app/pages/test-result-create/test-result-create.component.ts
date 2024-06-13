@@ -28,10 +28,9 @@ export class TestResultCreateComponent implements OnInit {
 
   uploadFile() {
 
-    console.log(this.selectedFiles);
-
     if (this.selectedFiles) {
-      this.testResultService.addTestResultForm(this.testRequestId, this.selectedFiles[0]).subscribe({})
+      this.testResultService.addTestResultForm(this.testRequestId, this.selectedFiles[0]).subscribe({});
+      alert("Files uploaded successfully");
     } else {
       alert("Please select a pdf file");
     }
