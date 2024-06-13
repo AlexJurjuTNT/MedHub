@@ -21,6 +21,7 @@ public class JwtService(
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Sub, user.Username),
             new(JwtRegisteredClaimNames.Email, user.Email),
+            new("UserId", user.Id.ToString()),
             new("ClinicId", user.ClinicId.ToString()),
             new(ClaimTypes.Role, user.Role.Name!)
         };

@@ -5,9 +5,6 @@ namespace MedHub_Backend.Dto;
 public class AddTestRequestDto
 {
     [Required]
-    public DateTime RequestDate { get; set; }
-
-    [Required]
     public int PatientId { get; set; }
 
     [Required]

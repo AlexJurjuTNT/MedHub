@@ -33,6 +33,8 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 // add automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+// from npsql 6 only DateTimeUtc is supported, added this line to revert behaviour, add time as local time
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // add swagger documentation
 builder.Services.AddSwaggerGen(options =>

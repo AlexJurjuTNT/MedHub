@@ -35,7 +35,8 @@ public class TestRequestController(
             return NotFound($"Test request with id {testRequestId} not found");
         }
 
-        return Ok(mapper.Map<TestRequestDto>(testRequest));
+        var testRequestDto = mapper.Map<TestRequestDto>(testRequest);
+        return Ok(testRequestDto);
     }
 
     [HttpPost]
@@ -47,22 +48,25 @@ public class TestRequestController(
         {
             return NotFound($"Patient with id {testRequestDto.PatientId} not found");
         }
+
         if (patientUser.Role.Name != "Patient")
         {
             return BadRequest($"User with id {testRequestDto.PatientId} is not a patient");
         }
-        
+
         var doctorUser = await userService.GetUserByIdAsync(testRequestDto.DoctorId);
         if (doctorUser == null)
         {
             return NotFound($"Doctor with id {testRequestDto.DoctorId} not found");
         }
+
         if (doctorUser.Role.Name != "Doctor")
         {
             return BadRequest($"User with id {testRequestDto.DoctorId} is not a doctor");
         }
 
         var testRequest = mapper.Map<TestRequest>(testRequestDto);
+        testRequest.RequestDate = DateTime.Now;
 
         var createdTestRequest = await testRequestService.CreateNewTestRequestAsync(testRequest);
 
@@ -87,21 +91,23 @@ public class TestRequestController(
         {
             return NotFound($"Patient with id {testRequestDto.PatientId} not found");
         }
+
         if (patientUser.Role.Name != "Patient")
         {
             return BadRequest($"User with id {testRequestDto.PatientId} is not a patient");
         }
-        
+
         var doctorUser = await userService.GetUserByIdAsync(testRequestDto.DoctorId);
         if (doctorUser == null)
         {
             return NotFound($"Doctor with id {testRequestDto.DoctorId} not found");
         }
+
         if (doctorUser.Role.Name != "Doctor")
         {
             return BadRequest($"User with id {testRequestDto.DoctorId} is not a doctor");
         }
-        
+
         var existingTestRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
         if (existingTestRequest == null)
         {
