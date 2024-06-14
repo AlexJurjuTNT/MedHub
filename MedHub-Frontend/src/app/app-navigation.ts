@@ -37,5 +37,10 @@ export const navigation = [
     text: 'Test Request Create',
     path: '/pages/test-request-create',
     icon: 'folder'
+  },
+  {
+    text: 'Clinic List',
+    path: '/pages/clinic-list',
+    icon: 'folder'
   }
 ];

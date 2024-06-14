@@ -14,8 +14,14 @@ import {TestTypeListComponent} from './pages/test-type-list/test-type-list.compo
 import {TestRequestCreateComponent} from './pages/test-request-create/test-request-create.component';
 import {TestResultCreateComponent} from "./pages/test-result-create/test-result-create.component";
 import {TestResultView} from "./pages/test-result-view/test-result-view";
+import { ClinicListComponent } from './pages/clinic-list/clinic-list.component';
 
 const routes: Routes = [
+  {
+    path: 'pages/clinic-list',
+    component: ClinicListComponent,
+    canActivate: [ AuthGuardService ]
+  },
   {
     path: 'pages/test-request-create',
     component: TestRequestCreateComponent,
@@ -103,7 +109,8 @@ const routes: Routes = [
     PatientAddComponent,
     PatientListComponent,
     TestTypeListComponent,
-    TestRequestCreateComponent
+    TestRequestCreateComponent,
+    ClinicListComponent
   ]
 })
 export class AppRoutingModule {
