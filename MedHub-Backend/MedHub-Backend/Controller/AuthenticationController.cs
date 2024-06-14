@@ -101,8 +101,8 @@ public class AuthenticationController(
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDto resetPasswordRequestDto)
     {
-        var existingUser = await userService.GetUserByEmail(resetPasswordRequestDto.EmailAddress);
-        if (existingUser == null) return NotFound($"User with email {resetPasswordRequestDto.EmailAddress} not found");
+        var existingUser = await userService.GetUserByEmail(resetPasswordRequestDto.Email);
+        if (existingUser == null) return NotFound($"User with email {resetPasswordRequestDto.Email} not found");
 
         if (existingUser.PasswordResetCode != resetPasswordRequestDto.PasswordResetCode) return BadRequest("Reset codes don't match");
 

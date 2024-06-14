@@ -10,7 +10,7 @@ public class TestRequestDto
     public int Id { get; set; }
 
     [Required]
-    public DateTime RequestDate { get; set; }
+    public string RequestDate { get; set; }
 
     [Required]
     public int PatientId { get; set; }

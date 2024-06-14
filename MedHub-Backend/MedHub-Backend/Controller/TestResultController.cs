@@ -28,7 +28,9 @@ public class TestResultController(
         if (testRequest == null) return NotFound($"Test request with id {testResult.TestRequestId} not found");
 
         var result = await testResultService.UploadResult(testResult, testRequest, formFile);
-        return Ok(mapper.Map<TestResultDto>(result));
+        var resultDto = mapper.Map<TestResultDto>(result);
+        resultDto.CompletionDate = result.CompletionDate.ToString("yyyy-mm-dd HH:mm");
+        return Ok(resultDto);
     }
 
     [HttpDelete("{testResultId}")]

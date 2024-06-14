@@ -25,8 +25,9 @@ public class AuthenticationService(
         var patientRole = await roleService.GetRoleByName("Patient");
         if (patientRole == null) throw new RoleNotFoundException("Role with name Patient doesn't exist");
 
-        var tempPassword = passwordService.GenerateRandomPassword(8);
+        user.Username = clinic.Name + clinic.Id + user.Email.Substring(0, user.Email.IndexOf('@'));
         user.Role = patientRole;
+        var tempPassword = passwordService.GenerateRandomPassword(8);
         user.PasswordResetCode = tempPassword;
 
         var createdUser = await userService.CreateUserAsync(user);

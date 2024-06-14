@@ -34,6 +34,7 @@ public class TestRequestController(
         if (testRequest == null) return NotFound($"Test request with id {testRequestId} not found");
 
         var testRequestDto = mapper.Map<TestRequestDto>(testRequest);
+        testRequestDto.RequestDate = testRequest.RequestDate.ToString("yyyy-mm-dd HH:mm");
         return Ok(testRequestDto);
     }
 

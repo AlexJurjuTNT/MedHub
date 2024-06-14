@@ -8,7 +8,7 @@ public class TestResultDto
     public int Id { get; set; }
 
     [Required]
-    public DateTime CompletionDate { get; set; }
+    public string CompletionDate { get; set; }
 
     [Required]
     public string FilePath { get; set; }
