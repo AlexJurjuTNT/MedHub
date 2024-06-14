@@ -71,12 +71,9 @@ public class ClinicController(
     public async Task<IActionResult> UpdateClinic([FromRoute] int clinicId, [FromBody] ClinicDto clinicDto)
     {
         if (clinicId != clinicDto.Id) return BadRequest();
-
-        var existingClinic = await clinicService.GetClinicByIdAsync(clinicId);
-        if (existingClinic == null) return NotFound($"Clinic with id {clinicId} not found");
-
-        var updatedClinic = await clinicService.UpdateClinicAsync(mapper.Map<Clinic>(clinicDto));
-        return Ok(updatedClinic);
+        var clinic = mapper.Map<Clinic>(clinicDto);
+        var updatedClinic = await clinicService.UpdateClinicAsync(clinic);
+        return Ok(mapper.Map<ClinicDto>(updatedClinic));
     }
 
     /// <summary>

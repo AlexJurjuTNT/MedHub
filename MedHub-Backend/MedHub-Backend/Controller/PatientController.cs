@@ -1,6 +1,9 @@
+
+
 using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
+using DevExtreme.AspNet.Mvc;
 using MedHub_Backend.Dto.Patient;
 using MedHub_Backend.Dto.TestRequest;
 using MedHub_Backend.Dto.User;
@@ -79,7 +82,7 @@ public class PatientController(
 
     [HttpGet("paged")]
     [ProducesResponseType(200, Type = typeof(LoadResult))]
-    public async Task<IActionResult> GetAllPatientsOfClinic([FromQuery] int clinicId, [FromQuery] DataSourceLoadOptionsBase loadOptions)
+    public async Task<IActionResult> GetAllPatientsOfClinic([FromQuery] int clinicId, [FromQuery] DataSourceLoadOptions loadOptions)
     {
         try
         {

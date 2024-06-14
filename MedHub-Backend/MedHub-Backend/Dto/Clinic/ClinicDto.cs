@@ -12,4 +12,7 @@ public class ClinicDto
 
     [Required]
     public string Location { get; set; }
+    
+    [Required]
+    public string SendgridApiKey { get; set; }
 }
