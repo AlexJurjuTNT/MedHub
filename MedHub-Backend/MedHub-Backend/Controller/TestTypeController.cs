@@ -46,10 +46,6 @@ public class TestTypeController(
     public async Task<IActionResult> UpdateTestType([FromRoute] int testTypeId, [FromBody] TestTypeDto testTypeDto)
     {
         if (testTypeId != testTypeDto.Id) return BadRequest();
-
-        var existingTestType = await testTypeService.GetTestTypeByIdAsync(testTypeId);
-        if (existingTestType == null) return NotFound($"TestType with id {testTypeId} not found");
-
         var testType = mapper.Map<TestType>(testTypeDto);
         var updatedTestType = await testTypeService.UpdateTestTypeAsync(testType);
         return Ok(mapper.Map<TestTypeDto>(updatedTestType));
