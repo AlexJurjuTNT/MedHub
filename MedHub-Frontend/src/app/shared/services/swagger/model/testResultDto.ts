@@ -12,7 +12,7 @@
 
 export interface TestResultDto {
   id: number;
-  completionDate: Date;
+  completionDate: string;
   filePath: string;
   testRequestId: number;
 }

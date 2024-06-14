@@ -1,44 +1,53 @@
 import {CommonModule} from '@angular/common';
-import {Component, NgModule, OnInit} from '@angular/core';
-import {ActivatedRoute, Router, RouterModule} from '@angular/router';
+import {Component, NgModule} from '@angular/core';
+import {Router, RouterModule} from '@angular/router';
 import {ValidationCallbackData} from 'devextreme-angular/common';
 import {DxFormModule} from 'devextreme-angular/ui/form';
 import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
-import notify from 'devextreme/ui/notify';
 import {AuthService} from '../../services';
+import {AuthenticationService, ResetPasswordRequestDto} from "../../services/swagger";
 
 
 @Component({
-  selector: 'app-change-passsword-form',
-  templateUrl: './change-password-form.component.html'
+  selector: 'app-change-password-form',
+  templateUrl: './change-password-form.component.html',
+  styleUrls: ['./change-password-form.component.scss']
 })
-export class ChangePasswordFormComponent implements OnInit {
+export class ChangePasswordFormComponent {
   loading = false;
   formData: any = {};
-  recoveryCode: string = '';
 
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {
-  }
-
-  ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      this.recoveryCode = params.get('recoveryCode') || '';
-    });
+  constructor(
+    private authenticationService: AuthenticationService,
+  ) {
   }
 
   async onSubmit(e: Event) {
     e.preventDefault();
-    const {password} = this.formData;
+
     this.loading = true;
 
-    const result = await this.authService.changePassword(password, this.recoveryCode);
-    this.loading = false;
-
-    if (result.isOk) {
-      this.router.navigate(['/login-form']);
-    } else {
-      notify(result.message, 'error', 2000);
+    const resetRequest: ResetPasswordRequestDto = {
+      email: this.formData.email,
+      password: this.formData.password,
+      confirmPassword: this.formData.confirmPassword,
+      passwordResetCode: this.formData.passwordResetCode,
     }
+
+    this.authenticationService.resetPassword(resetRequest).subscribe({
+      next: (response) => {
+        this.loading = false;
+        alert("Password changed successfully");
+      },
+      error: err => {
+        console.log(err);
+        this.loading = false;
+        alert("Error changing password");
+      }
+    })
+
+
+    this.loading = false;
   }
 
   confirmPassword = (e: ValidationCallbackData) => {
@@ -56,5 +65,5 @@ export class ChangePasswordFormComponent implements OnInit {
   declarations: [ChangePasswordFormComponent],
   exports: [ChangePasswordFormComponent]
 })
-export class ChangePasswordFormModule {
+export class CreateAccountFormModule {
 }

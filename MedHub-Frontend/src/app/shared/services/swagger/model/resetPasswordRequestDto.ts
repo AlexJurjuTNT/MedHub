@@ -11,7 +11,7 @@
  */
 
 export interface ResetPasswordRequestDto {
-  emailAddress: string;
+  email: string;
   passwordResetCode: string;
   password: string;
   confirmPassword: string;

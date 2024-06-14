@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
-import {Component, NgModule} from '@angular/core';
-import {Router, RouterModule} from '@angular/router';
+import {Component, NgModule, OnInit} from '@angular/core';
+import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {ValidationCallbackData} from 'devextreme-angular/common';
 import {DxFormModule} from 'devextreme-angular/ui/form';
 import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
@@ -9,23 +9,29 @@ import {AuthService} from '../../services';
 
 
 @Component({
-  selector: 'app-create-account-form',
-  templateUrl: './create-account-form.component.html',
-  styleUrls: ['./create-account-form.component.scss']
+  selector: 'app-change-passsword-form',
+  templateUrl: './change-form.component.html'
 })
-export class CreateAccountFormComponent {
+export class ChangeFormComponent implements OnInit {
   loading = false;
   formData: any = {};
+  recoveryCode: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {
+  }
+
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      this.recoveryCode = params.get('recoveryCode') || '';
+    });
   }
 
   async onSubmit(e: Event) {
     e.preventDefault();
-    const {email, password} = this.formData;
+    const {password} = this.formData;
     this.loading = true;
 
-    const result = await this.authService.createAccount(email, password);
+    const result = await this.authService.changePassword(password, this.recoveryCode);
     this.loading = false;
 
     if (result.isOk) {
@@ -47,8 +53,8 @@ export class CreateAccountFormComponent {
     DxFormModule,
     DxLoadIndicatorModule
   ],
-  declarations: [CreateAccountFormComponent],
-  exports: [CreateAccountFormComponent]
+  declarations: [ChangeFormComponent],
+  exports: [ChangeFormComponent]
 })
-export class CreateAccountFormModule {
+export class ChangePasswordFormModule {
 }

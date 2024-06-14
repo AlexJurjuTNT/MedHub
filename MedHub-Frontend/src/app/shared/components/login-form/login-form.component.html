@@ -1,8 +1,7 @@
 <form (submit)="onSubmit($event)" class="login-form">
   <dx-form [disabled]="loading" [formData]="formData">
 
-    <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Email', mode: 'email' }" dataField="email"
-              editorType="dxTextBox">
+    <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Email', mode: 'email' }" dataField="email" editorType="dxTextBox">
       <dxi-validation-rule message="Email is required" type="required"></dxi-validation-rule>
       <dxi-validation-rule message="Email is invalid" type="email"></dxi-validation-rule>
       <dxo-label [visible]="false"></dxo-label>
@@ -31,7 +30,7 @@
     </dxi-item>
 
     <dxi-item itemType="button">
-      <dxo-button-options [onClick]="onCreateAccountClick" text="Create an account" width="100%"></dxo-button-options>
+      <dxo-button-options [onClick]="onChangePasswordClick" text="Change Password" width="100%"></dxo-button-options>
     </dxi-item>
 
     <ng-container *dxTemplate="let item of 'signInTemplate'">

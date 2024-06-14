@@ -14,7 +14,7 @@ import {TestTypeDto} from './testTypeDto';
 
 export interface TestRequestDto {
   id: number;
-  requestDate: Date;
+  requestDate: string;
   patientId: number;
   doctorId: number;
   testTypes: Array<TestTypeDto>;

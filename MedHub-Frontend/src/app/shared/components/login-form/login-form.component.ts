@@ -31,8 +31,8 @@ export class LoginFormComponent {
     }
   }
 
-  onCreateAccountClick = () => {
-    this.router.navigate(['/create-account']);
+  onChangePasswordClick = () => {
+    this.router.navigate(['/change-password']);
   }
 }
 

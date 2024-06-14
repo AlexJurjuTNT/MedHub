@@ -142,6 +142,7 @@ export class AuthService {
 
   async logOut() {
     this._user = null;
+    this.tokenService.removeToken();
     this.router.navigate(['/login-form']);
   }
 }
@@ -156,8 +157,7 @@ export class AuthGuardService implements CanActivate {
     const isAuthForm = [
       'login-form',
       'reset-password',
-      'create-account',
-      'change-password/:recoveryCode'
+      'change-password',
     ].includes(route.routeConfig?.path || defaultPath);
 
     if (isLoggedIn && isAuthForm) {
