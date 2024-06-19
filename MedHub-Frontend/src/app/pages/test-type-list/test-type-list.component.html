@@ -40,8 +40,8 @@
       <dxo-filter-row [visible]="true"></dxo-filter-row>
 
       <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
-      <dxi-column caption="Test Name" dataField="name"></dxi-column>
-      <dxi-column caption="Actions" cellTemplate="actionCellTemplate"></dxi-column>
+      <dxi-column [width]="250" caption="Test Name" dataField="name"></dxi-column>
+      <dxi-column [width]="250" caption="Actions" cellTemplate="actionCellTemplate"></dxi-column>
 
       <!--      Template that contains all the actions for a test type -->
       <div *dxTemplate="let data of 'actionCellTemplate'">

@@ -1,32 +1,58 @@
-export const navigation = [
+export const doctorNavigation = [
   {
     text: 'Home',
     path: '/home',
     icon: 'home'
   },
   {
-    text: 'Examples',
+    text: 'Patient',
     icon: 'folder',
     items: [
       {
-        text: 'Profile',
-        path: '/profile'
+        text: 'Patient Add',
+        path: '/pages/patient-add',
+        icon: 'folder'
       },
       {
-        text: 'Tasks',
-        path: '/tasks'
-      }
+        text: 'Patient List',
+        path: '/pages/patient-list',
+        icon: 'folder'
+      },
     ]
   },
   {
-    text: 'Patient Add',
-    path: '/pages/patient-add',
+    text: 'Test Type List',
+    path: '/pages/test-type-list',
     icon: 'folder'
   },
   {
-    text: 'Patient List',
-    path: '/pages/patient-list',
+    text: 'Test Request Create',
+    path: '/pages/test-request-create',
     icon: 'folder'
+  }
+];
+
+export const adminNavigation = [
+  {
+    text: 'Home',
+    path: '/home',
+    icon: 'home'
+  },
+  {
+    text: 'Patient',
+    icon: 'folder',
+    items: [
+      {
+        text: 'Patient Add',
+        path: '/pages/patient-add',
+        icon: 'folder'
+      },
+      {
+        text: 'Patient List',
+        path: '/pages/patient-list',
+        icon: 'folder'
+      },
+    ]
   },
   {
     text: 'Test Type List',
@@ -49,3 +75,4 @@ export const navigation = [
     icon: 'folder'
   }
 ];
+

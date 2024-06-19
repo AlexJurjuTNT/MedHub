@@ -1,8 +1,10 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, NgModule, OnDestroy, Output, ViewChild} from '@angular/core';
 import {DxTreeViewComponent, DxTreeViewModule, DxTreeViewTypes} from 'devextreme-angular/ui/tree-view';
-import {navigation} from '../../../app-navigation';
+import {adminNavigation, doctorNavigation} from '../../../app-navigation';
 
 import * as events from 'devextreme/events';
+import {UserDto} from "../../services/swagger";
+import {TokenService} from "../../services/token.service";
 
 @Component({
   selector: 'app-side-navigation-menu',
@@ -19,10 +21,14 @@ export class SideNavigationMenuComponent implements AfterViewInit, OnDestroy {
   @Output()
   openMenu = new EventEmitter<any>();
 
-  constructor(private elementRef: ElementRef) {
+  constructor(
+    private elementRef: ElementRef,
+    private tokenService: TokenService,
+  ) {
   }
 
   private _selectedItem!: String;
+  private user: UserDto = {} as UserDto;
 
   @Input()
   set selectedItem(value: String) {
@@ -38,14 +44,33 @@ export class SideNavigationMenuComponent implements AfterViewInit, OnDestroy {
 
   get items() {
     if (!this._items) {
-      this._items = navigation.map((item) => {
+
+      let navItems;
+
+      if (this.tokenService.isTokenValid()) {
+        switch (this.tokenService.getUserRole()) {
+          case "Admin":
+            navItems = adminNavigation;
+            break;
+
+          case "Doctor":
+            navItems = doctorNavigation;
+            break;
+
+          default:
+            throw new Error("Unknown user role " + this.tokenService.getUserRole());
+        }
+      }
+
+
+      this._items = navItems!.map((item) => {
         if (item.path && !(/^\//.test(item.path))) {
           item.path = `/${item.path}`;
         }
         return {...item, expanded: !this._compactMode}
       });
-    }
 
+    }
     return this._items;
   }
 

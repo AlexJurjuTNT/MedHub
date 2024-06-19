@@ -41,14 +41,14 @@ export class TokenService {
     return !this.isTokenValid();
   }
 
-  public getUserRoles(): string[] {
+  public getUserRole(): string {
     const token = this.token;
     if (token) {
       const jwtHelper = new JwtHelperService();
       const decodedToken = jwtHelper.decodeToken(token);
       return decodedToken.role;
     }
-    return [];
+    return "";
   }
 
   public getUsername(): string {
