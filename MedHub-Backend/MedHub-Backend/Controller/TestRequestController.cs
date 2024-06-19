@@ -1,6 +1,7 @@
 using AutoMapper;
 using MedHub_Backend.Dto.TestRequest;
 using MedHub_Backend.Dto.TestResult;
+using MedHub_Backend.Dto.TestType;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -104,9 +105,25 @@ public class TestRequestController(
     public async Task<IActionResult> GetAllResultsOfRequest([FromRoute] int testRequestId)
     {
         var testRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
-        if (testRequest == null) return NotFound();
+        if (testRequest == null) return NotFound($"Test request with id {testRequestId} not found");
 
         var testResultsDto = mapper.Map<List<TestResultDto>>(testRequest.TestResults);
         return Ok(testResultsDto);
+    }
+
+    [HttpGet("{testRequestId}/remaining")]
+    [ProducesResponseType(200, Type = typeof(List<TestTypeDto>))]
+    public async Task<IActionResult> GetRemainingTestTypes([FromRoute] int testRequestId)
+    {
+        var testRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
+        if (testRequest == null) return NotFound($"Test request with id {testRequestId} not found");
+
+        var existingTestTypeIds = await testRequestService.GetExistingTestTypeIdsForTestRequestAsync(testRequestId);
+        var remainingTestTypes = testRequest.TestTypes
+            .Where(tt => !existingTestTypeIds.Contains(tt.Id))
+            .Select(tt => mapper.Map<TestTypeDto>(tt))
+            .ToList();
+
+        return Ok(remainingTestTypes);
     }
 }

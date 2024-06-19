@@ -43,11 +43,19 @@ public class TestTypeService(
         return true;
     }
 
-    public async Task<List<TestType>> GetTestTypesFromIdList(List<int> testTypesId)
+    public async Task<List<TestType>> GetTestTypesFromIdList(List<int> testTypesIds)
     {
         var testTypes = await appDbContext.TestTypes
-            .Where(tt => testTypesId.Contains(tt.Id))
+            .Where(tt => testTypesIds.Contains(tt.Id))
             .ToListAsync();
+
+        // check if input testTypesIds contains an id that is not present in appDbContext.TestTypes
+        var missingTestTypeIds = testTypesIds.Except(testTypes.Select(tt => tt.Id)).ToList();
+
+        if (missingTestTypeIds.Any())
+        {
+            throw new ArgumentException($"One or more test type IDs are not valid: {string.Join(", ", missingTestTypeIds)}");
+        }
 
         return testTypes;
     }

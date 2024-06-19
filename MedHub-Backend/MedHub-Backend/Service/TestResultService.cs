@@ -64,6 +64,14 @@ public class TestResultService(
         return createdTestResult;
     }
 
+    public async Task<TestResult> AddTestTypesAsync(TestResult testResult, List<TestType> testTypes)
+    {
+        testResult.TestTypes = testTypes;
+        appDbContext.TestResults.Update(testResult);
+        await appDbContext.SaveChangesAsync();
+        return testResult;
+    }
+
     private async Task<string> UploadResultFile(IFormFile formFile, User patient, Clinic clinic)
     {
         var uploadPath = LocalStorageHelper.GetClinicUserPath(clinic.Name, patient.Username);

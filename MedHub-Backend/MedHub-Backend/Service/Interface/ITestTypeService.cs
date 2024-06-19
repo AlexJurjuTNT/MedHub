@@ -9,5 +9,5 @@ public interface ITestTypeService
     Task<TestType> CreateTestTypeAsync(TestType testType);
     Task<TestType> UpdateTestTypeAsync(TestType testType);
     Task<bool> DeleteClinicByIdAsync(int testTypeId);
-    Task<List<TestType>> GetTestTypesFromIdList(List<int> testTypesId);
+    Task<List<TestType>> GetTestTypesFromIdList(List<int> testTypesIds);
 }

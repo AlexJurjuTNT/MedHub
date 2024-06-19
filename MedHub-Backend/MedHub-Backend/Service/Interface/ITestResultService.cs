@@ -6,8 +6,8 @@ public interface ITestResultService
 {
     Task<List<TestResult>> GetAllTestResultsAsync();
     Task<TestResult?> GetTestResultByIdAsync(int testResultId);
-    Task<TestResult> UpdateTestResultAsync(TestResult testResult);
     Task<bool> DeleteTestResultAsync(int testResultId);
     Task<TestResult> CreateTestResultAsync(TestResult testResult);
     Task<TestResult> UploadResult(TestResult testResult, TestRequest testRequest, IFormFile formFile);
+    Task<TestResult> AddTestTypesAsync(TestResult createdTestResult, List<TestType> testTypes);
 }

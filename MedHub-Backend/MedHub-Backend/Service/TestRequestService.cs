@@ -55,4 +55,14 @@ public class TestRequestService(
     {
         return await appDbContext.TestRequests.Where(t => t.PatientId == userId).ToListAsync();
     }
+
+    public async Task<List<int>> GetExistingTestTypeIdsForTestRequestAsync(int testRequestId)
+    {
+        return await appDbContext.TestResults
+            .Where(tr => tr.TestRequestId == testRequestId)
+            .SelectMany(tr => tr.TestTypes)
+            .Select(tt => tt.Id)
+            .Distinct()
+            .ToListAsync();
+    }
 }

@@ -16,6 +16,7 @@ public class TestResultController(
     ITestRequestService testRequestService,
     IClinicService clinicService,
     IUserService userService,
+    ITestTypeService testTypeService,
     IMapper mapper
 ) : ControllerBase
 {
@@ -23,14 +24,32 @@ public class TestResultController(
     [ProducesResponseType(200, Type = typeof(TestResultDto))]
     public async Task<IActionResult> AddTestResult([FromForm] AddTestResultDto testResultDto, IFormFile formFile)
     {
+        if (!ModelState.IsValid || formFile == null)
+        {
+            return BadRequest(ModelState);
+        }
+
         var testResult = mapper.Map<TestResult>(testResultDto);
         var testRequest = await testRequestService.GetTestRequestByIdAsync(testResult.TestRequestId);
         if (testRequest == null) return NotFound($"Test request with id {testResult.TestRequestId} not found");
 
-        var result = await testResultService.UploadResult(testResult, testRequest, formFile);
-        var resultDto = mapper.Map<TestResultDto>(result);
-        resultDto.CompletionDate = result.CompletionDate.ToString("yyyy-mm-dd HH:mm");
-        return Ok(resultDto);
+        var validTestTypeIds = testRequest.TestTypes.Select(tt => tt.Id).ToList();
+        var invalidTestTypeIds = testResultDto.TestTypesIds.Except(validTestTypeIds).ToList();
+        if (invalidTestTypeIds.Any()) return BadRequest($"The following test type IDs are not valid for this test request: {string.Join(", ", invalidTestTypeIds)}");
+
+
+        var createdTestResult = await testResultService.UploadResult(testResult, testRequest, formFile);
+
+        try
+        {
+            var testTypes = await testTypeService.GetTestTypesFromIdList(testResultDto.TestTypesIds);
+            createdTestResult = await testResultService.AddTestTypesAsync(createdTestResult, testTypes);
+            return Ok(mapper.Map<TestResultDto>(createdTestResult));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpDelete("{testResultId}")]
