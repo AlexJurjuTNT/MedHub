@@ -8,11 +8,11 @@
 
     <dx-popup
       [(visible)]="createTestTypePopupVisible"
-      title="Add New Test Type"
-      [width]="300"
+      [dragEnabled]="false"
       [height]="400"
       [showTitle]="true"
-      [dragEnabled]="false">
+      [width]="300"
+      title="Add New Test Type">
       <div *dxTemplate="let data of 'content'">
         <dx-text-box
           [(value)]="newTestTypeName"
@@ -20,8 +20,8 @@
         ></dx-text-box>
         <dx-button
           (onClick)="saveTestType()"
-          text="Save"
           [disabled]="!newTestTypeName"
+          text="Save"
         ></dx-button>
         <dx-button (onClick)="createTestTypePopupVisible = false;" text="Cancel"></dx-button>
       </div>
@@ -65,11 +65,11 @@
   <!--      Popup for confirming deletion -->
   <dx-popup
     [(visible)]="deletePopupVisible"
-    title="Delete Test Type"
-    [width]="300"
+    [dragEnabled]="false"
     [height]="400"
     [showTitle]="true"
-    [dragEnabled]="false">
+    [width]="300"
+    title="Delete Test Type">
     <div *dxTemplate="let data of 'content'">
       <p>Are you sure you want to delete this test type?</p>
       <dx-button (onClick)="deleteTestType()" text="Yes"></dx-button>
@@ -80,11 +80,11 @@
   <!--  Popup for updating the name of a test type -->
   <dx-popup
     [(visible)]="updatePopupVisible"
-    title="Update Test Type"
-    [width]="300"
+    [dragEnabled]="false"
     [height]="400"
     [showTitle]="true"
-    [dragEnabled]="false">
+    [width]="300"
+    title="Update Test Type">
     <div *dxTemplate="let data of 'content'">
       <p>Current Test Type Name: {{ updateTestTypeInfo.name }}</p>
       <dx-text-box
@@ -93,8 +93,8 @@
       ></dx-text-box>
       <dx-button
         (onClick)="updateTestType()"
-        text="Update"
         [disabled]="!newTestTypeName"
+        text="Update"
       ></dx-button>
       <dx-button (onClick)="updatePopupVisible = false" text="Cancel"></dx-button>
     </div>

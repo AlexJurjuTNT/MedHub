@@ -25,304 +25,304 @@ import {Configuration} from '../configuration';
 @Injectable()
 export class TestTypeService {
 
-    public defaultHeaders = new HttpHeaders();
-    public configuration = new Configuration();
-    protected basePath = 'http://localhost:5210';
+  public defaultHeaders = new HttpHeaders();
+  public configuration = new Configuration();
+  protected basePath = 'http://localhost:5210';
 
-    constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
-        if (basePath) {
-            this.basePath = basePath;
-        }
-        if (configuration) {
-            this.configuration = configuration;
-            this.basePath = basePath || configuration.basePath || this.basePath;
-        }
+  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+    if (basePath) {
+      this.basePath = basePath;
+    }
+    if (configuration) {
+      this.configuration = configuration;
+      this.basePath = basePath || configuration.basePath || this.basePath;
+    }
+  }
+
+  /**
+   *
+   *
+   * @param body
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public createTestType(body?: AddTestTypeDto, observe?: 'body', reportProgress?: boolean): Observable<TestTypeDto>;
+
+  public createTestType(body?: AddTestTypeDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestTypeDto>>;
+
+  public createTestType(body?: AddTestTypeDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestTypeDto>>;
+
+  public createTestType(body?: AddTestTypeDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+
+    let headers = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+    // to determine the Accept header
+    let httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
-    /**
-     *
-     *
-     * @param body
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public createTestType(body?: AddTestTypeDto, observe?: 'body', reportProgress?: boolean): Observable<TestTypeDto>;
-
-    public createTestType(body?: AddTestTypeDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestTypeDto>>;
-
-    public createTestType(body?: AddTestTypeDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestTypeDto>>;
-
-    public createTestType(body?: AddTestTypeDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json',
-            'text/json',
-            'application/_*+json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected != undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        return this.httpClient.request<TestTypeDto>('post', `${this.basePath}/api/v1/TestType`,
-            {
-                body: body,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+    // to determine the Content-Type header
+    const consumes: string[] = [
+      'application/json',
+      'text/json',
+      'application/_*+json'
+    ];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected != undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
     }
 
-    /**
-     *
-     *
-     * @param testTypeId
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public deleteTestType(testTypeId: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    return this.httpClient.request<TestTypeDto>('post', `${this.basePath}/api/v1/TestType`,
+      {
+        body: body,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
 
-    public deleteTestType(testTypeId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  /**
+   *
+   *
+   * @param testTypeId
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public deleteTestType(testTypeId: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
 
-    public deleteTestType(testTypeId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public deleteTestType(testTypeId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
 
-    public deleteTestType(testTypeId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public deleteTestType(testTypeId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
 
-        if (testTypeId === null || testTypeId === undefined) {
-            throw new Error('Required parameter testTypeId was null or undefined when calling deleteTestType.');
-        }
+  public deleteTestType(testTypeId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [];
-
-        return this.httpClient.request<any>('delete', `${this.basePath}/api/v1/TestType/${encodeURIComponent(String(testTypeId))}`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+    if (testTypeId === null || testTypeId === undefined) {
+      throw new Error('Required parameter testTypeId was null or undefined when calling deleteTestType.');
     }
 
-    /**
-     *
-     *
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getAllTestTypes(observe?: 'body', reportProgress?: boolean): Observable<Array<TestTypeDto>>;
+    let headers = this.defaultHeaders;
 
-    public getAllTestTypes(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TestTypeDto>>>;
-
-    public getAllTestTypes(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TestTypeDto>>>;
-
-    public getAllTestTypes(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [];
-
-        return this.httpClient.request<Array<TestTypeDto>>('get', `${this.basePath}/api/v1/TestType`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+    // authentication (Bearer) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+    // to determine the Accept header
+    let httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
-    /**
-     *
-     *
-     * @param testTypeId
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getTestTypeById(testTypeId: number, observe?: 'body', reportProgress?: boolean): Observable<TestTypeDto>;
+    // to determine the Content-Type header
+    const consumes: string[] = [];
 
-    public getTestTypeById(testTypeId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestTypeDto>>;
+    return this.httpClient.request<any>('delete', `${this.basePath}/api/v1/TestType/${encodeURIComponent(String(testTypeId))}`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
 
-    public getTestTypeById(testTypeId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestTypeDto>>;
+  /**
+   *
+   *
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getAllTestTypes(observe?: 'body', reportProgress?: boolean): Observable<Array<TestTypeDto>>;
 
-    public getTestTypeById(testTypeId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public getAllTestTypes(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TestTypeDto>>>;
 
-        if (testTypeId === null || testTypeId === undefined) {
-            throw new Error('Required parameter testTypeId was null or undefined when calling getTestTypeById.');
-        }
+  public getAllTestTypes(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TestTypeDto>>>;
 
-        let headers = this.defaultHeaders;
+  public getAllTestTypes(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-        // authentication (Bearer) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
+    let headers = this.defaultHeaders;
 
-        // to determine the Content-Type header
-        const consumes: string[] = [];
-
-        return this.httpClient.request<TestTypeDto>('get', `${this.basePath}/api/v1/TestType/${encodeURIComponent(String(testTypeId))}`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+    // authentication (Bearer) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+    // to determine the Accept header
+    let httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
-    /**
-     *
-     *
-     * @param testTypeId
-     * @param body
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public updateTestType(testTypeId: number, body?: TestTypeDto, observe?: 'body', reportProgress?: boolean): Observable<TestTypeDto>;
+    // to determine the Content-Type header
+    const consumes: string[] = [];
 
-    public updateTestType(testTypeId: number, body?: TestTypeDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestTypeDto>>;
+    return this.httpClient.request<Array<TestTypeDto>>('get', `${this.basePath}/api/v1/TestType`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
 
-    public updateTestType(testTypeId: number, body?: TestTypeDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestTypeDto>>;
+  /**
+   *
+   *
+   * @param testTypeId
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getTestTypeById(testTypeId: number, observe?: 'body', reportProgress?: boolean): Observable<TestTypeDto>;
 
-    public updateTestType(testTypeId: number, body?: TestTypeDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public getTestTypeById(testTypeId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestTypeDto>>;
 
-        if (testTypeId === null || testTypeId === undefined) {
-            throw new Error('Required parameter testTypeId was null or undefined when calling updateTestType.');
-        }
+  public getTestTypeById(testTypeId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestTypeDto>>;
 
+  public getTestTypeById(testTypeId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.accessToken) {
-            const accessToken = typeof this.configuration.accessToken === 'function'
-                ? this.configuration.accessToken()
-                : this.configuration.accessToken;
-            headers = headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'text/plain',
-            'application/json',
-            'text/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json',
-            'text/json',
-            'application/_*+json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected != undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        return this.httpClient.request<TestTypeDto>('put', `${this.basePath}/api/v1/TestType/${encodeURIComponent(String(testTypeId))}`,
-            {
-                body: body,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
+    if (testTypeId === null || testTypeId === undefined) {
+      throw new Error('Required parameter testTypeId was null or undefined when calling getTestTypeById.');
     }
 
-    /**
-     * @param consumes string[] mime-types
-     * @return true: consumes contains 'multipart/form-data', false: otherwise
-     */
-    private canConsumeForm(consumes: string[]): boolean {
-        const form = 'multipart/form-data';
-        for (const consume of consumes) {
-            if (form === consume) {
-                return true;
-            }
-        }
-        return false;
+    let headers = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
     }
+    // to determine the Accept header
+    let httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.request<TestTypeDto>('get', `${this.basePath}/api/v1/TestType/${encodeURIComponent(String(testTypeId))}`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   *
+   * @param testTypeId
+   * @param body
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public updateTestType(testTypeId: number, body?: TestTypeDto, observe?: 'body', reportProgress?: boolean): Observable<TestTypeDto>;
+
+  public updateTestType(testTypeId: number, body?: TestTypeDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestTypeDto>>;
+
+  public updateTestType(testTypeId: number, body?: TestTypeDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestTypeDto>>;
+
+  public updateTestType(testTypeId: number, body?: TestTypeDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    if (testTypeId === null || testTypeId === undefined) {
+      throw new Error('Required parameter testTypeId was null or undefined when calling updateTestType.');
+    }
+
+
+    let headers = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+    // to determine the Accept header
+    let httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [
+      'application/json',
+      'text/json',
+      'application/_*+json'
+    ];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected != undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
+
+    return this.httpClient.request<TestTypeDto>('put', `${this.basePath}/api/v1/TestType/${encodeURIComponent(String(testTypeId))}`,
+      {
+        body: body,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
+   * @param consumes string[] mime-types
+   * @return true: consumes contains 'multipart/form-data', false: otherwise
+   */
+  private canConsumeForm(consumes: string[]): boolean {
+    const form = 'multipart/form-data';
+    for (const consume of consumes) {
+      if (form === consume) {
+        return true;
+      }
+    }
+    return false;
+  }
 
 }

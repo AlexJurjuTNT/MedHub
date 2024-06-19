@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from "@angular/router";
-import { PatientDto, PatientService, TestRequestDto, TestResultDto, TestTypeDto, TestRequestService } from "../../shared/services/swagger";
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
+import {PatientDto, PatientService, TestRequestDto, TestRequestService, TestTypeDto} from "../../shared/services/swagger";
 
 @Component({
   selector: 'app-patient-tests',
@@ -18,7 +18,8 @@ export class PatientTestsComponent implements OnInit {
     private patientService: PatientService,
     private testRequestService: TestRequestService,
     private router: Router
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -41,7 +42,7 @@ export class PatientTestsComponent implements OnInit {
   }
 
   navigateToAddTestResult(testRequestId: number, remainingTestTypes: TestTypeDto[]) {
-    this.router.navigate(['pages/test-result-create', testRequestId], { state: { remainingTestTypes } });
+    this.router.navigate(['pages/test-result-create', testRequestId], {state: {remainingTestTypes}});
   }
 
   private loadRemainingTestTypes() {

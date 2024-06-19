@@ -15,14 +15,14 @@ export class AppComponent implements OnInit {
   ) {
   }
 
+  @HostBinding('class') get getClass() {
+    return Object.keys(this.screen.sizes).filter(cl => this.screen.sizes[cl]).join(' ');
+  }
+
   ngOnInit(): void {
     if (!this.authService.loggedIn) {
       this.authService.updateUserToken();
     }
-  }
-
-  @HostBinding('class') get getClass() {
-    return Object.keys(this.screen.sizes).filter(cl => this.screen.sizes[cl]).join(' ');
   }
 
   isAuthenticated() {

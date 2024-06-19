@@ -28,14 +28,6 @@ export class ClinicListComponent implements OnInit {
     this.getAllClinics();
   }
 
-  private getAllClinics() {
-    this.clinicService.getAllClinics().subscribe({
-      next: result => {
-        this.dataSource = result;
-      }
-    })
-  }
-
   createClinic($event: Event) {
     $event.preventDefault();
 
@@ -86,6 +78,14 @@ export class ClinicListComponent implements OnInit {
       next: result => {
         this.updatePopupVisible = false;
         this.getAllClinics();
+      }
+    })
+  }
+
+  private getAllClinics() {
+    this.clinicService.getAllClinics().subscribe({
+      next: result => {
+        this.dataSource = result;
       }
     })
   }

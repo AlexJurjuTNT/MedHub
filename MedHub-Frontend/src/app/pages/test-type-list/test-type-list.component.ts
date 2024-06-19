@@ -28,14 +28,6 @@ export class TestTypeListComponent implements OnInit {
     this.getAllTestTypes();
   }
 
-  private getAllTestTypes() {
-    this.testTypeService.getAllTestTypes().subscribe({
-      next: data => {
-        this.dataSource = data;
-      }
-    });
-  }
-
   showNewTestTypePopup() {
     this.newTestTypeName = ''; // Clear the input field
     this.createTestTypePopupVisible = true;
@@ -90,5 +82,13 @@ export class TestTypeListComponent implements OnInit {
       }
     })
 
+  }
+
+  private getAllTestTypes() {
+    this.testTypeService.getAllTestTypes().subscribe({
+      next: data => {
+        this.dataSource = data;
+      }
+    });
   }
 }

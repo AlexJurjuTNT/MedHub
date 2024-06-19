@@ -11,6 +11,6 @@
  */
 
 export interface SummaryInfo {
-    selector?: string;
-    summaryType?: string;
+  selector?: string;
+  summaryType?: string;
 }

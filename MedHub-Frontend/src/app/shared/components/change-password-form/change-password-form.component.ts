@@ -1,10 +1,9 @@
 import {CommonModule} from '@angular/common';
 import {Component, NgModule} from '@angular/core';
-import {Router, RouterModule} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {ValidationCallbackData} from 'devextreme-angular/common';
 import {DxFormModule} from 'devextreme-angular/ui/form';
 import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
-import {AuthService} from '../../services';
 import {AuthenticationService, ResetPasswordRequestDto} from "../../services/swagger";
 
 

@@ -11,10 +11,10 @@
  */
 
 export interface AddPatientDataDto {
-    cnp: number;
-    dateOfBirth: string;
-    weight: number;
-    height: number;
-    gender: string;
-    userId: number;
+  cnp: number;
+  dateOfBirth: string;
+  weight: number;
+  height: number;
+  gender: string;
+  userId: number;
 }

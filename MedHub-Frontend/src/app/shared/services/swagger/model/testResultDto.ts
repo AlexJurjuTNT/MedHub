@@ -12,9 +12,9 @@
 import {TestTypeDto} from './testTypeDto';
 
 export interface TestResultDto {
-    id: number;
-    completionDate: string;
-    filePath: string;
-    testRequestId: number;
-    testTypes: Array<TestTypeDto>;
+  id: number;
+  completionDate: string;
+  filePath: string;
+  testRequestId: number;
+  testTypes: Array<TestTypeDto>;
 }

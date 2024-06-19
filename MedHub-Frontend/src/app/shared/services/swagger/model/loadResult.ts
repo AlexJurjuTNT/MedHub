@@ -11,8 +11,8 @@
  */
 
 export interface LoadResult {
-    data?: Array<any>;
-    totalCount?: number;
-    groupCount?: number;
-    summary?: Array<any>;
+  data?: Array<any>;
+  totalCount?: number;
+  groupCount?: number;
+  summary?: Array<any>;
 }

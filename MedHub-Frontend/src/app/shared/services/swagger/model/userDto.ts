@@ -11,8 +11,8 @@
  */
 
 export interface UserDto {
-    id: number;
-    email: string;
-    username: string;
-    clinicId: number;
+  id: number;
+  email: string;
+  username: string;
+  clinicId: number;
 }

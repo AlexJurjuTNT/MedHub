@@ -26,6 +26,15 @@ export class PatientListComponent implements OnInit {
     this.loadDoctorAndPatients();
   }
 
+  viewPatient(patientId: number): void {
+    this.router.navigate(['pages/patient-tests', patientId]);
+  }
+
+  deleteUser(currentUserId: number | null) {
+    this.userService.deleteUser(currentUserId!).subscribe({});
+    this.loadPatientsOfClinic();
+  }
+
   private loadDoctorAndPatients() {
     this.loadCurrentUser();
     this.loadPatientsOfClinic();
@@ -44,14 +53,5 @@ export class PatientListComponent implements OnInit {
         this.dataSource = result.data;
       }
     });
-  }
-
-  viewPatient(patientId: number): void {
-    this.router.navigate(['pages/patient-tests', patientId]);
-  }
-
-  deleteUser(currentUserId: number | null) {
-    this.userService.deleteUser(currentUserId!).subscribe({});
-    this.loadPatientsOfClinic();
   }
 }

@@ -22,6 +22,12 @@ export class AuthService {
     return !!this._user;
   }
 
+  private _lastAuthenticatedPath: string = defaultPath;
+
+  set lastAuthenticatedPath(value: string) {
+    this._lastAuthenticatedPath = value;
+  }
+
   public updateUserToken() {
     if (this.tokenService.isTokenValid()) {
       this.userService.getUserById(this.tokenService.getUserId()).subscribe({
@@ -30,12 +36,6 @@ export class AuthService {
         }
       })
     }
-  }
-
-  private _lastAuthenticatedPath: string = defaultPath;
-
-  set lastAuthenticatedPath(value: string) {
-    this._lastAuthenticatedPath = value;
   }
 
   async logIn(email: string, password: string): Promise<{ isOk: boolean; data?: UserDto; message?: string }> {

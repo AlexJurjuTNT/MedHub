@@ -25,6 +25,16 @@ export class TestResultCreateComponent implements OnInit {
     this.getRemainingTestTypes();
   }
 
+  uploadFile() {
+    if (!this.selectedFiles) {
+      alert("Please select a file");
+    }
+
+    this.testResultService.addTestResultForm(this.testRequestId, this.selectedTestTypesIds, this.selectedFiles[0]).subscribe({});
+
+    alert("Uploaded test result");
+  }
+
   private getRemainingTestTypes(): void {
     this.route.paramMap.subscribe(params => {
       this.testRequestId = Number(params.get('testRequestId'));
@@ -34,17 +44,6 @@ export class TestResultCreateComponent implements OnInit {
         }
       })
     });
-  }
-
-
-  uploadFile() {
-    if (!this.selectedFiles) {
-      alert("Please select a file");
-    }
-
-    this.testResultService.addTestResultForm(this.testRequestId, this.selectedTestTypesIds, this.selectedFiles[0]).subscribe({});
-
-    alert("Uploaded test result");
   }
 
 }

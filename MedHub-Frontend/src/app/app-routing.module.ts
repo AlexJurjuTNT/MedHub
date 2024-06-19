@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {ChangeFormComponent, ChangePasswordFormComponent, LoginFormComponent, ForgotPasswordFormComponent} from './shared/components';
+import {ChangeFormComponent, ChangePasswordFormComponent, ForgotPasswordFormComponent, LoginFormComponent} from './shared/components';
 import {AuthGuardService} from './shared/services';
 import {HomeComponent} from './pages/home/home.component';
 import {ProfileComponent} from './pages/profile/profile.component';
@@ -14,13 +14,19 @@ import {TestTypeListComponent} from './pages/test-type-list/test-type-list.compo
 import {TestRequestCreateComponent} from './pages/test-request-create/test-request-create.component';
 import {TestResultCreateComponent} from "./pages/test-result-create/test-result-create.component";
 import {TestResultView} from "./pages/test-result-view/test-result-view";
-import { ClinicListComponent } from './pages/clinic-list/clinic-list.component';
+import {ClinicListComponent} from './pages/clinic-list/clinic-list.component';
+import {DoctorListComponent} from './pages/doctor-list/doctor-list.component';
 
 const routes: Routes = [
   {
+    path: 'pages/doctor-list',
+    component: DoctorListComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
     path: 'pages/clinic-list',
     component: ClinicListComponent,
-    canActivate: [ AuthGuardService ]
+    canActivate: [AuthGuardService]
   },
   {
     path: 'pages/test-request-create',
@@ -110,7 +116,8 @@ const routes: Routes = [
     PatientListComponent,
     TestTypeListComponent,
     TestRequestCreateComponent,
-    ClinicListComponent
+    ClinicListComponent,
+    DoctorListComponent
   ]
 })
 export class AppRoutingModule {
