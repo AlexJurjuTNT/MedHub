@@ -45,15 +45,19 @@ public class DoctorController(
 
     [HttpPut("{doctorId}")]
     [ProducesResponseType(200, Type = typeof(UserDto))]
-    public async Task<IActionResult> UpdateDoctor([FromRoute] int doctorId, [FromBody] UserDto userDto)
+    public async Task<IActionResult> UpdateDoctor([FromRoute] int doctorId, [FromBody] UserDto doctorDto)
     {
-        if (doctorId != userDto.Id) return BadRequest();
+        if (doctorId != doctorDto.Id) return BadRequest();
 
         var existingDoctor = await doctorService.GetDoctorById(doctorId);
         if (existingDoctor == null) return NotFound($"Doctor with id {doctorId} not found");
 
-        var doctor = mapper.Map<User>(userDto);
-        var updatedDoctor = await doctorService.UpdateDoctorAsync(doctor);
+        existingDoctor.Email = doctorDto.Email;
+        existingDoctor.Username = doctorDto.Username;
+        existingDoctor.ClinicId = doctorDto.ClinicId;
+
+        var updatedDoctor = await doctorService.UpdateDoctorAsync(existingDoctor);
+
         return Ok(mapper.Map<UserDto>(updatedDoctor));
     }
 }
