@@ -3,8 +3,9 @@ import {Component, NgModule} from '@angular/core';
 import {Router, RouterModule} from '@angular/router';
 import {DxFormModule} from 'devextreme-angular/ui/form';
 import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
-import notify from 'devextreme/ui/notify';
 import {AuthService} from '../../services';
+import {AuthenticationResponse, AuthenticationService, LoginRequestDto, UserDto, UserService} from "../../services/swagger";
+import {TokenService} from "../../services/token.service";
 
 
 @Component({
@@ -16,23 +17,52 @@ export class LoginFormComponent {
   loading = false;
   formData: any = {};
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private userService: UserService,
+    private tokenService: TokenService,
+  ) {
   }
 
-  async onSubmit(e: Event) {
+  onSubmit(e: Event) {
     e.preventDefault();
-    const {email, password} = this.formData;
+
     this.loading = true;
 
-    const result = await this.authService.logIn(email, password);
-    if (!result.isOk) {
-      this.loading = false;
-      notify(result.message, 'error', 2000);
-    }
-  }
+    const loginRequest: LoginRequestDto = {
+      email: this.formData.email,
+      password: this.formData.password,
+    };
 
-  onChangePasswordClick = () => {
-    this.router.navigate(['/change-password']);
+    this.authenticationService.login(loginRequest).subscribe({
+      next: (result: AuthenticationResponse) => {
+
+        console.log(result);
+
+        if (result.hasToResetPassword) {
+          this.router.navigate(['/change-default-password', result.userId]);
+          this.loading = false;
+        } else {
+          this.userService.getUserById(result.userId).subscribe({
+            next: (userResult: UserDto) => {
+              this.authService.setUser(userResult);
+              this.tokenService.token = result.token;
+              this.loading = false;
+            },
+            error: (error) => {
+              console.error('Error fetching user:', error);
+              this.loading = false;
+            }
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error during login:', error);
+        this.loading = false;
+      }
+    });
   }
 }
 

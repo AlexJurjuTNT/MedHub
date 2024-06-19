@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {Component, NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import {DxFormModule} from 'devextreme-angular/ui/form';
 import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
 import {AuthenticationService} from "../../services/swagger";
@@ -19,6 +19,7 @@ export class ForgotPasswordFormComponent {
 
   constructor(
     private authenticationService: AuthenticationService,
+    private router: Router,
   ) {
   }
 
@@ -30,6 +31,7 @@ export class ForgotPasswordFormComponent {
     this.authenticationService.forgotPassword(email).subscribe({
       next: result => {
         notify("Email sent successfully!");
+        this.router.navigate(['/change-password']);
       },
       error: err => {
         notify("Error sending email")

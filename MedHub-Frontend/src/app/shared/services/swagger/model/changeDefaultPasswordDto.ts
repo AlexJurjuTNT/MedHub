@@ -10,8 +10,8 @@
  * Do not edit the class manually.
  */
 
-export interface AuthenticationResponse {
-  token: string;
+export interface ChangeDefaultPasswordDto {
   userId: number;
-  hasToResetPassword: boolean;
+  password: string;
+  confirmPassword: string;
 }

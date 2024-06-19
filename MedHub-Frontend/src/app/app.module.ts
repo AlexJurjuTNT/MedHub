@@ -10,43 +10,47 @@ import {AppRoutingModule} from './app-routing.module';
 import {ApiModule} from "./shared/services/swagger";
 import {HttpClientModule, provideHttpClient, withInterceptors} from "@angular/common/http";
 import {PatientTestsComponent} from './pages/patient-tests/patient-tests.component';
-import {DxButtonModule, DxDataGridModule, DxFileUploaderModule, DxTagBoxModule, DxTemplateModule} from "devextreme-angular";
+import {DxButtonModule, DxDataGridModule, DxFileUploaderModule, DxFormModule, DxLoadIndicatorModule, DxTagBoxModule, DxTemplateModule} from "devextreme-angular";
 import {DxiColumnModule, DxoFilterRowModule, DxoPagerModule, DxoPagingModule} from "devextreme-angular/ui/nested";
 import {TestResultCreateComponent} from './pages/test-result-create/test-result-create.component';
 import {TestResultView} from './pages/test-result-view/test-result-view';
 import {httpTokenInterceptor} from "./shared/services/http-token.interceptor";
+import { ChangeDefaultPasswordComponent } from './shared/components/change-default-password/change-default-password.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PatientTestsComponent,
     TestResultCreateComponent,
-    TestResultView
+    TestResultView,
+    ChangeDefaultPasswordComponent
   ],
-  imports: [
-    BrowserModule,
-    SideNavOuterToolbarModule,
-    SideNavInnerToolbarModule,
-    SingleCardModule,
-    FooterModule,
-    ResetPasswordFormModule,
-    CreateAccountFormModule,
-    ChangePasswordFormModule,
-    LoginFormModule,
-    UnauthenticatedContentModule,
-    AppRoutingModule,
-    ApiModule,
-    HttpClientModule,
-    DxDataGridModule,
-    DxTemplateModule,
-    DxiColumnModule,
-    DxoFilterRowModule,
-    DxoPagerModule,
-    DxoPagingModule,
-    DxButtonModule,
-    DxFileUploaderModule,
-    DxTagBoxModule,
-  ],
+    imports: [
+        BrowserModule,
+        SideNavOuterToolbarModule,
+        SideNavInnerToolbarModule,
+        SingleCardModule,
+        FooterModule,
+        ResetPasswordFormModule,
+        CreateAccountFormModule,
+        ChangePasswordFormModule,
+        LoginFormModule,
+        UnauthenticatedContentModule,
+        AppRoutingModule,
+        ApiModule,
+        HttpClientModule,
+        DxDataGridModule,
+        DxTemplateModule,
+        DxiColumnModule,
+        DxoFilterRowModule,
+        DxoPagerModule,
+        DxoPagingModule,
+        DxButtonModule,
+        DxFileUploaderModule,
+        DxTagBoxModule,
+        DxFormModule,
+        DxLoadIndicatorModule,
+    ],
   providers: [
     AuthService,
     ScreenService,

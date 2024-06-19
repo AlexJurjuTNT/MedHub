@@ -16,6 +16,7 @@ import {TestResultCreateComponent} from "./pages/test-result-create/test-result-
 import {TestResultView} from "./pages/test-result-view/test-result-view";
 import {ClinicListComponent} from './pages/clinic-list/clinic-list.component';
 import {DoctorListComponent} from './pages/doctor-list/doctor-list.component';
+import {ChangeDefaultPasswordComponent} from "./shared/components/change-default-password/change-default-password.component";
 
 const routes: Routes = [
   {
@@ -62,6 +63,10 @@ const routes: Routes = [
     path: 'pages/test-result-create/:testRequestId',
     component: TestResultCreateComponent,
     canActivate: [AuthGuardService]
+  },
+  {
+    path: 'change-default-password/:userId',
+    component: ChangeDefaultPasswordComponent
   },
   {
     path: 'tasks',

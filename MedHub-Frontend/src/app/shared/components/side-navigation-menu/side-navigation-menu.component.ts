@@ -57,6 +57,11 @@ export class SideNavigationMenuComponent implements AfterViewInit, OnDestroy {
             navItems = doctorNavigation;
             break;
 
+          // todo: separate patient nav
+          case "Patient":
+            navItems = doctorNavigation;
+            break;
+
           default:
             throw new Error("Unknown user role " + this.tokenService.getUserRole());
         }

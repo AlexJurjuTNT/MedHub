@@ -3,6 +3,7 @@ export * from './addPatientDataDto';
 export * from './addTestRequestDto';
 export * from './addTestTypeDto';
 export * from './authenticationResponse';
+export * from './changeDefaultPasswordDto';
 export * from './clinicDto';
 export * from './groupingInfo';
 export * from './loadResult';

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
-import {AuthenticationResponse, AuthenticationService, LoginRequestDto, UserDto, UserService} from "./swagger";
+import {AuthenticationService, UserDto, UserService} from "./swagger";
 import {TokenService} from "./token.service";
 
 const defaultPath = '/';
@@ -38,31 +38,10 @@ export class AuthService {
     }
   }
 
-  async logIn(email: string, password: string): Promise<{ isOk: boolean; data?: UserDto; message?: string }> {
-    const loginRequest: LoginRequestDto = {
-      email: email,
-      password: password
-    };
 
-    return new Promise((resolve) => {
-      this.authenticationService.login(loginRequest).subscribe({
-        next: (authResponse: AuthenticationResponse) => {
-          this.tokenService.token = authResponse.token;
-
-          this.userService.getUserById(authResponse.userId).subscribe({
-            next: (user: UserDto) => {
-              this._user = user;
-              this.router.navigate([this._lastAuthenticatedPath]);
-              resolve({isOk: true, data: this._user});
-            },
-            error: () => resolve({isOk: false, message: "Failed to retrieve user details"})
-          });
-        },
-        error: () => resolve({isOk: false, message: "Authentication failed"})
-      });
-    });
+  setUser(userDto: UserDto) {
+    this._user = userDto;
   }
-
 
   async getUser() {
     try {
