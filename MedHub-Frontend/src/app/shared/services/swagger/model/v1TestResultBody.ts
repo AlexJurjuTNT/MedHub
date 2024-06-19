@@ -11,6 +11,7 @@
  */
 
 export interface V1TestResultBody {
-  testRequestId: number;
-  formFile?: Blob;
+    testRequestId: number;
+    testTypesIds: Array<number>;
+    formFile?: Blob;
 }

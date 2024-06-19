@@ -26,352 +26,352 @@ import {Configuration} from '../configuration';
 @Injectable()
 export class ClinicService {
 
-  public defaultHeaders = new HttpHeaders();
-  public configuration = new Configuration();
-  protected basePath = 'http://localhost:5210';
+    public defaultHeaders = new HttpHeaders();
+    public configuration = new Configuration();
+    protected basePath = 'http://localhost:5210';
 
-  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
-    if (basePath) {
-      this.basePath = basePath;
-    }
-    if (configuration) {
-      this.configuration = configuration;
-      this.basePath = basePath || configuration.basePath || this.basePath;
-    }
-  }
-
-  /**
-   * Create a new clinic
-   *
-   * @param body Clinic to be created
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public createClinic(body?: AddClinicDto, observe?: 'body', reportProgress?: boolean): Observable<ClinicDto>;
-
-  public createClinic(body?: AddClinicDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ClinicDto>>;
-
-  public createClinic(body?: AddClinicDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ClinicDto>>;
-
-  public createClinic(body?: AddClinicDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-
-    let headers = this.defaultHeaders;
-
-    // authentication (Bearer) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+        if (basePath) {
+            this.basePath = basePath;
+        }
+        if (configuration) {
+            this.configuration = configuration;
+            this.basePath = basePath || configuration.basePath || this.basePath;
+        }
     }
 
-    // to determine the Content-Type header
-    const consumes: string[] = [
-      'application/json',
-      'text/json',
-      'application/_*+json'
-    ];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected != undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
+    /**
+     * Create a new clinic
+     *
+     * @param body Clinic to be created
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createClinic(body?: AddClinicDto, observe?: 'body', reportProgress?: boolean): Observable<ClinicDto>;
+
+    public createClinic(body?: AddClinicDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ClinicDto>>;
+
+    public createClinic(body?: AddClinicDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ClinicDto>>;
+
+    public createClinic(body?: AddClinicDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json',
+            'text/json',
+            'application/_*+json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.request<ClinicDto>('post', `${this.basePath}/api/v1/Clinic`,
+            {
+                body: body,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
-    return this.httpClient.request<ClinicDto>('post', `${this.basePath}/api/v1/Clinic`,
-      {
-        body: body,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
+    /**
+     * Delete a clinic
+     *
+     * @param clinicId ID of the clinic to be deleted
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deleteClinic(clinicId: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
 
-  /**
-   * Delete a clinic
-   *
-   * @param clinicId ID of the clinic to be deleted
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public deleteClinic(clinicId: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public deleteClinic(clinicId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
 
-  public deleteClinic(clinicId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public deleteClinic(clinicId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
 
-  public deleteClinic(clinicId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public deleteClinic(clinicId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-  public deleteClinic(clinicId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+        if (clinicId === null || clinicId === undefined) {
+            throw new Error('Required parameter clinicId was null or undefined when calling deleteClinic.');
+        }
 
-    if (clinicId === null || clinicId === undefined) {
-      throw new Error('Required parameter clinicId was null or undefined when calling deleteClinic.');
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [];
+
+        return this.httpClient.request<any>('delete', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
-    let headers = this.defaultHeaders;
+    /**
+     * Retrieves all Clinics
+     *
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAllClinics(observe?: 'body', reportProgress?: boolean): Observable<Array<ClinicDto>>;
 
-    // authentication (Bearer) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+    public getAllClinics(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ClinicDto>>>;
 
-    // to determine the Content-Type header
-    const consumes: string[] = [];
+    public getAllClinics(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ClinicDto>>>;
 
-    return this.httpClient.request<any>('delete', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
+    public getAllClinics(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-  /**
-   * Retrieves all Clinics
-   *
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getAllClinics(observe?: 'body', reportProgress?: boolean): Observable<Array<ClinicDto>>;
+        let headers = this.defaultHeaders;
 
-  public getAllClinics(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ClinicDto>>>;
+        // authentication (Bearer) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
 
-  public getAllClinics(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ClinicDto>>>;
+        // to determine the Content-Type header
+        const consumes: string[] = [];
 
-  public getAllClinics(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    let headers = this.defaultHeaders;
-
-    // authentication (Bearer) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
+        return this.httpClient.request<Array<ClinicDto>>('get', `${this.basePath}/api/v1/Clinic`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
-    // to determine the Content-Type header
-    const consumes: string[] = [];
+    /**
+     * Retrive all doctors of a clinic
+     *
+     * @param clinicId ID of the clinic where the doctors are
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAllDoctorsOfClinic(clinicId: number, observe?: 'body', reportProgress?: boolean): Observable<Array<UserDto>>;
 
-    return this.httpClient.request<Array<ClinicDto>>('get', `${this.basePath}/api/v1/Clinic`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
+    public getAllDoctorsOfClinic(clinicId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<UserDto>>>;
 
-  /**
-   * Retrive all doctors of a clinic
-   *
-   * @param clinicId ID of the clinic where the doctors are
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getAllDoctorsOfClinic(clinicId: number, observe?: 'body', reportProgress?: boolean): Observable<Array<UserDto>>;
+    public getAllDoctorsOfClinic(clinicId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<UserDto>>>;
 
-  public getAllDoctorsOfClinic(clinicId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<UserDto>>>;
+    public getAllDoctorsOfClinic(clinicId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-  public getAllDoctorsOfClinic(clinicId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<UserDto>>>;
+        if (clinicId === null || clinicId === undefined) {
+            throw new Error('Required parameter clinicId was null or undefined when calling getAllDoctorsOfClinic.');
+        }
 
-  public getAllDoctorsOfClinic(clinicId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+        let headers = this.defaultHeaders;
 
-    if (clinicId === null || clinicId === undefined) {
-      throw new Error('Required parameter clinicId was null or undefined when calling getAllDoctorsOfClinic.');
+        // authentication (Bearer) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [];
+
+        return this.httpClient.request<Array<UserDto>>('get', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}/doctors`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
-    let headers = this.defaultHeaders;
+    /**
+     * Get clinic by ID
+     *
+     * @param clinicId ID of the clinic
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getClinicById(clinicId: number, observe?: 'body', reportProgress?: boolean): Observable<ClinicDto>;
 
-    // authentication (Bearer) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+    public getClinicById(clinicId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ClinicDto>>;
 
-    // to determine the Content-Type header
-    const consumes: string[] = [];
+    public getClinicById(clinicId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ClinicDto>>;
 
-    return this.httpClient.request<Array<UserDto>>('get', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}/doctors`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
+    public getClinicById(clinicId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-  /**
-   * Get clinic by ID
-   *
-   * @param clinicId ID of the clinic
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getClinicById(clinicId: number, observe?: 'body', reportProgress?: boolean): Observable<ClinicDto>;
+        if (clinicId === null || clinicId === undefined) {
+            throw new Error('Required parameter clinicId was null or undefined when calling getClinicById.');
+        }
 
-  public getClinicById(clinicId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ClinicDto>>;
+        let headers = this.defaultHeaders;
 
-  public getClinicById(clinicId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ClinicDto>>;
+        // authentication (Bearer) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
 
-  public getClinicById(clinicId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+        // to determine the Content-Type header
+        const consumes: string[] = [];
 
-    if (clinicId === null || clinicId === undefined) {
-      throw new Error('Required parameter clinicId was null or undefined when calling getClinicById.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    // authentication (Bearer) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
+        return this.httpClient.request<ClinicDto>('get', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
-    // to determine the Content-Type header
-    const consumes: string[] = [];
+    /**
+     * Update an existing clinic
+     *
+     * @param clinicId ID of the clinic to be updated
+     * @param body Updated clinic
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public updateClinic(clinicId: number, body?: ClinicDto, observe?: 'body', reportProgress?: boolean): Observable<ClinicDto>;
 
-    return this.httpClient.request<ClinicDto>('get', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
+    public updateClinic(clinicId: number, body?: ClinicDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ClinicDto>>;
 
-  /**
-   * Update an existing clinic
-   *
-   * @param clinicId ID of the clinic to be updated
-   * @param body Updated clinic
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public updateClinic(clinicId: number, body?: ClinicDto, observe?: 'body', reportProgress?: boolean): Observable<ClinicDto>;
+    public updateClinic(clinicId: number, body?: ClinicDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ClinicDto>>;
 
-  public updateClinic(clinicId: number, body?: ClinicDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ClinicDto>>;
+    public updateClinic(clinicId: number, body?: ClinicDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-  public updateClinic(clinicId: number, body?: ClinicDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ClinicDto>>;
+        if (clinicId === null || clinicId === undefined) {
+            throw new Error('Required parameter clinicId was null or undefined when calling updateClinic.');
+        }
 
-  public updateClinic(clinicId: number, body?: ClinicDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-    if (clinicId === null || clinicId === undefined) {
-      throw new Error('Required parameter clinicId was null or undefined when calling updateClinic.');
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json',
+            'text/json',
+            'application/_*+json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.request<ClinicDto>('put', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}`,
+            {
+                body: body,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
-
-    let headers = this.defaultHeaders;
-
-    // authentication (Bearer) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    /**
+     * @param consumes string[] mime-types
+     * @return true: consumes contains 'multipart/form-data', false: otherwise
+     */
+    private canConsumeForm(consumes: string[]): boolean {
+        const form = 'multipart/form-data';
+        for (const consume of consumes) {
+            if (form === consume) {
+                return true;
+            }
+        }
+        return false;
     }
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [
-      'application/json',
-      'text/json',
-      'application/_*+json'
-    ];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected != undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    return this.httpClient.request<ClinicDto>('put', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}`,
-      {
-        body: body,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
-
-  /**
-   * @param consumes string[] mime-types
-   * @return true: consumes contains 'multipart/form-data', false: otherwise
-   */
-  private canConsumeForm(consumes: string[]): boolean {
-    const form = 'multipart/form-data';
-    for (const consume of consumes) {
-      if (form === consume) {
-        return true;
-      }
-    }
-    return false;
-  }
 
 }

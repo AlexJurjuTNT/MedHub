@@ -13,10 +13,10 @@ import {TestResultDto} from './testResultDto';
 import {TestTypeDto} from './testTypeDto';
 
 export interface TestRequestDto {
-  id: number;
-  requestDate: string;
-  patientId: number;
-  doctorId: number;
-  testTypes: Array<TestTypeDto>;
-  testResults: Array<TestResultDto>;
+    id: number;
+    requestDate: string;
+    patientId: number;
+    doctorId: number;
+    testTypes: Array<TestTypeDto>;
+    testResults: Array<TestResultDto>;
 }

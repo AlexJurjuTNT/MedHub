@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {TestResultService} from "../../shared/services/swagger";
+import {TestRequestService, TestResultService, TestTypeDto} from "../../shared/services/swagger";
 import {ActivatedRoute} from "@angular/router";
 
 
@@ -9,31 +9,42 @@ import {ActivatedRoute} from "@angular/router";
   styleUrl: './test-result-create.component.scss'
 })
 export class TestResultCreateComponent implements OnInit {
-  testRequestId: number = 0;
-  // todo: upload one file or multiple files?
   selectedFiles: File[] = [];
+  remainingTestTypes: TestTypeDto[] = [];
+  selectedTestTypesIds: number[] = [];
+  testRequestId: number = 0;
 
   constructor(
     private route: ActivatedRoute,
-    private testResultService: TestResultService
+    private testResultService: TestResultService,
+    private testRequestService: TestRequestService,
   ) {
   }
 
   ngOnInit(): void {
+    this.getRemainingTestTypes();
+  }
+
+  private getRemainingTestTypes(): void {
     this.route.paramMap.subscribe(params => {
       this.testRequestId = Number(params.get('testRequestId'));
-    })
+      this.testRequestService.getRemainingTestTypes(this.testRequestId).subscribe({
+        next: (result: TestTypeDto[]) => {
+          this.remainingTestTypes = result;
+        }
+      })
+    });
   }
 
 
   uploadFile() {
-
-    if (this.selectedFiles) {
-      this.testResultService.addTestResultForm(this.testRequestId, this.selectedFiles[0]).subscribe({});
-      alert("Files uploaded successfully");
-    } else {
-      alert("Please select a pdf file");
+    if (!this.selectedFiles) {
+      alert("Please select a file");
     }
+
+    this.testResultService.addTestResultForm(this.testRequestId, this.selectedTestTypesIds, this.selectedFiles[0]).subscribe({});
+
+    alert("Uploaded test result");
   }
 
 }

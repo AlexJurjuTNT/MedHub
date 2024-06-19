@@ -18,6 +18,7 @@ import {Observable} from 'rxjs';
 import {AddTestRequestDto} from '../model/addTestRequestDto';
 import {TestRequestDto} from '../model/testRequestDto';
 import {TestResultDto} from '../model/testResultDto';
+import {TestTypeDto} from '../model/testTypeDto';
 
 import {BASE_PATH} from '../variables';
 import {Configuration} from '../configuration';
@@ -240,6 +241,58 @@ export class TestRequestService {
     const consumes: string[] = [];
 
     return this.httpClient.request<Array<TestRequestDto>>('get', `${this.basePath}/api/v1/TestRequest`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   *
+   * @param testRequestId
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getRemainingTestTypes(testRequestId: number, observe?: 'body', reportProgress?: boolean): Observable<Array<TestTypeDto>>;
+
+  public getRemainingTestTypes(testRequestId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TestTypeDto>>>;
+
+  public getRemainingTestTypes(testRequestId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TestTypeDto>>>;
+
+  public getRemainingTestTypes(testRequestId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    if (testRequestId === null || testRequestId === undefined) {
+      throw new Error('Required parameter testRequestId was null or undefined when calling getRemainingTestTypes.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+    // to determine the Accept header
+    let httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.request<Array<TestTypeDto>>('get', `${this.basePath}/api/v1/TestRequest/${encodeURIComponent(String(testRequestId))}/remaining`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,

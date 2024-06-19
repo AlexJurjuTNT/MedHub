@@ -11,8 +11,8 @@
  */
 
 export interface UserRegisterDto {
-  username: string;
-  email: string;
-  password: string;
-  clinicId: number;
+    username: string;
+    email: string;
+    password: string;
+    clinicId: number;
 }

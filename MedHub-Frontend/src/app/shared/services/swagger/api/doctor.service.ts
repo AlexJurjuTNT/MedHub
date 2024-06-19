@@ -23,246 +23,246 @@ import {Configuration} from '../configuration';
 @Injectable()
 export class DoctorService {
 
-  public defaultHeaders = new HttpHeaders();
-  public configuration = new Configuration();
-  protected basePath = 'http://localhost:5210';
+    public defaultHeaders = new HttpHeaders();
+    public configuration = new Configuration();
+    protected basePath = 'http://localhost:5210';
 
-  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
-    if (basePath) {
-      this.basePath = basePath;
-    }
-    if (configuration) {
-      this.configuration = configuration;
-      this.basePath = basePath || configuration.basePath || this.basePath;
-    }
-  }
-
-  /**
-   *
-   *
-   * @param doctorId
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public deleteDoctor(doctorId: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
-
-  public deleteDoctor(doctorId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-
-  public deleteDoctor(doctorId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-
-  public deleteDoctor(doctorId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    if (doctorId === null || doctorId === undefined) {
-      throw new Error('Required parameter doctorId was null or undefined when calling deleteDoctor.');
+    constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+        if (basePath) {
+            this.basePath = basePath;
+        }
+        if (configuration) {
+            this.configuration = configuration;
+            this.basePath = basePath || configuration.basePath || this.basePath;
+        }
     }
 
-    let headers = this.defaultHeaders;
+    /**
+     *
+     *
+     * @param doctorId
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deleteDoctor(doctorId: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
 
-    // authentication (Bearer) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+    public deleteDoctor(doctorId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
 
-    // to determine the Content-Type header
-    const consumes: string[] = [];
+    public deleteDoctor(doctorId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
 
-    return this.httpClient.request<any>('delete', `${this.basePath}/api/v1/Doctor/${encodeURIComponent(String(doctorId))}`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
+    public deleteDoctor(doctorId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-  /**
-   *
-   *
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getAllDoctors(observe?: 'body', reportProgress?: boolean): Observable<UserDto>;
+        if (doctorId === null || doctorId === undefined) {
+            throw new Error('Required parameter doctorId was null or undefined when calling deleteDoctor.');
+        }
 
-  public getAllDoctors(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<UserDto>>;
+        let headers = this.defaultHeaders;
 
-  public getAllDoctors(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<UserDto>>;
+        // authentication (Bearer) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
 
-  public getAllDoctors(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+        // to determine the Content-Type header
+        const consumes: string[] = [];
 
-    let headers = this.defaultHeaders;
-
-    // authentication (Bearer) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
+        return this.httpClient.request<any>('delete', `${this.basePath}/api/v1/Doctor/${encodeURIComponent(String(doctorId))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
-    // to determine the Content-Type header
-    const consumes: string[] = [];
+    /**
+     *
+     *
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAllDoctors(observe?: 'body', reportProgress?: boolean): Observable<UserDto>;
 
-    return this.httpClient.request<UserDto>('get', `${this.basePath}/api/v1/Doctor`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
+    public getAllDoctors(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<UserDto>>;
 
-  /**
-   *
-   *
-   * @param doctorId
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getDoctorById(doctorId: number, observe?: 'body', reportProgress?: boolean): Observable<UserDto>;
+    public getAllDoctors(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<UserDto>>;
 
-  public getDoctorById(doctorId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<UserDto>>;
+    public getAllDoctors(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-  public getDoctorById(doctorId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<UserDto>>;
+        let headers = this.defaultHeaders;
 
-  public getDoctorById(doctorId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+        // authentication (Bearer) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
 
-    if (doctorId === null || doctorId === undefined) {
-      throw new Error('Required parameter doctorId was null or undefined when calling getDoctorById.');
+        // to determine the Content-Type header
+        const consumes: string[] = [];
+
+        return this.httpClient.request<UserDto>('get', `${this.basePath}/api/v1/Doctor`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
-    let headers = this.defaultHeaders;
+    /**
+     *
+     *
+     * @param doctorId
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getDoctorById(doctorId: number, observe?: 'body', reportProgress?: boolean): Observable<UserDto>;
 
-    // authentication (Bearer) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
+    public getDoctorById(doctorId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<UserDto>>;
 
-    // to determine the Content-Type header
-    const consumes: string[] = [];
+    public getDoctorById(doctorId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<UserDto>>;
 
-    return this.httpClient.request<UserDto>('get', `${this.basePath}/api/v1/Doctor/${encodeURIComponent(String(doctorId))}`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
+    public getDoctorById(doctorId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-  /**
-   *
-   *
-   * @param doctorId
-   * @param body
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public updateDoctor(doctorId: number, body?: UserDto, observe?: 'body', reportProgress?: boolean): Observable<UserDto>;
+        if (doctorId === null || doctorId === undefined) {
+            throw new Error('Required parameter doctorId was null or undefined when calling getDoctorById.');
+        }
 
-  public updateDoctor(doctorId: number, body?: UserDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<UserDto>>;
+        let headers = this.defaultHeaders;
 
-  public updateDoctor(doctorId: number, body?: UserDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<UserDto>>;
+        // authentication (Bearer) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
 
-  public updateDoctor(doctorId: number, body?: UserDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+        // to determine the Content-Type header
+        const consumes: string[] = [];
 
-    if (doctorId === null || doctorId === undefined) {
-      throw new Error('Required parameter doctorId was null or undefined when calling updateDoctor.');
-    }
-
-
-    let headers = this.defaultHeaders;
-
-    // authentication (Bearer) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
+        return this.httpClient.request<UserDto>('get', `${this.basePath}/api/v1/Doctor/${encodeURIComponent(String(doctorId))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
-    // to determine the Content-Type header
-    const consumes: string[] = [
-      'application/json',
-      'text/json',
-      'application/_*+json'
-    ];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected != undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
+    /**
+     *
+     *
+     * @param doctorId
+     * @param body
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public updateDoctor(doctorId: number, body?: UserDto, observe?: 'body', reportProgress?: boolean): Observable<UserDto>;
+
+    public updateDoctor(doctorId: number, body?: UserDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<UserDto>>;
+
+    public updateDoctor(doctorId: number, body?: UserDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<UserDto>>;
+
+    public updateDoctor(doctorId: number, body?: UserDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+        if (doctorId === null || doctorId === undefined) {
+            throw new Error('Required parameter doctorId was null or undefined when calling updateDoctor.');
+        }
+
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.accessToken) {
+            const accessToken = typeof this.configuration.accessToken === 'function'
+                ? this.configuration.accessToken()
+                : this.configuration.accessToken;
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'text/plain',
+            'application/json',
+            'text/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json',
+            'text/json',
+            'application/_*+json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.request<UserDto>('put', `${this.basePath}/api/v1/Doctor/${encodeURIComponent(String(doctorId))}`,
+            {
+                body: body,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
-    return this.httpClient.request<UserDto>('put', `${this.basePath}/api/v1/Doctor/${encodeURIComponent(String(doctorId))}`,
-      {
-        body: body,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
-
-  /**
-   * @param consumes string[] mime-types
-   * @return true: consumes contains 'multipart/form-data', false: otherwise
-   */
-  private canConsumeForm(consumes: string[]): boolean {
-    const form = 'multipart/form-data';
-    for (const consume of consumes) {
-      if (form === consume) {
-        return true;
-      }
+    /**
+     * @param consumes string[] mime-types
+     * @return true: consumes contains 'multipart/form-data', false: otherwise
+     */
+    private canConsumeForm(consumes: string[]): boolean {
+        const form = 'multipart/form-data';
+        for (const consume of consumes) {
+            if (form === consume) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
 }

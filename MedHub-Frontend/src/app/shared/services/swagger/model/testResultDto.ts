@@ -9,10 +9,12 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import {TestTypeDto} from './testTypeDto';
 
 export interface TestResultDto {
-  id: number;
-  completionDate: string;
-  filePath: string;
-  testRequestId: number;
+    id: number;
+    completionDate: string;
+    filePath: string;
+    testRequestId: number;
+    testTypes: Array<TestTypeDto>;
 }

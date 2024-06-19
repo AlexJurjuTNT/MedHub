@@ -11,6 +11,6 @@
  */
 
 export interface AuthenticationResponse {
-  token: string;
-  userId: number;
+    token: string;
+    userId: number;
 }

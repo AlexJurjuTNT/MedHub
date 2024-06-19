@@ -11,6 +11,6 @@
  */
 
 export interface PatientRegisterDto {
-  email: string;
-  clinicId: number;
+    email: string;
+    clinicId: number;
 }

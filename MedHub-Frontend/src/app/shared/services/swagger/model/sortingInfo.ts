@@ -11,6 +11,6 @@
  */
 
 export interface SortingInfo {
-  selector?: string;
-  desc?: boolean;
+    selector?: string;
+    desc?: boolean;
 }

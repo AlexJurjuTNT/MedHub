@@ -43,17 +43,18 @@ export class TestResultService {
    *
    *
    * @param testRequestId
+   * @param testTypesIds
    * @param formFile
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public addTestResultForm(testRequestId?: number, formFile?: Blob, observe?: 'body', reportProgress?: boolean): Observable<TestResultDto>;
+  public addTestResultForm(testRequestId?: number, testTypesIds?: Array<number>, formFile?: Blob, observe?: 'body', reportProgress?: boolean): Observable<TestResultDto>;
 
-  public addTestResultForm(testRequestId?: number, formFile?: Blob, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestResultDto>>;
+  public addTestResultForm(testRequestId?: number, testTypesIds?: Array<number>, formFile?: Blob, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestResultDto>>;
 
-  public addTestResultForm(testRequestId?: number, formFile?: Blob, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestResultDto>>;
+  public addTestResultForm(testRequestId?: number, testTypesIds?: Array<number>, formFile?: Blob, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestResultDto>>;
 
-  public addTestResultForm(testRequestId?: number, formFile?: Blob, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public addTestResultForm(testRequestId?: number, testTypesIds?: Array<number>, formFile?: Blob, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
 
     let headers = this.defaultHeaders;
@@ -97,6 +98,11 @@ export class TestResultService {
 
     if (testRequestId !== undefined) {
       formParams = formParams.append('TestRequestId', <any>testRequestId) as any || formParams;
+    }
+    if (testTypesIds) {
+      testTypesIds.forEach((element) => {
+        formParams = formParams.append('TestTypesIds', <any>element) as any || formParams;
+      })
     }
     if (formFile !== undefined) {
       formParams = formParams.append('formFile', <any>formFile) as any || formParams;

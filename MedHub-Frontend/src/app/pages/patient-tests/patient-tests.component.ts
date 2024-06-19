@@ -1,32 +1,32 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {PatientDto, PatientService, TestRequestDto, TestTypeDto} from "../../shared/services/swagger";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from "@angular/router";
+import { PatientDto, PatientService, TestRequestDto, TestResultDto, TestTypeDto, TestRequestService } from "../../shared/services/swagger";
 
 @Component({
   selector: 'app-patient-tests',
   templateUrl: './patient-tests.component.html',
-  styleUrl: './patient-tests.component.scss'
+  styleUrls: ['./patient-tests.component.scss']
 })
 export class PatientTestsComponent implements OnInit {
   userId: number = 0;
   patient: PatientDto = {} as PatientDto;
   dataSource: TestRequestDto[] = [];
+  remainingTestTypes: { [key: number]: TestTypeDto[] } = {};
 
   constructor(
     private route: ActivatedRoute,
     private patientService: PatientService,
+    private testRequestService: TestRequestService,
     private router: Router
-  ) {
-  }
+  ) { }
 
-  // todo: paging
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.userId = Number(params.get('id'));
       this.patientService.getTestRequestsOfPatient(this.userId).subscribe({
         next: (result: TestRequestDto[]) => {
           this.dataSource = result;
-          console.log(this.dataSource)
+          this.loadRemainingTestTypes();
         }
       });
     });
@@ -36,12 +36,21 @@ export class PatientTestsComponent implements OnInit {
     return testTypes.map(testType => testType.name).join(', ');
   }
 
-  navigateToTestResultCreate(testRequestId: number) {
-    this.router.navigate(['pages/test-result-create', testRequestId]);
+  navigateToViewTestResult(testResultId: number) {
+    this.router.navigate(['pages/test-result-view', testResultId]);
   }
 
-  // todo: do something for multiple pdfs for a request
-  navigateToViewTestResults(testRequestId: number) {
-    this.router.navigate(['pages/test-result-view', this.dataSource.find(d => d.id == testRequestId)?.testResults[0].id]);
+  navigateToAddTestResult(testRequestId: number, remainingTestTypes: TestTypeDto[]) {
+    this.router.navigate(['pages/test-result-create', testRequestId], { state: { remainingTestTypes } });
+  }
+
+  private loadRemainingTestTypes() {
+    this.dataSource.forEach(testRequest => {
+      this.testRequestService.getRemainingTestTypes(testRequest.id).subscribe({
+        next: (result: TestTypeDto[]) => {
+          this.remainingTestTypes[testRequest.id] = result;
+        }
+      });
+    });
   }
 }

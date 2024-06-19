@@ -11,5 +11,5 @@
  */
 
 export interface AddTestTypeDto {
-  name: string;
+    name: string;
 }

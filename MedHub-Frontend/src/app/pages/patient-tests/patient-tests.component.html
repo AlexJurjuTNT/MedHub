@@ -12,28 +12,22 @@
       <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
       <dxo-filter-row [visible]="true"></dxo-filter-row>
 
-      <!-- Define the columns for UserDto data -->
+      <!-- Define the columns for TestRequestDto data -->
       <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
       <dxi-column caption="Request Date" dataField="requestDate"></dxi-column>
       <dxi-column caption="Test Types" cellTemplate="testTypesTemplate"></dxi-column>
-      <dxi-column caption="Add Test Result" cellTemplate="addTestResultTemplate"></dxi-column>
 
-      <div *dxTemplate="let user of 'testTypesTemplate'">
-        <span>{{ getTestTypeNames(user.data.testTypes) }}</span>
-      </div>
-
-
-      <div *dxTemplate="let data of 'addTestResultTemplate'">
-
-        <dx-button *ngIf="data.data.testResults.length > 0"
-                   (onClick)="navigateToViewTestResults(data.data.id)"
-                   [text]="'View Test Results'"
-        ></dx-button>
-
-        <dx-button *ngIf="data.data.testResults.length == 0"
-                   (onClick)="navigateToTestResultCreate(data.data.id)"
-                   [text]="'Add Test Result'"
-        ></dx-button>
+      <div *dxTemplate="let request of 'testTypesTemplate'">
+        <div *ngFor="let testResult of request.data.testResults">
+          <span>{{ getTestTypeNames(testResult.testTypes) }}</span>
+          <dx-button (onClick)="navigateToViewTestResult(testResult.id)"
+                     [text]="'View'"></dx-button>
+        </div>
+        <div *ngIf="remainingTestTypes[request.data.id]?.length!> 0">
+          <span>Remaining Test Types: {{ getTestTypeNames(remainingTestTypes[request.data.id]) }}</span>
+          <dx-button (onClick)="navigateToAddTestResult(request.data.id, remainingTestTypes[request.data.id])"
+                     [text]="'Add Test Result'"></dx-button>
+        </div>
       </div>
 
     </dx-data-grid>

@@ -11,6 +11,20 @@
     >
     </dx-file-uploader>
 
+    <dx-tag-box
+      (onValueChanged)="selectedTestTypesIds = $event.value"
+      [applyValueMode]="'useButtons'"
+      [dataSource]="remainingTestTypes"
+      [searchEnabled]="true"
+      [searchExpr]="['name']"
+      [searchMode]="'contains'"
+      [showClearButton]="true"
+      [value]="selectedTestTypesIds"
+      displayExpr="name"
+      valueExpr="id"
+    >
+    </dx-tag-box>
+
     <dx-button
       (onClick)="uploadFile()"
       text="Upload"

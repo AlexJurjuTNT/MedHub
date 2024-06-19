@@ -11,8 +11,8 @@
  */
 
 export interface GroupingInfo {
-  selector?: string;
-  desc?: boolean;
-  groupInterval?: string;
-  isExpanded?: boolean;
+    selector?: string;
+    desc?: boolean;
+    groupInterval?: string;
+    isExpanded?: boolean;
 }
