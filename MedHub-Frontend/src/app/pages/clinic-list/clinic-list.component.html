@@ -30,6 +30,12 @@
               <dxo-label [visible]="false"></dxo-label>
             </dxi-item>
 
+            <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Email' }" dataField="email" editorType="dxTextBox">
+              <dxi-validation-rule message="Email is required" type="required"></dxi-validation-rule>
+              <dxi-validation-rule message="Email is invalid" type="email"></dxi-validation-rule>
+              <dxo-label [visible]="false"></dxo-label>
+            </dxi-item>
+
             <dxi-item itemType="button">
               <dxo-button-options
                 [text]="'Create New Clinic'"
@@ -56,8 +62,9 @@
       <dxo-filter-row [visible]="true"></dxo-filter-row>
 
       <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
-      <dxi-column caption="Test Name" dataField="name"></dxi-column>
+      <dxi-column caption="Name" dataField="name"></dxi-column>
       <dxi-column caption="Location" dataField="location"></dxi-column>
+      <dxi-column caption="Email" dataField="email"></dxi-column>
       <dxi-column caption="Sendgrid Api Key" dataField="sendgridApiKey"></dxi-column>
 
       <dxi-column caption="Actions" cellTemplate="actionCellTemplate"></dxi-column>
@@ -117,6 +124,12 @@
 
             <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedClinic.sendgridApiKey }" dataField="sendgridApiKey" editorType="dxTextBox">
               <dxi-validation-rule message="SendGrid Api Key is required" type="required"></dxi-validation-rule>
+              <dxo-label [visible]="false"></dxo-label>
+            </dxi-item>
+
+            <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Email' }" dataField="email" editorType="dxTextBox">
+              <dxi-validation-rule message="Email is required" type="required"></dxi-validation-rule>
+              <dxi-validation-rule message="Email is invalid" type="email"></dxi-validation-rule>
               <dxo-label [visible]="false"></dxo-label>
             </dxi-item>
 

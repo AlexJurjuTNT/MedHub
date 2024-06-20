@@ -35,6 +35,7 @@ export class ClinicListComponent implements OnInit {
       name: this.createClinicFormData.name,
       location: this.createClinicFormData.location,
       sendgridApiKey: this.createClinicFormData.sendgridApiKey,
+      email: this.createClinicFormData.email
     }
 
     this.clinicService.createClinic(addClinicDto).subscribe({
@@ -71,7 +72,8 @@ export class ClinicListComponent implements OnInit {
       id: this.selectedClinic.id,
       name: this.updateClinicFormData.name,
       location: this.updateClinicFormData.location,
-      sendgridApiKey: this.updateClinicFormData.sendgridApiKey
+      sendgridApiKey: this.updateClinicFormData.sendgridApiKey,
+      email: this.updateClinicFormData.email
     }
 
     this.clinicService.updateClinic(this.selectedClinic.id, updateClinic).subscribe({

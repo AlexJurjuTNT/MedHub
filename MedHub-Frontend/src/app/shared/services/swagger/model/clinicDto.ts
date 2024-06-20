@@ -15,4 +15,5 @@ export interface ClinicDto {
   name: string;
   location: string;
   sendgridApiKey: string;
+  email: string;
 }

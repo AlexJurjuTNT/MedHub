@@ -14,4 +14,5 @@ export interface AddClinicDto {
   name: string;
   location: string;
   sendgridApiKey: string;
+  email: string;
 }
