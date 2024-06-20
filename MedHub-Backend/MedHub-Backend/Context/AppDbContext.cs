@@ -40,5 +40,15 @@ public class AppDbContext : DbContext
             );
             await SaveChangesAsync();
         }
+        
+        if (!TestTypes.Any())
+        {
+            TestTypes.AddRange(
+                new TestType { Name = "Blood" },
+                new TestType { Name = "EKG" },
+                new TestType { Name = "Sugar" }
+            );
+            await SaveChangesAsync();
+        }
     }
 }

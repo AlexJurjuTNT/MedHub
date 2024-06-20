@@ -28,7 +28,8 @@ public class AuthenticationService(
         user.Username = clinic.Name + clinic.Id + user.Email.Substring(0, user.Email.IndexOf('@'));
         user.Role = patientRole;
         var tempPassword = passwordService.GenerateRandomPassword(8);
-        user.PasswordResetCode = tempPassword;
+        user.Password = BCrypt.Net.BCrypt.HashPassword(tempPassword);
+        user.HasToResetPassword = true;
 
         var createdUser = await userService.CreateUserAsync(user);
         await emailService.SendPatientResetPasswordEmail(clinic, user, tempPassword);
@@ -46,7 +47,8 @@ public class AuthenticationService(
         return new AuthenticationResponse
         {
             Token = jwtService.GenerateToken(user),
-            UserId = user.Id
+            UserId = user.Id,
+            HasToResetPassword = user.HasToResetPassword
         };
     }
 
@@ -62,6 +64,23 @@ public class AuthenticationService(
         if (doctorRole == null) throw new RoleNotFoundException("Role with name Doctor doesn't exist");
 
         user.Role = doctorRole;
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
+        return await userService.CreateUserAsync(user);
+    }
+
+    public async Task<User> RegisterAdminAsync(User user)
+    {
+        var userByUsername = await userService.GetUserByUsernameAsync(user.Username);
+        if (userByUsername != null) throw new UserAlreadyExistsException("Admin with username already exists");
+
+        var userByEmail = await userService.GetUserByEmail(user.Email);
+        if (userByEmail != null) throw new UserAlreadyExistsException("Admin with email already exists");
+
+        var adminRole = await roleService.GetRoleByName("Admin");
+        if (adminRole == null) throw new RoleNotFoundException("Role with name Admin doesn't exist");
+
+        user.Role = adminRole;
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
         return await userService.CreateUserAsync(user);
@@ -83,6 +102,7 @@ public class AuthenticationService(
     {
         existingUser.PasswordResetCode = null;
         existingUser.Password = BCrypt.Net.BCrypt.HashPassword(password);
+        existingUser.HasToResetPassword = false;
         await userService.UpdateUserAsync(existingUser);
     }
 }

@@ -33,9 +33,6 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 // add automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-// from npsql 6 only DateTimeUtc is supported, added this line to revert behaviour, add time as local time
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
 // add swagger documentation
 builder.Services.AddSwaggerGen(options =>
 {
@@ -78,6 +75,9 @@ builder.Services.AddSwaggerGen(options =>
     // possible bug - when using swagger ui with a different port number than the one noted below all requests will show CORS error
     options.AddServer(new OpenApiServer { Url = "http://localhost:5210", Description = "Local server" });
 });
+
+// from npsql 6 only DateTimeUtc is supported, added this line to revert behaviour, add time as local time
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // connect to db
 var connectionString = builder.Configuration["DatabaseSettings:PostgreSQLConnectionString"];

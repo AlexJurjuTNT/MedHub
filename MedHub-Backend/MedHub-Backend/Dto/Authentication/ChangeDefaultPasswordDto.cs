@@ -2,14 +2,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MedHub_Backend.Dto.Authentication;
 
-public class AuthenticationResponse
+public class ChangeDefaultPasswordDto
 {
     [Required]
-    public string Token { get; set; }
-
-    [Required]
     public int UserId { get; set; }
-
+    
     [Required]
-    public bool HasToResetPassword { get; set; }
+    public string Password { get; set; }
+    
+    [Required]
+    public string ConfirmPassword { get; set; }
 }

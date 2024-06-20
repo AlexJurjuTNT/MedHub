@@ -22,6 +22,9 @@ public class User
     [Column("password_reset_code")]
     public string? PasswordResetCode { get; set; } = string.Empty;
 
+    [Column("has_to_reset_password")]
+    public bool HasToResetPassword { get; set; } = false;
+
     [Column("clinic_id")]
     [ForeignKey("Clinic")]
     public int ClinicId { get; set; }
