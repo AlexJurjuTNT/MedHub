@@ -25,6 +25,12 @@ public class TestRequest
 
     public virtual User Doctor { get; set; }
 
+    [Column("laboratory_id")]
+    [ForeignKey("Laboratory")]
+    public int LaboratoryId { get; set; }
+
+    public virtual Laboratory Laboratory { get; set; }
+
     public virtual ICollection<TestResult> TestResults { get; set; }
     public virtual ICollection<TestType> TestTypes { get; set; }
 }

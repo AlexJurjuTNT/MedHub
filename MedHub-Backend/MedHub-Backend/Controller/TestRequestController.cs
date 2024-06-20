@@ -16,6 +16,7 @@ public class TestRequestController(
     IUserService userService,
     IClinicService clinicService,
     IEmailService emailService,
+    ILaboratoryService laboratoryService,
     IMapper mapper
 ) : ControllerBase
 {
@@ -41,6 +42,7 @@ public class TestRequestController(
         return Ok(testRequestDto);
     }
 
+    // todo: check if laboratory does not have a testType for the required testRequest
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(AddTestRequestDto))]
     public async Task<IActionResult> CreateTestRequest([FromBody] AddTestRequestDto testRequestDto)
@@ -55,6 +57,9 @@ public class TestRequestController(
 
         var clinic = await clinicService.GetClinicByIdAsync(userDoctor.ClinicId);
         if (clinic == null) return NotFound($"Clinic with id {userDoctor.ClinicId} not found");
+
+        var laboratory = await laboratoryService.GetLaboratoryByIdAsync(testRequestDto.LaboratoryId);
+        if (laboratory == null) return NotFound($"Laboratory with id {testRequestDto.LaboratoryId} not found");
 
         try
         {

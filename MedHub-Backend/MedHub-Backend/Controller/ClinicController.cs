@@ -1,5 +1,6 @@
 using AutoMapper;
 using MedHub_Backend.Dto.Clinic;
+using MedHub_Backend.Dto.Laboratory;
 using MedHub_Backend.Dto.User;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
@@ -106,5 +107,18 @@ public class ClinicController(
         var patients = clinic.Users.Where(u => u.Role.Name == "Doctor").ToList();
 
         return Ok(mapper.Map<List<UserDto>>(patients));
+    }
+
+    [HttpGet("{clinicId}/laboratories")]
+    [ProducesResponseType(200, Type = typeof(List<LaboratoryDto>))]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetAllLaboratoriesOfClinic([FromRoute] int clinicId)
+    {
+        var clinic = await clinicService.GetClinicByIdAsync(clinicId);
+        if (clinic == null) return NotFound($"Clinic with id {clinicId} not found");
+
+        var laboratories = clinic.Laboratories;
+        var laboratoriesDto = mapper.Map<List<LaboratoryDto>>(laboratories);
+        return Ok(laboratoriesDto);
     }
 }

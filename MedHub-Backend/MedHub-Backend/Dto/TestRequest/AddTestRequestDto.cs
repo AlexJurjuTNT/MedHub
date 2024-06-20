@@ -12,4 +12,7 @@ public class AddTestRequestDto
 
     [Required]
     public List<int> TestTypesId { get; set; }
+
+    [Required]
+    public int LaboratoryId { get; set; }
 }
