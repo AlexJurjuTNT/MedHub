@@ -30,7 +30,6 @@ public class PatientController(
     {
         var userResult = await userService.GetUserByIdAsync(addPatientDataDto.UserId);
         if (userResult == null) return NotFound($"User with id {addPatientDataDto.UserId} not found");
-
         if (userResult.Role.Name != "Patient") return BadRequest($"User with id {addPatientDataDto.UserId} is not a patient");
 
         var patient = mapper.Map<Patient>(addPatientDataDto);

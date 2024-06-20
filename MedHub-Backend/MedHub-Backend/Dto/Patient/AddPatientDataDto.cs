@@ -5,7 +5,7 @@ namespace MedHub_Backend.Dto.Patient;
 public class AddPatientDataDto
 {
     [Required]
-    public int Cnp { get; set; }
+    public string Cnp { get; set; }
 
     [Required]
     public DateOnly DateOfBirth { get; set; }
