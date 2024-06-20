@@ -17,20 +17,28 @@
       <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
       <dxi-column caption="Email" dataField="email"></dxi-column>
       <dxi-column caption="Username" dataField="username"></dxi-column>
-      <dxi-column cellTemplate="viewButtonTemplate"></dxi-column>
+      <dxi-column cellTemplate="viewPatientTestsTemplate"></dxi-column>
       <dxi-column cellTemplate="deleteButtonTemplate"></dxi-column>
+      <dxi-column cellTemplate="viewPatientInformationTemplate"></dxi-column>
 
-      <div *dxTemplate="let data of 'deleteButtonTemplate'">
+      <div *dxTemplate="let user of 'deleteButtonTemplate'">
         <dx-button
-          (click)="deleteUser(data.data.id)"
+          (click)="deleteUser(user.data.id)"
           [text]="'Delete'"
         ></dx-button>
       </div>
 
-      <div *dxTemplate="let data of 'viewButtonTemplate'">
+      <div *dxTemplate="let user of 'viewPatientTestsTemplate'">
         <dx-button
-          (click)="viewPatient(data.data.id)"
+          (click)="viewPatient(user.data.id)"
           [text]="'View Patient'"
+        ></dx-button>
+      </div>
+
+      <div *dxTemplate="let user of 'viewPatientInformationTemplate'">
+        <dx-button
+          (click)="viewPatientInformation(user.data.id)"
+          [text]="'View Patient Information'"
         ></dx-button>
       </div>
 

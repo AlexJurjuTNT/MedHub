@@ -30,6 +30,7 @@ export class PatientListComponent implements OnInit {
     this.router.navigate(['pages/patient-tests', patientId]);
   }
 
+  // todo: use a dialog instead
   deleteUser(currentUserId: number | null) {
     this.userService.deleteUser(currentUserId!).subscribe({});
     this.loadPatientsOfClinic();
@@ -53,5 +54,9 @@ export class PatientListComponent implements OnInit {
         this.dataSource = result.data;
       }
     });
+  }
+
+  viewPatientInformation(userId: number) {
+    this.router.navigate(["/patient-info", userId]);
   }
 }

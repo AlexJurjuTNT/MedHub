@@ -16,6 +16,7 @@ import {TestResultCreateComponent} from './pages/test-result-create/test-result-
 import {TestResultView} from './pages/test-result-view/test-result-view';
 import {httpTokenInterceptor} from "./shared/services/http-token.interceptor";
 import { ChangeDefaultPasswordComponent } from './shared/components/change-default-password/change-default-password.component';
+import { PatientInfoComponent } from './pages/patient-info/patient-info.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ChangeDefaultPasswordComponent } from './shared/components/change-defau
     PatientTestsComponent,
     TestResultCreateComponent,
     TestResultView,
-    ChangeDefaultPasswordComponent
+    ChangeDefaultPasswordComponent,
+    PatientInfoComponent
   ],
     imports: [
         BrowserModule,

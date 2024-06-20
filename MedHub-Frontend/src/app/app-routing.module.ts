@@ -17,6 +17,7 @@ import {TestResultView} from "./pages/test-result-view/test-result-view";
 import {ClinicListComponent} from './pages/clinic-list/clinic-list.component';
 import {DoctorListComponent} from './pages/doctor-list/doctor-list.component';
 import {ChangeDefaultPasswordComponent} from "./shared/components/change-default-password/change-default-password.component";
+import {PatientInfoComponent} from "./pages/patient-info/patient-info.component";
 
 const routes: Routes = [
   {
@@ -101,6 +102,11 @@ const routes: Routes = [
   {
     path: 'change-password/:recoveryCode',
     component: ChangeFormComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'patient-info/:userId',
+    component: PatientInfoComponent,
     canActivate: [AuthGuardService]
   },
   {
