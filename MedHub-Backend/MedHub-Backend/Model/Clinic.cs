@@ -22,5 +22,6 @@ public class Clinic
     [Column("email")]
     public string Email { get; set; }
 
+    public virtual ICollection<Laboratory> Laboratories { get; set; }
     public virtual ICollection<User> Users { get; set; }
 }

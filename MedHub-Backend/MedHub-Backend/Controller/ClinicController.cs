@@ -68,7 +68,7 @@ public class ClinicController(
     /// <returns>Updated clinic</returns>
     [HttpPut("{clinicId}")]
     [ProducesResponseType(200, Type = typeof(ClinicDto))]
-    public async Task<IActionResult> UpdateClinic([FromRoute] int clinicId, [FromBody] ClinicDto clinicDto)
+    public async Task<IActionResult> UpdateClinic([FromRoute] int clinicId, [FromBody] UpdateClinicDto clinicDto)
     {
         if (clinicId != clinicDto.Id) return BadRequest();
         var clinic = mapper.Map<Clinic>(clinicDto);

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MedHub_Backend.Dto.Authentication;
 using MedHub_Backend.Dto.Clinic;
+using MedHub_Backend.Dto.Laboratory;
 using MedHub_Backend.Dto.Patient;
 using MedHub_Backend.Dto.TestRequest;
 using MedHub_Backend.Dto.TestResult;
@@ -20,8 +21,8 @@ public class MappingProfiles : Profile
         CreateMap<PatientRegisterDto, User>();
 
         CreateMap<AddClinicDto, Clinic>();
+        CreateMap<UpdateClinicDto, Clinic>();
         CreateMap<Clinic, ClinicDto>();
-        CreateMap<ClinicDto, Clinic>();
 
         CreateMap<AddPatientDataDto, Patient>();
         CreateMap<Patient, PatientDto>();
@@ -37,5 +38,9 @@ public class MappingProfiles : Profile
         CreateMap<AddTestTypeDto, TestType>();
         CreateMap<TestTypeDto, TestType>();
         CreateMap<TestType, TestTypeDto>();
+
+        CreateMap<LaboratoryDto, Laboratory>();
+        CreateMap<AddLaboratoryDto, Laboratory>();
+        CreateMap<Laboratory, LaboratoryDto>();
     }
 }

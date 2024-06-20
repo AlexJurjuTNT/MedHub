@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<TestRequest> TestRequests { get; set; }
     public DbSet<TestResult> TestResults { get; set; }
     public DbSet<TestType> TestTypes { get; set; }
+    public DbSet<Laboratory> Laboratories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,7 +41,7 @@ public class AppDbContext : DbContext
             );
             await SaveChangesAsync();
         }
-        
+
         if (!TestTypes.Any())
         {
             TestTypes.AddRange(
