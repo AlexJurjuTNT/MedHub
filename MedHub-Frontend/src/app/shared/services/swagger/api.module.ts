@@ -6,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import {AuthenticationService} from './api/authentication.service';
 import {ClinicService} from './api/clinic.service';
 import {DoctorService} from './api/doctor.service';
+import {LaboratoryService} from './api/laboratory.service';
 import {PatientService} from './api/patient.service';
 import {TestRequestService} from './api/testRequest.service';
 import {TestResultService} from './api/testResult.service';
@@ -20,6 +21,7 @@ import {UserService} from './api/user.service';
     AuthenticationService,
     ClinicService,
     DoctorService,
+    LaboratoryService,
     PatientService,
     TestRequestService,
     TestResultService,

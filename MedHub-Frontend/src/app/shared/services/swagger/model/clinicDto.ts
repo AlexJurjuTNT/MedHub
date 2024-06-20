@@ -9,6 +9,7 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import {LaboratoryDto} from './laboratoryDto';
 
 export interface ClinicDto {
   id: number;
@@ -16,4 +17,5 @@ export interface ClinicDto {
   location: string;
   sendgridApiKey: string;
   email: string;
+  laboratories: Array<LaboratoryDto>;
 }

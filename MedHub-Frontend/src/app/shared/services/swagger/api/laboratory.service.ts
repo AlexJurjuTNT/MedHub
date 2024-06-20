@@ -15,17 +15,15 @@ import {HttpClient, HttpEvent, HttpHeaders, HttpResponse} from '@angular/common/
 
 import {Observable} from 'rxjs';
 
-import {AddClinicDto} from '../model/addClinicDto';
-import {ClinicDto} from '../model/clinicDto';
-import {UpdateClinicDto} from '../model/updateClinicDto';
-import {UserDto} from '../model/userDto';
+import {AddLaboratoryDto} from '../model/addLaboratoryDto';
+import {LaboratoryDto} from '../model/laboratoryDto';
 
 import {BASE_PATH} from '../variables';
 import {Configuration} from '../configuration';
 
 
 @Injectable()
-export class ClinicService {
+export class LaboratoryService {
 
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
@@ -42,19 +40,19 @@ export class ClinicService {
   }
 
   /**
-   * Create a new clinic
    *
-   * @param body Clinic to be created
+   *
+   * @param body
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public createClinic(body?: AddClinicDto, observe?: 'body', reportProgress?: boolean): Observable<ClinicDto>;
+  public createLaboratory(body?: AddLaboratoryDto, observe?: 'body', reportProgress?: boolean): Observable<LaboratoryDto>;
 
-  public createClinic(body?: AddClinicDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ClinicDto>>;
+  public createLaboratory(body?: AddLaboratoryDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LaboratoryDto>>;
 
-  public createClinic(body?: AddClinicDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ClinicDto>>;
+  public createLaboratory(body?: AddLaboratoryDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LaboratoryDto>>;
 
-  public createClinic(body?: AddClinicDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public createLaboratory(body?: AddLaboratoryDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
 
     let headers = this.defaultHeaders;
@@ -88,7 +86,7 @@ export class ClinicService {
       headers = headers.set('Content-Type', httpContentTypeSelected);
     }
 
-    return this.httpClient.request<ClinicDto>('post', `${this.basePath}/api/v1/Clinic`,
+    return this.httpClient.request<LaboratoryDto>('post', `${this.basePath}/api/v1/Laboratory`,
       {
         body: body,
         withCredentials: this.configuration.withCredentials,
@@ -100,22 +98,22 @@ export class ClinicService {
   }
 
   /**
-   * Delete a clinic
    *
-   * @param clinicId ID of the clinic to be deleted
+   *
+   * @param laboratoryId
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public deleteClinic(clinicId: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public deleteLaboratory(laboratoryId: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
 
-  public deleteClinic(clinicId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public deleteLaboratory(laboratoryId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
 
-  public deleteClinic(clinicId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public deleteLaboratory(laboratoryId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
 
-  public deleteClinic(clinicId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public deleteLaboratory(laboratoryId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-    if (clinicId === null || clinicId === undefined) {
-      throw new Error('Required parameter clinicId was null or undefined when calling deleteClinic.');
+    if (laboratoryId === null || laboratoryId === undefined) {
+      throw new Error('Required parameter laboratoryId was null or undefined when calling deleteLaboratory.');
     }
 
     let headers = this.defaultHeaders;
@@ -137,7 +135,7 @@ export class ClinicService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<any>('delete', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}`,
+    return this.httpClient.request<any>('delete', `${this.basePath}/api/v1/Laboratory/${encodeURIComponent(String(laboratoryId))}`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,
@@ -148,18 +146,18 @@ export class ClinicService {
   }
 
   /**
-   * Retrieves all Clinics
+   *
    *
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getAllClinics(observe?: 'body', reportProgress?: boolean): Observable<Array<ClinicDto>>;
+  public getAllLaboratories(observe?: 'body', reportProgress?: boolean): Observable<Array<LaboratoryDto>>;
 
-  public getAllClinics(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<ClinicDto>>>;
+  public getAllLaboratories(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LaboratoryDto>>>;
 
-  public getAllClinics(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<ClinicDto>>>;
+  public getAllLaboratories(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LaboratoryDto>>>;
 
-  public getAllClinics(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public getAllLaboratories(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     let headers = this.defaultHeaders;
 
@@ -184,7 +182,7 @@ export class ClinicService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<Array<ClinicDto>>('get', `${this.basePath}/api/v1/Clinic`,
+    return this.httpClient.request<Array<LaboratoryDto>>('get', `${this.basePath}/api/v1/Laboratory`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,
@@ -195,74 +193,22 @@ export class ClinicService {
   }
 
   /**
-   * Retrive all doctors of a clinic
    *
-   * @param clinicId ID of the clinic where the doctors are
+   *
+   * @param laboratoryId
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getAllDoctorsOfClinic(clinicId: number, observe?: 'body', reportProgress?: boolean): Observable<Array<UserDto>>;
+  public getLaboratoryById(laboratoryId: number, observe?: 'body', reportProgress?: boolean): Observable<LaboratoryDto>;
 
-  public getAllDoctorsOfClinic(clinicId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<UserDto>>>;
+  public getLaboratoryById(laboratoryId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LaboratoryDto>>;
 
-  public getAllDoctorsOfClinic(clinicId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<UserDto>>>;
+  public getLaboratoryById(laboratoryId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LaboratoryDto>>;
 
-  public getAllDoctorsOfClinic(clinicId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public getLaboratoryById(laboratoryId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-    if (clinicId === null || clinicId === undefined) {
-      throw new Error('Required parameter clinicId was null or undefined when calling getAllDoctorsOfClinic.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    // authentication (Bearer) required
-    if (this.configuration.accessToken) {
-      const accessToken = typeof this.configuration.accessToken === 'function'
-        ? this.configuration.accessToken()
-        : this.configuration.accessToken;
-      headers = headers.set('Authorization', 'Bearer ' + accessToken);
-    }
-    // to determine the Accept header
-    let httpHeaderAccepts: string[] = [
-      'text/plain',
-      'application/json',
-      'text/json'
-    ];
-    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    if (httpHeaderAcceptSelected != undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = [];
-
-    return this.httpClient.request<Array<UserDto>>('get', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}/doctors`,
-      {
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress
-      }
-    );
-  }
-
-  /**
-   * Get clinic by ID
-   *
-   * @param clinicId ID of the clinic
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getClinicById(clinicId: number, observe?: 'body', reportProgress?: boolean): Observable<ClinicDto>;
-
-  public getClinicById(clinicId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ClinicDto>>;
-
-  public getClinicById(clinicId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ClinicDto>>;
-
-  public getClinicById(clinicId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
-
-    if (clinicId === null || clinicId === undefined) {
-      throw new Error('Required parameter clinicId was null or undefined when calling getClinicById.');
+    if (laboratoryId === null || laboratoryId === undefined) {
+      throw new Error('Required parameter laboratoryId was null or undefined when calling getLaboratoryById.');
     }
 
     let headers = this.defaultHeaders;
@@ -288,7 +234,7 @@ export class ClinicService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<ClinicDto>('get', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}`,
+    return this.httpClient.request<LaboratoryDto>('get', `${this.basePath}/api/v1/Laboratory/${encodeURIComponent(String(laboratoryId))}`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,
@@ -299,23 +245,23 @@ export class ClinicService {
   }
 
   /**
-   * Update an existing clinic
    *
-   * @param clinicId ID of the clinic to be updated
-   * @param body Updated clinic
+   *
+   * @param laboratoryId
+   * @param body
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public updateClinic(clinicId: number, body?: UpdateClinicDto, observe?: 'body', reportProgress?: boolean): Observable<ClinicDto>;
+  public updateLaboratory(laboratoryId: number, body?: AddLaboratoryDto, observe?: 'body', reportProgress?: boolean): Observable<LaboratoryDto>;
 
-  public updateClinic(clinicId: number, body?: UpdateClinicDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ClinicDto>>;
+  public updateLaboratory(laboratoryId: number, body?: AddLaboratoryDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LaboratoryDto>>;
 
-  public updateClinic(clinicId: number, body?: UpdateClinicDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ClinicDto>>;
+  public updateLaboratory(laboratoryId: number, body?: AddLaboratoryDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LaboratoryDto>>;
 
-  public updateClinic(clinicId: number, body?: UpdateClinicDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public updateLaboratory(laboratoryId: number, body?: AddLaboratoryDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-    if (clinicId === null || clinicId === undefined) {
-      throw new Error('Required parameter clinicId was null or undefined when calling updateClinic.');
+    if (laboratoryId === null || laboratoryId === undefined) {
+      throw new Error('Required parameter laboratoryId was null or undefined when calling updateLaboratory.');
     }
 
 
@@ -350,7 +296,7 @@ export class ClinicService {
       headers = headers.set('Content-Type', httpContentTypeSelected);
     }
 
-    return this.httpClient.request<ClinicDto>('put', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}`,
+    return this.httpClient.request<LaboratoryDto>('put', `${this.basePath}/api/v1/Laboratory/${encodeURIComponent(String(laboratoryId))}`,
       {
         body: body,
         withCredentials: this.configuration.withCredentials,

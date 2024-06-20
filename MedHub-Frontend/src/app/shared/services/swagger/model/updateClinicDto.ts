@@ -10,11 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface AddPatientDataDto {
-  cnp: string;
-  dateOfBirth: string;
-  weight: number;
-  height: number;
-  gender: string;
-  userId: number;
+export interface UpdateClinicDto {
+  id: number;
+  name: string;
+  location: string;
+  sendgridApiKey: string;
+  email: string;
 }

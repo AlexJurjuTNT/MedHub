@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AddClinicDto, ClinicDto, ClinicService} from "../../shared/services/swagger";
+import {AddClinicDto, ClinicDto, ClinicService, UpdateClinicDto} from "../../shared/services/swagger";
 
 @Component({
   selector: 'app-clinic-list',
@@ -39,7 +39,7 @@ export class ClinicListComponent implements OnInit {
     }
 
     this.clinicService.createClinic(addClinicDto).subscribe({
-      next: result => {
+      next: () => {
         this.createClinicPopupVisible = false;
         this.getAllClinics();
       }
@@ -53,7 +53,7 @@ export class ClinicListComponent implements OnInit {
 
   deleteClinic() {
     this.clinicService.deleteClinic(this.clinicId).subscribe({
-      next: result => {
+      next: () => {
         this.deletePopupVisible = false;
         this.getAllClinics();
       }
@@ -68,7 +68,7 @@ export class ClinicListComponent implements OnInit {
   updateClinic($event: SubmitEvent) {
     $event.preventDefault();
 
-    const updateClinic: ClinicDto = {
+    const updateClinic: UpdateClinicDto = {
       id: this.selectedClinic.id,
       name: this.updateClinicFormData.name,
       location: this.updateClinicFormData.location,
@@ -77,7 +77,7 @@ export class ClinicListComponent implements OnInit {
     }
 
     this.clinicService.updateClinic(this.selectedClinic.id, updateClinic).subscribe({
-      next: result => {
+      next: () => {
         this.updatePopupVisible = false;
         this.getAllClinics();
       }

@@ -9,12 +9,11 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import {TestTypeDto} from './testTypeDto';
 
-export interface AddPatientDataDto {
-  cnp: string;
-  dateOfBirth: string;
-  weight: number;
-  height: number;
-  gender: string;
-  userId: number;
+export interface LaboratoryDto {
+  id: number;
+  location: string;
+  clinicId: number;
+  testTypes: Array<TestTypeDto>;
 }
