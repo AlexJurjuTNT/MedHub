@@ -1,5 +1,3 @@
-
-
 using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
@@ -48,14 +46,18 @@ public class PatientController(
 
     [HttpPut("{patientId}")]
     [ProducesResponseType(200, Type = typeof(PatientDto))]
-    public async Task<IActionResult> UpdatePatientInformation([FromRoute] int patientId, [FromBody] PatientDto patientDto)
+    public async Task<IActionResult> UpdatePatientInformation([FromRoute] int patientId, [FromBody] UpdatePatientDto patientDto)
     {
-        if (patientId != patientDto.Id) return BadRequest();
-
         var existingPatient = await patientService.GetPatientAsync(patientId);
         if (existingPatient == null) return NotFound($"Patient with id {patientId} not found");
 
-        var updatedPatient = await patientService.UpdatePatientAsync(mapper.Map<Patient>(patientDto));
+        existingPatient.Cnp = patientDto.Cnp;
+        existingPatient.Gender = patientDto.Gender;
+        existingPatient.Height = patientDto.Height;
+        existingPatient.Weight = patientDto.Weight;
+        existingPatient.DateOfBirth = patientDto.DateOfBirth;
+
+        var updatedPatient = await patientService.UpdatePatientAsync(existingPatient);
         return Ok(mapper.Map<PatientDto>(updatedPatient));
     }
 
@@ -74,6 +76,7 @@ public class PatientController(
     {
         var user = await userService.GetUserByIdAsync(userId);
         if (user == null) return NotFound($"User with id {userId} not found");
+        if (user.Role.Name != "Patient") return BadRequest($"User with id {userId} is not a patient");
 
         return Ok(mapper.Map<PatientDto>(user.Patient));
     }
