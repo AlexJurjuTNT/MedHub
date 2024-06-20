@@ -5,9 +5,19 @@ import {AuthGuardService} from './shared/services';
 import {HomeComponent} from './pages/home/home.component';
 import {ProfileComponent} from './pages/profile/profile.component';
 import {TasksComponent} from './pages/tasks/tasks.component';
-import {DxButtonModule, DxDataGridModule, DxFormModule, DxLoadIndicatorModule, DxPopupModule, DxSelectBoxModule, DxTagBoxModule, DxTextBoxModule} from 'devextreme-angular';
+import {
+  DxButtonModule,
+  DxDataGridModule,
+  DxFileManagerModule,
+  DxFormModule,
+  DxLoadIndicatorModule,
+  DxPopupModule,
+  DxSelectBoxModule,
+  DxTagBoxModule,
+  DxTextBoxModule
+} from 'devextreme-angular';
 import {PatientAddComponent} from './pages/patient-add/patient-add.component';
-import {NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {PatientListComponent} from './pages/patient-list/patient-list.component';
 import {PatientTestsComponent} from "./pages/patient-tests/patient-tests.component";
 import {TestTypeListComponent} from './pages/test-type-list/test-type-list.component';
@@ -116,7 +126,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true}), DxDataGridModule, DxFormModule, DxLoadIndicatorModule, NgIf, DxSelectBoxModule, DxTagBoxModule, DxButtonModule, DxPopupModule, DxTextBoxModule],
+  imports: [RouterModule.forRoot(routes, {useHash: true}), DxDataGridModule, DxFormModule, DxLoadIndicatorModule, NgIf, DxSelectBoxModule, DxTagBoxModule, DxButtonModule, DxPopupModule, DxTextBoxModule, DxFileManagerModule, NgForOf],
   providers: [AuthGuardService],
   exports: [RouterModule],
   declarations: [

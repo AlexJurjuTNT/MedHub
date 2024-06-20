@@ -2,6 +2,7 @@
 <div class="content-block">
   <div class="dx-card responsive-paddings">
     <dx-button (click)="this.createClinicPopupVisible = true;" text="Add new Clinic"></dx-button>
+    <!--    popup for creating a new clinic -->
     <dx-popup
       [(visible)]="createClinicPopupVisible"
       [dragEnabled]="false"
@@ -12,7 +13,6 @@
       title="Create new Clinic"
     >
       <div *dxTemplate="let data of 'content'">
-
         <form (submit)="createClinic($event)">
           <dx-form [formData]="createClinicFormData">
             <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Name' }" dataField="name" editorType="dxTextBox">
@@ -66,9 +66,11 @@
       <dxi-column caption="Location" dataField="location"></dxi-column>
       <dxi-column caption="Email" dataField="email"></dxi-column>
       <dxi-column caption="Sendgrid Api Key" dataField="sendgridApiKey"></dxi-column>
+      <dxo-master-detail [enabled]="true" template="details"></dxo-master-detail>
 
       <dxi-column caption="Actions" cellTemplate="actionCellTemplate"></dxi-column>
 
+      <!--      template for all action buttons-->
       <div *dxTemplate="let data of 'actionCellTemplate'">
         <!--        Button that opens a dialog for deleting a test type -->
         <dx-button
@@ -83,8 +85,32 @@
           type="normal"
         ></dx-button>
       </div>
+
+      <div *dxTemplate="let clinic of 'details'">
+        <div class="master-detail-caption">
+          {{ clinic.name }}
+        </div>
+
+        <dx-data-grid
+          [dataSource]="clinic.data.laboratories"
+          [showBorders]="true"
+          [columnAutoWidth]="true"
+        >
+          <dxi-column caption="ID" dataField="id"></dxi-column>
+          <dxi-column caption="Location" dataField="location"></dxi-column>
+          <dxi-column caption="TestTypes" cellTemplate="testTypesTemplate"></dxi-column>
+
+          <div *dxTemplate="let laboratory of 'testTypesTemplate'">
+            <div *ngFor="let testType of laboratory.data.testTypes">
+              <span>{{ testType.name }}</span>
+            </div>
+          </div>
+        </dx-data-grid>
+      </div>
+
     </dx-data-grid>
 
+    <!--    popup for delete button-->
     <dx-popup
       [(visible)]="deletePopupVisible"
       [dragEnabled]="false"
@@ -99,6 +125,7 @@
       </div>
     </dx-popup>
 
+    <!--    popup for update button-->
     <dx-popup
       [(visible)]="updatePopupVisible"
       [dragEnabled]="false"

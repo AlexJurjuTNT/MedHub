@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AddClinicDto, ClinicDto, ClinicService, UpdateClinicDto} from "../../shared/services/swagger";
+import {AddClinicDto, ClinicDto, ClinicService, TestTypeDto, UpdateClinicDto} from "../../shared/services/swagger";
 
 @Component({
   selector: 'app-clinic-list',
@@ -90,5 +90,9 @@ export class ClinicListComponent implements OnInit {
         this.dataSource = result;
       }
     })
+  }
+
+  getTestTypeNames(testTypes: TestTypeDto[]): string {
+    return testTypes.map(testType => testType.name).join(', ');
   }
 }
