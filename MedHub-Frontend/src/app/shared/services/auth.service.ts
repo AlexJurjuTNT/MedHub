@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
-import {AuthenticationService, UserDto, UserService} from "./swagger";
+import {UserDto, UserService} from "./swagger";
 import {TokenService} from "./token.service";
 
-const defaultPath = '/';
+const defaultPath = '/home';
 
 @Injectable()
 export class AuthService {
@@ -11,17 +11,16 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService,
     private userService: UserService,
     private tokenService: TokenService
   ) {
   }
 
-  // todo: if token is set and valid get user using the token value
   get loggedIn(): boolean {
     return !!this._user;
   }
 
+  // todo: change default path when logging in, patient->Tests
   private _lastAuthenticatedPath: string = defaultPath;
 
   set lastAuthenticatedPath(value: string) {

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {PatientDto, PatientService, TestRequestDto, TestRequestService, TestTypeDto} from "../../shared/services/swagger";
+import {PatientService, TestRequestDto, TestRequestService, TestTypeDto} from "../../shared/services/swagger";
+import {TokenService} from "../../shared/services/token.service";
 
 @Component({
   selector: 'app-patient-tests',
@@ -9,7 +10,8 @@ import {PatientDto, PatientService, TestRequestDto, TestRequestService, TestType
 })
 export class PatientTestsComponent implements OnInit {
   userId: number = 0;
-  patient: PatientDto = {} as PatientDto;
+
+  role: string = "";
   dataSource: TestRequestDto[] = [];
   remainingTestTypes: { [key: number]: TestTypeDto[] } = {};
 
@@ -17,17 +19,34 @@ export class PatientTestsComponent implements OnInit {
     private route: ActivatedRoute,
     private patientService: PatientService,
     private testRequestService: TestRequestService,
+    private tokenService: TokenService,
     private router: Router
   ) {
   }
 
+// todo: improve this, make calls sync instead of chaining them
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.userId = Number(params.get('id'));
-      this.patientService.getTestRequestsOfPatient(this.userId).subscribe({
-        next: (result: TestRequestDto[]) => {
-          this.dataSource = result;
-          this.loadRemainingTestTypes();
+      this.getTestRequestsOfPatient();
+      this.role = this.tokenService.getUserRole();
+    });
+  }
+
+  private getTestRequestsOfPatient() {
+    this.patientService.getTestRequestsOfPatient(this.userId).subscribe({
+      next: (result: TestRequestDto[]) => {
+        this.dataSource = result;
+        this.loadRemainingTestTypes();
+      }
+    });
+  }
+
+  private loadRemainingTestTypes() {
+    this.dataSource.forEach(testRequest => {
+      this.testRequestService.getRemainingTestTypes(testRequest.id).subscribe({
+        next: (result: TestTypeDto[]) => {
+          this.remainingTestTypes[testRequest.id] = result;
         }
       });
     });
@@ -43,15 +62,5 @@ export class PatientTestsComponent implements OnInit {
 
   navigateToAddTestResult(testRequestId: number, remainingTestTypes: TestTypeDto[]) {
     this.router.navigate(['pages/test-result-create', testRequestId], {state: {remainingTestTypes}});
-  }
-
-  private loadRemainingTestTypes() {
-    this.dataSource.forEach(testRequest => {
-      this.testRequestService.getRemainingTestTypes(testRequest.id).subscribe({
-        next: (result: TestTypeDto[]) => {
-          this.remainingTestTypes[testRequest.id] = result;
-        }
-      });
-    });
   }
 }

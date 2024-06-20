@@ -1,3 +1,5 @@
+import {TokenService} from "./shared/services/token.service";
+
 export const doctorNavigation = [
   {
     text: 'Home',
@@ -28,6 +30,22 @@ export const doctorNavigation = [
   {
     text: 'Test Request Create',
     path: '/pages/test-request-create',
+    icon: 'folder'
+  }
+];
+
+const tokenService = new TokenService();
+
+let userId;
+if (tokenService.isTokenValid()) {
+  userId = tokenService.getUserId();
+}
+
+
+export const patientNavigation = [
+  {
+    text: 'Patient Tests',
+    path: `/pages/patient-tests/${userId}`,
     icon: 'folder'
   }
 ];

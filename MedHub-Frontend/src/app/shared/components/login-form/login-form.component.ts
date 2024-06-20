@@ -50,6 +50,7 @@ export class LoginFormComponent {
               this.authService.setUser(userResult);
               this.tokenService.token = result.token;
               this.loading = false;
+              this.router.navigate(["/home"])
             },
             error: (error) => {
               console.error('Error fetching user:', error);

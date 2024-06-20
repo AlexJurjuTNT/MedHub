@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, NgModule, OnDestroy, Output, ViewChild} from '@angular/core';
 import {DxTreeViewComponent, DxTreeViewModule, DxTreeViewTypes} from 'devextreme-angular/ui/tree-view';
-import {adminNavigation, doctorNavigation} from '../../../app-navigation';
+import {adminNavigation, doctorNavigation, patientNavigation} from '../../../app-navigation';
 
 import * as events from 'devextreme/events';
 import {UserDto} from "../../services/swagger";
@@ -57,9 +57,8 @@ export class SideNavigationMenuComponent implements AfterViewInit, OnDestroy {
             navItems = doctorNavigation;
             break;
 
-          // todo: separate patient nav
           case "Patient":
-            navItems = doctorNavigation;
+            navItems = patientNavigation;
             break;
 
           default:

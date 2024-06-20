@@ -25,8 +25,10 @@
         </div>
         <div *ngIf="remainingTestTypes[request.data.id]?.length!> 0">
           <span>Remaining Test Types: {{ getTestTypeNames(remainingTestTypes[request.data.id]) }}</span>
-          <dx-button (onClick)="navigateToAddTestResult(request.data.id, remainingTestTypes[request.data.id])"
-                     [text]="'Add Test Result'"></dx-button>
+          <div *ngIf="role !== 'Patient'">
+            <dx-button (onClick)="navigateToAddTestResult(request.data.id, remainingTestTypes[request.data.id])"
+                       [text]="'Add Test Result'"></dx-button>
+          </div>
         </div>
       </div>
 
