@@ -19,5 +19,8 @@ public class Clinic
     [Column("sendgrid_api_key")]
     public string SendgridApiKey { get; set; }
 
+    [Column("email")]
+    public string Email { get; set; }
+
     public virtual ICollection<User> Users { get; set; }
 }

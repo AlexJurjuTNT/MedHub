@@ -19,9 +19,10 @@ public class TestRequestService(
         return await appDbContext.TestRequests.FindAsync(testRequestId);
     }
 
-    public async Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest)
+    public async Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest, List<TestType> testTypes)
     {
         await appDbContext.TestRequests.AddAsync(testRequest);
+        testRequest.TestTypes = testTypes;
         await appDbContext.SaveChangesAsync();
         return testRequest;
     }
@@ -41,14 +42,6 @@ public class TestRequestService(
         appDbContext.TestRequests.Remove(testRequest);
         await appDbContext.SaveChangesAsync();
         return true;
-    }
-
-    public async Task<TestRequest> AddTestTypesAsync(TestRequest testRequest, List<TestType> testTypes)
-    {
-        testRequest.TestTypes = testTypes;
-        appDbContext.TestRequests.Update(testRequest);
-        await appDbContext.SaveChangesAsync();
-        return testRequest;
     }
 
     public async Task<List<TestRequest>> GetAllTestRequestsOfUserAsync(int userId)

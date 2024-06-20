@@ -14,6 +14,8 @@ public class TestRequestController(
     ITestRequestService testRequestService,
     ITestTypeService testTypeService,
     IUserService userService,
+    IClinicService clinicService,
+    IEmailService emailService,
     IMapper mapper
 ) : ControllerBase
 {
@@ -43,26 +45,32 @@ public class TestRequestController(
     [ProducesResponseType(201, Type = typeof(AddTestRequestDto))]
     public async Task<IActionResult> CreateTestRequest([FromBody] AddTestRequestDto testRequestDto)
     {
-        var patientUser = await userService.GetUserByIdAsync(testRequestDto.PatientId);
-        if (patientUser == null) return NotFound($"Patient with id {testRequestDto.PatientId} not found");
+        var userPatient = await userService.GetUserByIdAsync(testRequestDto.PatientId);
+        if (userPatient == null) return NotFound($"Patient with id {testRequestDto.PatientId} not found");
+        if (userPatient.Role.Name != "Patient") return BadRequest($"User with id {testRequestDto.PatientId} is not a patient");
 
-        if (patientUser.Role.Name != "Patient") return BadRequest($"User with id {testRequestDto.PatientId} is not a patient");
+        var userDoctor = await userService.GetUserByIdAsync(testRequestDto.DoctorId);
+        if (userDoctor == null) return NotFound($"Doctor with id {testRequestDto.DoctorId} not found");
+        if (userDoctor.Role.Name != "Doctor") return BadRequest($"User with id {testRequestDto.DoctorId} is not a doctor");
 
-        var doctorUser = await userService.GetUserByIdAsync(testRequestDto.DoctorId);
-        if (doctorUser == null) return NotFound($"Doctor with id {testRequestDto.DoctorId} not found");
+        var clinic = await clinicService.GetClinicByIdAsync(userDoctor.ClinicId);
+        if (clinic == null) return NotFound($"Clinic with id {userDoctor.ClinicId} not found");
 
-        if (doctorUser.Role.Name != "Doctor") return BadRequest($"User with id {testRequestDto.DoctorId} is not a doctor");
+        try
+        {
+            var testRequest = mapper.Map<TestRequest>(testRequestDto);
+            testRequest.RequestDate = DateTime.Now;
+            var testTypes = await testTypeService.GetTestTypesFromIdList(testRequestDto.TestTypesId);
+            var createdTestRequest = await testRequestService.CreateNewTestRequestAsync(testRequest, testTypes);
 
-        var testRequest = mapper.Map<TestRequest>(testRequestDto);
-        testRequest.RequestDate = DateTime.Now;
+            await emailService.SendCreatedTestRequestEmail(clinic, createdTestRequest);
 
-        var createdTestRequest = await testRequestService.CreateNewTestRequestAsync(testRequest);
-
-        var testTypes = await testTypeService.GetTestTypesFromIdList(testRequestDto.TestTypesId);
-
-        createdTestRequest = await testRequestService.AddTestTypesAsync(createdTestRequest, testTypes);
-
-        return CreatedAtAction(nameof(GetTestRequestById), new { testRequestId = createdTestRequest.Id }, mapper.Map<TestRequestDto>(createdTestRequest));
+            return CreatedAtAction(nameof(GetTestRequestById), new { testRequestId = createdTestRequest.Id }, mapper.Map<TestRequestDto>(createdTestRequest));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPut("{testRequestId}")]
@@ -73,12 +81,10 @@ public class TestRequestController(
 
         var patientUser = await userService.GetUserByIdAsync(testRequestDto.PatientId);
         if (patientUser == null) return NotFound($"Patient with id {testRequestDto.PatientId} not found");
-
         if (patientUser.Role.Name != "Patient") return BadRequest($"User with id {testRequestDto.PatientId} is not a patient");
 
         var doctorUser = await userService.GetUserByIdAsync(testRequestDto.DoctorId);
         if (doctorUser == null) return NotFound($"Doctor with id {testRequestDto.DoctorId} not found");
-
         if (doctorUser.Role.Name != "Doctor") return BadRequest($"User with id {testRequestDto.DoctorId} is not a doctor");
 
         var existingTestRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);

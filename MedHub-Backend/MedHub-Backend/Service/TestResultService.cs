@@ -43,23 +43,22 @@ public class TestResultService(
     {
         await appDbContext.TestResults.AddAsync(testResult);
         await appDbContext.SaveChangesAsync();
-        // interesting detail - when i return this TestResults object, the testRequest that comes with it is null because the db is not accessed to update the fields
         return testResult;
     }
 
     public async Task<TestResult> UploadResult(TestResult testResult, TestRequest testRequest, IFormFile formFile)
     {
         // upload the pdf
-        var patient = testRequest.Patient;
-        var clinic = patient.Clinic;
-        var pdfPath = await UploadResultFile(formFile, patient, clinic);
+        var patientUser = testRequest.Patient;
+        var clinic = patientUser.Clinic;
+        var pdfPath = await UploadResultFile(formFile, patientUser, clinic);
 
         // insert testResult object to the db
         testResult.FilePath = pdfPath;
         testResult.CompletionDate = DateTime.UtcNow;
         var createdTestResult = await CreateTestResultAsync(testResult);
 
-        await emailService.SendPatientResultsCompleteEmail(clinic.SendgridApiKey, patient.Email, patient.Username);
+        await emailService.SendPatientResultsCompleteEmail(clinic, patientUser);
 
         return createdTestResult;
     }

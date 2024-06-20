@@ -28,6 +28,7 @@ public class AuthenticationService(
         user.Username = clinic.Name + clinic.Id + user.Email.Substring(0, user.Email.IndexOf('@'));
         user.Role = patientRole;
         var tempPassword = passwordService.GenerateRandomPassword(8);
+        Console.WriteLine(tempPassword);
         user.Password = BCrypt.Net.BCrypt.HashPassword(tempPassword);
         user.HasToResetPassword = true;
 

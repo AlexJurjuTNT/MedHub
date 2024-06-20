@@ -6,10 +6,9 @@ public interface ITestRequestService
 {
     Task<List<TestRequest>> GetAllTestRequestsAsync();
     Task<TestRequest?> GetTestRequestByIdAsync(int testRequestId);
-    Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest);
+    Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest, List<TestType> testTypes);
     Task<TestRequest> UpdateTestRequestAsync(TestRequest testRequest);
     Task<bool> DeleteTestRequestAsync(int testRequestId);
-    Task<TestRequest> AddTestTypesAsync(TestRequest testRequest, List<TestType> testTypes);
     Task<List<TestRequest>> GetAllTestRequestsOfUserAsync(int userId);
     Task<List<int>> GetExistingTestTypeIdsForTestRequestAsync(int testRequestId);
 }
