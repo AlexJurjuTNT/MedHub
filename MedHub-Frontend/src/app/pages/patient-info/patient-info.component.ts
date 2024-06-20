@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {PatientDto, PatientService} from "../../shared/services/swagger";
-import {ActivatedRoute, Router} from "@angular/router";
+import {PatientDto, PatientService, UpdatePatientDto} from "../../shared/services/swagger";
+import {ActivatedRoute} from "@angular/router";
+
 
 @Component({
   selector: 'app-patient-info',
@@ -13,10 +14,12 @@ export class PatientInfoComponent implements OnInit {
   userId: number = 0;
   colCountByScreen: object;
 
+  updatePopupVisible: boolean = false;
+  patientCopy: PatientDto = {} as PatientDto;
+
   constructor(
     private patientService: PatientService,
     private route: ActivatedRoute,
-    private router: Router
   ) {
 
     this.colCountByScreen = {
@@ -44,5 +47,31 @@ export class PatientInfoComponent implements OnInit {
     });
   }
 
+  showUpdatePopup() {
+    this.updatePopupVisible = true;
+    this.patientCopy = {...this.patient};
+  }
 
+  hideUpdatePopup() {
+    this.getPatientInfo();
+    this.updatePopupVisible = false;
+  }
+
+  updatePatientInfo($event: SubmitEvent) {
+    $event.preventDefault()
+
+    const updatePatientInfo: UpdatePatientDto = {
+      cnp: this.patientCopy.cnp,
+      dateOfBirth: this.patientCopy.dateOfBirth,
+      weight: this.patientCopy.weight,
+      height: this.patientCopy.height,
+      gender: this.patientCopy.gender,
+    }
+
+    this.patientService.updatePatientInformation(this.patient.id, updatePatientInfo).subscribe({
+      next: () => {
+        this.hideUpdatePopup();
+      }
+    })
+  }
 }

@@ -23,6 +23,7 @@ import {PatientDto} from '../model/patientDto';
 import {SortingInfo} from '../model/sortingInfo';
 import {SummaryInfo} from '../model/summaryInfo';
 import {TestRequestDto} from '../model/testRequestDto';
+import {UpdatePatientDto} from '../model/updatePatientDto';
 import {UserDto} from '../model/userDto';
 
 import {BASE_PATH} from '../variables';
@@ -470,13 +471,13 @@ export class PatientService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public updatePatientInformation(patientId: number, body?: PatientDto, observe?: 'body', reportProgress?: boolean): Observable<PatientDto>;
+  public updatePatientInformation(patientId: number, body?: UpdatePatientDto, observe?: 'body', reportProgress?: boolean): Observable<PatientDto>;
 
-  public updatePatientInformation(patientId: number, body?: PatientDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<PatientDto>>;
+  public updatePatientInformation(patientId: number, body?: UpdatePatientDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<PatientDto>>;
 
-  public updatePatientInformation(patientId: number, body?: PatientDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<PatientDto>>;
+  public updatePatientInformation(patientId: number, body?: UpdatePatientDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<PatientDto>>;
 
-  public updatePatientInformation(patientId: number, body?: PatientDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public updatePatientInformation(patientId: number, body?: UpdatePatientDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     if (patientId === null || patientId === undefined) {
       throw new Error('Required parameter patientId was null or undefined when calling updatePatientInformation.');

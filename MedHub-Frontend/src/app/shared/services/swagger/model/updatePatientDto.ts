@@ -10,12 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface PatientDto {
-  id: number;
+export interface UpdatePatientDto {
   cnp: string;
   dateOfBirth: string;
   weight: number;
   height: number;
   gender: string;
-  userId: number;
 }

@@ -10,7 +10,16 @@ import {AppRoutingModule} from './app-routing.module';
 import {ApiModule} from "./shared/services/swagger";
 import {HttpClientModule, provideHttpClient, withInterceptors} from "@angular/common/http";
 import {PatientTestsComponent} from './pages/patient-tests/patient-tests.component';
-import {DxButtonModule, DxDataGridModule, DxFileUploaderModule, DxFormModule, DxLoadIndicatorModule, DxTagBoxModule, DxTemplateModule} from "devextreme-angular";
+import {
+    DxButtonModule,
+    DxDataGridModule,
+    DxFileUploaderModule,
+    DxFormModule,
+    DxLoadIndicatorModule,
+    DxPopupModule,
+    DxTagBoxModule,
+    DxTemplateModule
+} from "devextreme-angular";
 import {DxiColumnModule, DxoFilterRowModule, DxoPagerModule, DxoPagingModule} from "devextreme-angular/ui/nested";
 import {TestResultCreateComponent} from './pages/test-result-create/test-result-create.component';
 import {TestResultView} from './pages/test-result-view/test-result-view';
@@ -52,6 +61,7 @@ import { PatientInfoComponent } from './pages/patient-info/patient-info.componen
         DxTagBoxModule,
         DxFormModule,
         DxLoadIndicatorModule,
+        DxPopupModule,
     ],
   providers: [
     AuthService,

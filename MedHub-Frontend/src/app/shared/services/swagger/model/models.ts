@@ -19,6 +19,7 @@ export * from './testRequestDto';
 export * from './testResultDto';
 export * from './testTypeDto';
 export * from './updateClinicDto';
+export * from './updatePatientDto';
 export * from './userDto';
 export * from './userRegisterDto';
 export * from './v1TestResultBody';

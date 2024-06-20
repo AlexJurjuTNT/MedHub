@@ -1,13 +1,92 @@
 <h2 class="content-block">Patient Information</h2>
 <div class="content-block">
   <div class="dx-card responsive-paddings">
-
     <dx-form [colCountByScreen]="colCountByScreen"
              [formData]="patient"
              id="form"
              labelLocation="top"
+             [readOnly]="true"
     >
+      <dxi-item
+        dataField="cnp"
+        [label]="{ text: 'CNP' }"
+      ></dxi-item>
+      <dxi-item
+        dataField="dateOfBirth"
+        [editorOptions]="{ displayFormat: 'yyyy-MM-dd' }"
+        [label]="{ text: 'Date of Birth' }"
+      ></dxi-item>
+      <dxi-item
+        dataField="weight"
+        [label]="{ text: 'Weight' }"
+      ></dxi-item>
+      <dxi-item
+        dataField="height"
+        [label]="{ text: 'Height' }"
+      ></dxi-item>
+      <dxi-item
+        dataField="gender"
+        [label]="{ text: 'Gender' }"
+      ></dxi-item>
     </dx-form>
+    <dx-button text="Update" type="success" (onClick)="showUpdatePopup()"></dx-button>
+
+    <dx-popup
+      [(visible)]="updatePopupVisible"
+      [showTitle]="true"
+      title="Update Patient Information"
+      [dragEnabled]="false"
+      [showCloseButton]="true"
+    >
+      <div *dxTemplate="let data of 'content'">
+        <form (submit)="updatePatientInfo($event)">
+          <dx-form
+            [colCountByScreen]="colCountByScreen"
+            [formData]="patientCopy"
+            labelLocation="top">
+            <dxi-item
+              dataField="cnp"
+              [editorOptions]="{ mode: 'text' }"
+              [label]="{ text: 'CNP' }"
+            ></dxi-item>
+            <dxi-item
+              dataField="dateOfBirth"
+              editorType="dxDateBox"
+              [label]="{ text: 'Date of Birth' }"
+            ></dxi-item>
+            <dxi-item
+              dataField="weight"
+              [editorOptions]="{ mode: 'text' }"
+              [label]="{ text: 'Weight' }"
+            ></dxi-item>
+            <dxi-item
+              dataField="height"
+              [editorOptions]="{ mode: 'text' }"
+              [label]="{ text: 'Height' }"
+            ></dxi-item>
+            <dxi-item
+              dataField="gender"
+              editorType="dxSelectBox"
+              [editorOptions]="{
+                  items: ['Male', 'Female'],
+                  value: patientCopy.gender
+                }"
+              [label]="{ text: 'Gender' }"
+            ></dxi-item>
+            <dxi-item itemType="button">
+              <dxo-button-options
+                [text]="'Update Patient Info'"
+                [useSubmitBehavior]="true"
+                type="default"
+                width="100%"
+              >
+              </dxo-button-options>
+            </dxi-item>
+          </dx-form>
+        </form>
+      </div>
+    </dx-popup>
+
 
   </div>
 </div>
