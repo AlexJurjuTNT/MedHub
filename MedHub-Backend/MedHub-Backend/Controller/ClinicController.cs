@@ -3,7 +3,7 @@ using MedHub_Backend.Dto.Clinic;
 using MedHub_Backend.Dto.Laboratory;
 using MedHub_Backend.Dto.User;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.Clinic;
+using MedHub_Backend.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;
@@ -93,7 +93,7 @@ public class ClinicController(
     }
 
     /// <summary>
-    ///     Retrive all doctors of a clinic
+    ///     Retrieve all doctors of a clinic
     /// </summary>
     /// <param name="clinicId">ID of the clinic where the doctors are</param>
     /// <returns>List of all doctors that belong to that clinic</returns>

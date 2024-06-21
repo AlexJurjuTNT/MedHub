@@ -2,12 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using MedHub_Backend.Dto.TestResult;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.Clinic;
-using MedHub_Backend.Service.File;
-using MedHub_Backend.Service.TestRequest;
-using MedHub_Backend.Service.TestResult;
-using MedHub_Backend.Service.TestType;
-using MedHub_Backend.Service.User;
+using MedHub_Backend.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

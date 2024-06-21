@@ -7,10 +7,7 @@ using MedHub_Backend.Dto.TestRequest;
 using MedHub_Backend.Dto.User;
 using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.Clinic;
-using MedHub_Backend.Service.Patient;
-using MedHub_Backend.Service.TestRequest;
-using MedHub_Backend.Service.User;
+using MedHub_Backend.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;
@@ -105,12 +102,12 @@ public class PatientController(
     [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
     public async Task<IActionResult> GetTestRequestsOfPatient([FromRoute] int patientId)
     {
-        var patient = await userService.GetUserByIdAsync(patientId);
-        if (patient == null) return NotFound();
+        var userPatient = await userService.GetUserByIdAsync(patientId);
+        if (userPatient == null) return NotFound($"User with id {patientId} not found");
 
-        if (patient.Role.Name != "Patient") return BadRequest();
+        if (userPatient.Role.Name != "Patient") return BadRequest();
 
-        var testRequests = await testRequestService.GetAllTestRequestsOfUserAsync(patient.Id);
+        var testRequests = await testRequestService.GetAllTestRequestsOfUserAsync(userPatient.Id);
         return Ok(mapper.Map<List<TestRequestDto>>(testRequests));
     }
 }

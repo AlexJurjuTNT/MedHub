@@ -4,8 +4,7 @@ using MedHub_Backend.Dto.Authentication;
 using MedHub_Backend.Dto.User;
 using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.Authentication;
-using MedHub_Backend.Service.User;
+using MedHub_Backend.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;
@@ -31,9 +30,9 @@ public class AuthenticationController(
         {
             return NotFound(ex.Message);
         }
-        catch (PasswordMismatchException)
+        catch (PasswordMismatchException ex)
         {
-            return Unauthorized("Passwords don't match");
+            return Unauthorized(ex.Message);
         }
     }
 
@@ -46,13 +45,9 @@ public class AuthenticationController(
             var admin = await authenticationService.RegisterAdminAsync(user);
             return Ok(mapper.Map<UserDto>(admin));
         }
-        catch (UserAlreadyExistsException)
+        catch (UserAlreadyExistsException ex)
         {
-            return Conflict("Admin with username or email already exists");
-        }
-        catch (RoleNotFoundException)
-        {
-            return BadRequest("Admin with name Doctor doesn't exist");
+            return Conflict(ex.Message);
         }
     }
 
@@ -65,13 +60,13 @@ public class AuthenticationController(
             var doctor = await authenticationService.RegisterDoctorAsync(user);
             return Ok(mapper.Map<UserDto>(doctor));
         }
-        catch (UserAlreadyExistsException)
+        catch (UserAlreadyExistsException ex)
         {
-            return Conflict("Doctor with username or email already exists");
+            return Conflict(ex.Message);
         }
-        catch (RoleNotFoundException)
+        catch (ClinicNotFoundException ex)
         {
-            return BadRequest("Role with name Doctor doesn't exist");
+            return Conflict(ex.Message);
         }
     }
 
@@ -85,17 +80,13 @@ public class AuthenticationController(
             var patientResult = await authenticationService.RegisterPatientAsync(patient);
             return Ok(mapper.Map<UserDto>(patientResult));
         }
-        catch (UserAlreadyExistsException)
+        catch (UserAlreadyExistsException ex)
         {
-            return Conflict("User already exists");
+            return Conflict(ex.Message);
         }
-        catch (ClinicNotFoundException)
+        catch (ClinicNotFoundException ex)
         {
-            return NotFound($"Clinic with id {patientRegisterDto.ClinicId} doesn't exist");
-        }
-        catch (RoleNotFoundException)
-        {
-            return BadRequest("Role with name Patient doesn't exist");
+            return NotFound(ex.Message);
         }
     }
 
@@ -136,7 +127,6 @@ public class AuthenticationController(
 
         if (changeDefaultPasswordDto.Password != changeDefaultPasswordDto.ConfirmPassword) return BadRequest();
         await authenticationService.ResetPassword(user, changeDefaultPasswordDto.Password);
-
 
         return Ok();
     }

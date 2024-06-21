@@ -1,7 +1,7 @@
 using AutoMapper;
 using MedHub_Backend.Dto.TestType;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.TestType;
+using MedHub_Backend.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;
