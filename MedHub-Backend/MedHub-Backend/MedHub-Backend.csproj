@@ -30,7 +30,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Dto\Doctor\"/>
         <Folder Include="Uploads\"/>
         <Folder Include="Uploads\Documents\"/>
         <Folder Include="Uploads\Documents\Catena\Catena1realbigboialex\"/>

@@ -19,6 +19,9 @@ public class TestRequestDto
     public int DoctorId { get; set; }
 
     [Required]
+    public int LaboratoryId { get; set; }
+
+    [Required]
     public List<TestTypeDto> TestTypes { get; set; }
 
     [Required]
