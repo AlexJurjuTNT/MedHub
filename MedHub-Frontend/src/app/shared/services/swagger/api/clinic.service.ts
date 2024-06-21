@@ -17,6 +17,7 @@ import {Observable} from 'rxjs';
 
 import {AddClinicDto} from '../model/addClinicDto';
 import {ClinicDto} from '../model/clinicDto';
+import {LaboratoryDto} from '../model/laboratoryDto';
 import {UpdateClinicDto} from '../model/updateClinicDto';
 import {UserDto} from '../model/userDto';
 
@@ -237,6 +238,58 @@ export class ClinicService {
     const consumes: string[] = [];
 
     return this.httpClient.request<Array<UserDto>>('get', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}/doctors`,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
+
+  /**
+   *
+   *
+   * @param clinicId
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getAllLaboratoriesOfClinic(clinicId: number, observe?: 'body', reportProgress?: boolean): Observable<Array<LaboratoryDto>>;
+
+  public getAllLaboratoriesOfClinic(clinicId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LaboratoryDto>>>;
+
+  public getAllLaboratoriesOfClinic(clinicId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LaboratoryDto>>>;
+
+  public getAllLaboratoriesOfClinic(clinicId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+    if (clinicId === null || clinicId === undefined) {
+      throw new Error('Required parameter clinicId was null or undefined when calling getAllLaboratoriesOfClinic.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (Bearer) required
+    if (this.configuration.accessToken) {
+      const accessToken = typeof this.configuration.accessToken === 'function'
+        ? this.configuration.accessToken()
+        : this.configuration.accessToken;
+      headers = headers.set('Authorization', 'Bearer ' + accessToken);
+    }
+    // to determine the Accept header
+    let httpHeaderAccepts: string[] = [
+      'text/plain',
+      'application/json',
+      'text/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected != undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = [];
+
+    return this.httpClient.request<Array<LaboratoryDto>>('get', `${this.basePath}/api/v1/Clinic/${encodeURIComponent(String(clinicId))}/laboratories`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,

@@ -23,6 +23,29 @@
 
       <div class="dx-field">
         <div class="dx-field-label">
+          Laboratories
+        </div>
+
+        <div class="dx-field-value">
+          <!--          todo: what to display for the laboratory select ?-->
+          <dx-select-box
+            (onValueChanged)="selectedLaboratoryId = $event.value"
+            [dataSource]="laboratories"
+            [searchEnabled]="true"
+            [searchExpr]="['name']"
+            [searchMode]="'contains'"
+            [showClearButton]="true"
+            [value]="selectedLaboratoryId"
+            displayExpr="location"
+            valueExpr="id"
+            placeholder="Select a laboratory"
+          ></dx-select-box>
+        </div>
+      </div>
+
+
+      <div class="dx-field">
+        <div class="dx-field-label">
           Test Types
         </div>
 

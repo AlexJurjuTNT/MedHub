@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AddTestRequestDto, PatientService, TestRequestService, TestTypeDto, TestTypeService, UserDto} from "../../shared/services/swagger";
+import {AddTestRequestDto, ClinicService, LaboratoryDto, PatientService, TestRequestService, TestTypeDto, TestTypeService, UserDto} from "../../shared/services/swagger";
 import {AuthService} from "../../shared/services";
 
 @Component({
@@ -11,35 +11,41 @@ export class TestRequestCreateComponent implements OnInit {
 
   users: UserDto[] = [];
   testTypes: TestTypeDto[] = [];
+  doctor: UserDto = {} as UserDto;
+  laboratories: LaboratoryDto[] = [];
+
   selectedUserId: number | null = null;
   selectedTestTypesIds: number[] = [];
-  user: UserDto = {} as UserDto;
-
+  selectedLaboratoryId: number | undefined = undefined;
 
   constructor(
     private patientService: PatientService,
     private testTypeService: TestTypeService,
+    private testRequestService: TestRequestService,
     private authService: AuthService,
-    private testRequestService: TestRequestService
+    private clinicService: ClinicService,
   ) {
   }
 
+  // todo: make it so available testTypes are chosen from the laboratory
   ngOnInit(): void {
     this.authService.getUser().then((e) => {
       if (e.data) {
-        this.user = e.data;
+        this.doctor = e.data;
         this.getUsers();
         this.getTestTypes();
+        this.getLaboratoriesOfClinic();
       }
     });
   }
 
   createTestRequest() {
-    if (this.selectedUserId && this.selectedTestTypesIds.length > 0) {
+    if (this.selectedUserId && this.selectedLaboratoryId && this.selectedTestTypesIds.length > 0) {
       const testRequest: AddTestRequestDto = {
         patientId: this.selectedUserId,
-        doctorId: this.user.id,
-        testTypesId: this.selectedTestTypesIds
+        doctorId: this.doctor.id,
+        testTypesId: this.selectedTestTypesIds,
+        laboratoryId: this.selectedLaboratoryId
       };
 
       this.testRequestService.createTestRequest(testRequest).subscribe({
@@ -55,7 +61,7 @@ export class TestRequestCreateComponent implements OnInit {
   }
 
   private getUsers() {
-    this.patientService.getAllPatientsOfClinic(this.user.clinicId).subscribe({
+    this.patientService.getAllPatientsOfClinic(this.doctor.clinicId).subscribe({
       next: (result) => {
         this.users = result.data!;
       }
@@ -69,4 +75,17 @@ export class TestRequestCreateComponent implements OnInit {
       }
     })
   }
+
+  private getLaboratoriesOfClinic() {
+    this.clinicService.getAllLaboratoriesOfClinic(this.doctor.clinicId).subscribe({
+      next: (result: LaboratoryDto[]) => {
+        this.laboratories = result;
+        console.log('Laboratories:', this.laboratories);
+      },
+      error: (error) => {
+        console.error('Error fetching laboratories:', error);
+      }
+    });
+  }
+
 }
