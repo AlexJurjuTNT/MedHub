@@ -1,49 +1,37 @@
 <h2 class="content-block">Test Type List</h2>
 <div class="content-block">
   <div class="dx-card responsive-paddings">
+    <dx-button
+      (click)="viewPatient(selectedRow?.id)"
+      [text]="'View Patient Tests'"
+      [disabled]="!selectedRow"
+    ></dx-button>
+    <dx-button
+      (click)="viewPatientInformation(selectedRow?.id)"
+      [text]="'View Patient Information'"
+      [disabled]="!selectedRow"
+    ></dx-button>
 
-    <dx-data-grid [columnAutoWidth]="true"
-                  [columnHidingEnabled]="true"
-                  [dataSource]="dataSource"
-                  [focusedRowEnabled]="false"
-                  [showBorders]="true"
-                  class="dx-card wide-card">
+    <dx-data-grid
+      [dataSource]="customDataSource"
+      [columnAutoWidth]="true"
+      [columnHidingEnabled]="true"
+      [focusedRowEnabled]="true"
+      [showBorders]="true"
+      (onSelectionChanged)="onSelectionChanged($event)"
+      [(selectedRowKeys)]="selectedRowKeys"
+      class="dx-card wide-card">
 
+      <dxo-selection mode="single"></dxo-selection>
+      <dxo-remote-operations [groupPaging]="true"></dxo-remote-operations>
       <dxo-paging [pageSize]="10"></dxo-paging>
       <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
       <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-editing mode="row" [allowDeleting]="true" [confirmDelete]="true"></dxo-editing>
 
-      <!-- Define the columns for UserDto data -->
       <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
       <dxi-column caption="Email" dataField="email"></dxi-column>
       <dxi-column caption="Username" dataField="username"></dxi-column>
-      <dxi-column cellTemplate="viewPatientTestsTemplate"></dxi-column>
-      <dxi-column cellTemplate="viewPatientInformationTemplate"></dxi-column>
-      <dxi-column cellTemplate="deleteButtonTemplate"></dxi-column>
-
-      <div *dxTemplate="let user of 'viewPatientTestsTemplate'">
-        <dx-button
-          (click)="viewPatient(user.data.id)"
-          [text]="'View Patient Tests'"
-        ></dx-button>
-      </div>
-
-      <div *dxTemplate="let user of 'viewPatientInformationTemplate'">
-        <dx-button
-          (click)="viewPatientInformation(user.data.id)"
-          [text]="'View Patient Information'"
-        ></dx-button>
-      </div>
-
-      <div *dxTemplate="let user of 'deleteButtonTemplate'">
-        <dx-button
-          (click)="deleteUser(user.data.id)"
-          [text]="'Delete'"
-        ></dx-button>
-      </div>
-
     </dx-data-grid>
   </div>
 </div>
-
-

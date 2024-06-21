@@ -19,6 +19,7 @@ import {AddTestRequestDto} from '../model/addTestRequestDto';
 import {TestRequestDto} from '../model/testRequestDto';
 import {TestResultDto} from '../model/testResultDto';
 import {TestTypeDto} from '../model/testTypeDto';
+import {UpdateTestRequestDto} from '../model/updateTestRequestDto';
 
 import {BASE_PATH} from '../variables';
 import {Configuration} from '../configuration';
@@ -362,13 +363,13 @@ export class TestRequestService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public updateTestRequest(testRequestId: number, body?: TestRequestDto, observe?: 'body', reportProgress?: boolean): Observable<TestRequestDto>;
+  public updateTestRequest(testRequestId: number, body?: UpdateTestRequestDto, observe?: 'body', reportProgress?: boolean): Observable<TestRequestDto>;
 
-  public updateTestRequest(testRequestId: number, body?: TestRequestDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestRequestDto>>;
+  public updateTestRequest(testRequestId: number, body?: UpdateTestRequestDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestRequestDto>>;
 
-  public updateTestRequest(testRequestId: number, body?: TestRequestDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestRequestDto>>;
+  public updateTestRequest(testRequestId: number, body?: UpdateTestRequestDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestRequestDto>>;
 
-  public updateTestRequest(testRequestId: number, body?: TestRequestDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public updateTestRequest(testRequestId: number, body?: UpdateTestRequestDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     if (testRequestId === null || testRequestId === undefined) {
       throw new Error('Required parameter testRequestId was null or undefined when calling updateTestRequest.');

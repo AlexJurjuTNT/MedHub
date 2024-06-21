@@ -1,45 +1,50 @@
 <h2 class="content-block">Patient Information</h2>
 <div class="content-block">
   <div class="dx-card responsive-paddings">
-    <dx-form [colCountByScreen]="colCountByScreen"
-             [formData]="patient"
-             id="form"
-             labelLocation="top"
-             [readOnly]="true"
-    >
-      <dxi-item
-        dataField="cnp"
-        [label]="{ text: 'CNP' }"
-      ></dxi-item>
-      <dxi-item
-        dataField="dateOfBirth"
-        [editorOptions]="{ displayFormat: 'yyyy-MM-dd' }"
-        [label]="{ text: 'Date of Birth' }"
-      ></dxi-item>
-      <dxi-item
-        dataField="weight"
-        [label]="{ text: 'Weight' }"
-      ></dxi-item>
-      <dxi-item
-        dataField="height"
-        [label]="{ text: 'Height' }"
-      ></dxi-item>
-      <dxi-item
-        dataField="gender"
-        [label]="{ text: 'Gender' }"
-      ></dxi-item>
-    </dx-form>
-    <dx-button text="Update" type="success" (onClick)="showUpdatePopup()"></dx-button>
+    <ng-container *ngIf="patient; else addPatientButton">
+      <dx-form [colCountByScreen]="colCountByScreen"
+               [formData]="patient"
+               id="form"
+               labelLocation="top"
+               [readOnly]="true">
+        <dxi-item
+          dataField="cnp"
+          [label]="{ text: 'CNP' }"
+        ></dxi-item>
+        <dxi-item
+          dataField="dateOfBirth"
+          [editorOptions]="{ displayFormat: 'yyyy-MM-dd' }"
+          [label]="{ text: 'Date of Birth' }"
+        ></dxi-item>
+        <dxi-item
+          dataField="weight"
+          [label]="{ text: 'Weight' }"
+        ></dxi-item>
+        <dxi-item
+          dataField="height"
+          [label]="{ text: 'Height' }"
+        ></dxi-item>
+        <dxi-item
+          dataField="gender"
+          [label]="{ text: 'Gender' }"
+        ></dxi-item>
+      </dx-form>
+      <dx-button text="Update" type="success" (onClick)="showUpdatePopup()"></dx-button>
+    </ng-container>
+
+    <ng-template #addPatientButton>
+      <dx-button text="Add Patient Information" type="success" (onClick)="showUpdatePopup()"></dx-button>
+    </ng-template>
 
     <dx-popup
       [(visible)]="updatePopupVisible"
       [showTitle]="true"
-      title="Update Patient Information"
+      [title]="patient ? 'Update Patient Information' : 'Add Patient Information'"
       [dragEnabled]="false"
       [showCloseButton]="true"
     >
       <div *dxTemplate="let data of 'content'">
-        <form (submit)="updatePatientInfo($event)">
+        <form (submit)="upsertPatientInfo($event)">
           <dx-form
             [colCountByScreen]="colCountByScreen"
             [formData]="patientCopy"
@@ -75,7 +80,7 @@
             ></dxi-item>
             <dxi-item itemType="button">
               <dxo-button-options
-                [text]="'Update Patient Info'"
+                [text]="patient ? 'Update Patient Info' : 'Add Patient Info'"
                 [useSubmitBehavior]="true"
                 type="default"
                 width="100%"
@@ -86,9 +91,5 @@
         </form>
       </div>
     </dx-popup>
-
-
   </div>
 </div>
-
-

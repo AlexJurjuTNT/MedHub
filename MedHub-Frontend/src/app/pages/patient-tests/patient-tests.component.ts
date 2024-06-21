@@ -24,7 +24,7 @@ export class PatientTestsComponent implements OnInit {
   ) {
   }
 
-// todo: improve this, make calls sync instead of chaining them
+// todo: improve this, dont chain calls
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.userId = Number(params.get('id'));
@@ -62,5 +62,13 @@ export class PatientTestsComponent implements OnInit {
 
   navigateToAddTestResult(testRequestId: number, remainingTestTypes: TestTypeDto[]) {
     this.router.navigate(['pages/test-result-create', testRequestId], {state: {remainingTestTypes}});
+  }
+
+  getDoctorName(testRequestDto: TestRequestDto): string {
+    return testRequestDto.doctor ? testRequestDto.doctor.email : 'N/A';
+  }
+
+  getLaboratoryLocation(testRequestDto: TestRequestDto): string {
+    return testRequestDto.laboratory ? testRequestDto.laboratory.location : 'N/A';
   }
 }

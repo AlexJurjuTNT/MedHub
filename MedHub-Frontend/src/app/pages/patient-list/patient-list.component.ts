@@ -1,7 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {PatientService, UserDto, UserService} from "../../shared/services/swagger";
+import {GroupingInfo, PatientService, SortingInfo, SummaryInfo, UserDto, UserService} from "../../shared/services/swagger";
 import {AuthService} from "../../shared/services";
 import {Router} from "@angular/router";
+import {lastValueFrom} from "rxjs";
+import DataSource from 'devextreme/data/data_source';
+import CustomStore from 'devextreme/data/custom_store';
+import {LoadOptions} from 'devextreme/data';
 
 @Component({
   selector: 'app-patient-list',
@@ -9,8 +13,10 @@ import {Router} from "@angular/router";
   styleUrls: ['./patient-list.component.css']
 })
 export class PatientListComponent implements OnInit {
-  dataSource: any;
+  customDataSource: DataSource;
   doctor: UserDto = {} as UserDto;
+  selectedRowKeys: any[] = [];
+  selectedRow: any;
 
   constructor(
     private patientService: PatientService,
@@ -18,27 +24,65 @@ export class PatientListComponent implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {
+    this.loadCurrentUser();
+    this.customDataSource = new DataSource({
+      store: new CustomStore({
+        key: 'id',
+        load: async (loadOptions: LoadOptions) => {
+          try {
+            let response = await lastValueFrom(
+              this.patientService.getAllPatientsOfClinic(
+                this.doctor.clinicId, // clinicId
+                loadOptions.requireTotalCount,
+                loadOptions.requireGroupCount,
+                false, // isCountQuery
+                false, // isSummaryQuery
+                loadOptions.skip,
+                loadOptions.take,
+                loadOptions.sort as SortingInfo[],
+                loadOptions.group as GroupingInfo[],
+                loadOptions.filter,
+                loadOptions.totalSummary as SummaryInfo[],
+                loadOptions.groupSummary as SummaryInfo[],
+                loadOptions.select as string[],
+                undefined, // preSelect
+                undefined, // remoteSelect
+                undefined, // remoteGrouping
+                undefined, // expandLinqSumType
+                undefined, // primaryKey
+                undefined, // defaultSort
+                undefined, // stringToLower
+                undefined, // paginateViaPrimaryKey
+                undefined, // sortByPrimaryKey
+                undefined  // allowAsyncOverSync
+              )
+            );
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          } catch (e) {
+            throw 'Data loading error';
+          }
+        },
+        remove: (key) => {
+          return lastValueFrom(this.userService.deleteUser(key));
+        }
+      }),
+    });
   }
 
-
-  // todo: paging
   ngOnInit(): void {
-    this.loadDoctorAndPatients();
   }
 
   viewPatient(patientId: number): void {
     this.router.navigate(['pages/patient-tests', patientId]);
   }
 
-  // todo: use a dialog instead
-  deleteUser(currentUserId: number | null) {
-    this.userService.deleteUser(currentUserId!).subscribe({});
-    this.loadPatientsOfClinic();
-  }
-
-  private loadDoctorAndPatients() {
-    this.loadCurrentUser();
-    this.loadPatientsOfClinic();
+  viewPatientInformation(userId: number) {
+    this.router.navigate(["/patient-info", userId]);
   }
 
   private loadCurrentUser() {
@@ -48,15 +92,7 @@ export class PatientListComponent implements OnInit {
     }
   }
 
-  private loadPatientsOfClinic() {
-    this.patientService.getAllPatientsOfClinic(this.doctor.clinicId).subscribe({
-      next: (result) => {
-        this.dataSource = result.data;
-      }
-    });
-  }
-
-  viewPatientInformation(userId: number) {
-    this.router.navigate(["/patient-info", userId]);
+  onSelectionChanged(e: any) {
+    this.selectedRow = e.selectedRowsData[0];
   }
 }

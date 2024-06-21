@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {PatientDto, PatientService, UpdatePatientDto} from "../../shared/services/swagger";
+import {AddPatientDataDto, PatientDto, PatientService, UpdatePatientDto} from "../../shared/services/swagger";
 import {ActivatedRoute} from "@angular/router";
-
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-patient-info',
@@ -10,18 +10,17 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class PatientInfoComponent implements OnInit {
 
-  patient: PatientDto = {} as PatientDto;
+  patient: PatientDto | null = null;
   userId: number = 0;
   colCountByScreen: object;
 
   updatePopupVisible: boolean = false;
-  patientCopy: PatientDto = {} as PatientDto;
+  patientCopy: PatientDto | AddPatientDataDto = {} as PatientDto;
 
   constructor(
     private patientService: PatientService,
     private route: ActivatedRoute,
   ) {
-
     this.colCountByScreen = {
       xs: 1,
       sm: 2,
@@ -41,15 +40,17 @@ export class PatientInfoComponent implements OnInit {
       this.patientService.getPatientInformationForUser(this.userId).subscribe({
         next: result => {
           this.patient = result;
-          console.log(this.patient)
+        },
+        error: () => {
+          this.patient = null;
         }
-      })
+      });
     });
   }
 
   showUpdatePopup() {
     this.updatePopupVisible = true;
-    this.patientCopy = {...this.patient};
+    this.patientCopy = this.patient ? {...this.patient} : {userId: this.userId} as AddPatientDataDto;
   }
 
   hideUpdatePopup() {
@@ -57,21 +58,43 @@ export class PatientInfoComponent implements OnInit {
     this.updatePopupVisible = false;
   }
 
-  updatePatientInfo($event: SubmitEvent) {
-    $event.preventDefault()
+  upsertPatientInfo($event: SubmitEvent) {
+    $event.preventDefault();
 
-    const updatePatientInfo: UpdatePatientDto = {
-      cnp: this.patientCopy.cnp,
-      dateOfBirth: this.patientCopy.dateOfBirth,
-      weight: this.patientCopy.weight,
-      height: this.patientCopy.height,
-      gender: this.patientCopy.gender,
+    if (this.patient) {
+      const updatePatientInfo: UpdatePatientDto = {
+        cnp: this.patientCopy.cnp,
+        dateOfBirth: this.patientCopy.dateOfBirth,
+        weight: this.patientCopy.weight,
+        height: this.patientCopy.height,
+        gender: this.patientCopy.gender,
+      };
+
+      console.log(updatePatientInfo)
+
+      this.patientService.updatePatientInformation(this.patient.id, updatePatientInfo).subscribe({
+        next: () => {
+          this.hideUpdatePopup();
+        }
+      });
+    } else {
+      const addPatientInfo: AddPatientDataDto = {
+        userId: this.userId,
+        cnp: this.patientCopy.cnp,
+        dateOfBirth: format(new Date(this.patientCopy.dateOfBirth), 'yyyy-MM-dd'),
+        weight: this.patientCopy.weight,
+        height: this.patientCopy.height,
+        gender: this.patientCopy.gender,
+      };
+
+      console.log(addPatientInfo)
+
+
+      this.patientService.addPatientInformation(addPatientInfo).subscribe({
+        next: () => {
+          this.hideUpdatePopup();
+        }
+      });
     }
-
-    this.patientService.updatePatientInformation(this.patient.id, updatePatientInfo).subscribe({
-      next: () => {
-        this.hideUpdatePopup();
-      }
-    })
   }
 }

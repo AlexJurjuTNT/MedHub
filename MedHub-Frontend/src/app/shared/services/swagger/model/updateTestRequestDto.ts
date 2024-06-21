@@ -9,17 +9,12 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import {LaboratoryDto} from './laboratoryDto';
-import {TestResultDto} from './testResultDto';
-import {TestTypeDto} from './testTypeDto';
-import {UserDto} from './userDto';
 
-export interface TestRequestDto {
+export interface UpdateTestRequestDto {
   id: number;
   requestDate: string;
   patientId: number;
-  doctor: UserDto;
-  laboratory: LaboratoryDto;
-  testTypes: Array<TestTypeDto>;
-  testResults: Array<TestResultDto>;
+  doctorId: number;
+  laboratoryId: number;
+  testTypesIds: Array<number>;
 }
