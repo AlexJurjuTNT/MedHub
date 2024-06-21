@@ -2,7 +2,12 @@ using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using MedHub_Backend.Dto.TestResult;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.Interface;
+using MedHub_Backend.Service.Clinic;
+using MedHub_Backend.Service.File;
+using MedHub_Backend.Service.TestRequest;
+using MedHub_Backend.Service.TestResult;
+using MedHub_Backend.Service.TestType;
+using MedHub_Backend.Service.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,10 +29,7 @@ public class TestResultController(
     [ProducesResponseType(200, Type = typeof(TestResultDto))]
     public async Task<IActionResult> AddTestResult([FromForm] AddTestResultDto testResultDto, IFormFile formFile)
     {
-        if (!ModelState.IsValid || formFile == null)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid || formFile == null) return BadRequest(ModelState);
 
         var testResult = mapper.Map<TestResult>(testResultDto);
         var testRequest = await testRequestService.GetTestRequestByIdAsync(testResult.TestRequestId);
@@ -55,7 +57,7 @@ public class TestResultController(
     [HttpDelete("{testResultId}")]
     public async Task<IActionResult> DeleteTestResult([FromRoute] int testResultId)
     {
-        bool result = await testResultService.DeleteTestResultAsync(testResultId);
+        var result = await testResultService.DeleteTestResultAsync(testResultId);
         if (!result) return NotFound($"Test result with id {testResultId} not found");
 
         return Ok();

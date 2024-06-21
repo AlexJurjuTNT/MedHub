@@ -3,7 +3,7 @@ using MedHub_Backend.Dto.Clinic;
 using MedHub_Backend.Dto.Laboratory;
 using MedHub_Backend.Dto.User;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.Interface;
+using MedHub_Backend.Service.Clinic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;

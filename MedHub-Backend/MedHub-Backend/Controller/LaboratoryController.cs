@@ -1,7 +1,8 @@
 using AutoMapper;
 using MedHub_Backend.Dto.Laboratory;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.Interface;
+using MedHub_Backend.Service.Laboratory;
+using MedHub_Backend.Service.TestType;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;
@@ -57,7 +58,7 @@ public class LaboratoryController(
     [ProducesResponseType(204)]
     public async Task<IActionResult> DeleteLaboratory([FromRoute] int laboratoryId)
     {
-        bool result = await laboratoryService.DeleteLaboratoryAsync(laboratoryId);
+        var result = await laboratoryService.DeleteLaboratoryAsync(laboratoryId);
         if (result == false) return NotFound($"Laboratory with id {laboratoryId} not found");
 
         return NoContent();

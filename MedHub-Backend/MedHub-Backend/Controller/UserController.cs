@@ -1,7 +1,7 @@
 using AutoMapper;
 using MedHub_Backend.Dto.User;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.Interface;
+using MedHub_Backend.Service.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;

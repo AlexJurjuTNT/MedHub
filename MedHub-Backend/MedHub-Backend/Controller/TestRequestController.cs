@@ -3,7 +3,12 @@ using MedHub_Backend.Dto.TestRequest;
 using MedHub_Backend.Dto.TestResult;
 using MedHub_Backend.Dto.TestType;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.Interface;
+using MedHub_Backend.Service.Clinic;
+using MedHub_Backend.Service.Email;
+using MedHub_Backend.Service.Laboratory;
+using MedHub_Backend.Service.TestRequest;
+using MedHub_Backend.Service.TestType;
+using MedHub_Backend.Service.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;

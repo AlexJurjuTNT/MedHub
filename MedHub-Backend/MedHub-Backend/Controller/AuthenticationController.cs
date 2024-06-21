@@ -4,8 +4,8 @@ using MedHub_Backend.Dto.Authentication;
 using MedHub_Backend.Dto.User;
 using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.Interface;
-using Microsoft.AspNetCore.Authorization;
+using MedHub_Backend.Service.Authentication;
+using MedHub_Backend.Service.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;
@@ -137,8 +137,7 @@ public class AuthenticationController(
         if (changeDefaultPasswordDto.Password != changeDefaultPasswordDto.ConfirmPassword) return BadRequest();
         await authenticationService.ResetPassword(user, changeDefaultPasswordDto.Password);
 
-        
-        
+
         return Ok();
     }
 }

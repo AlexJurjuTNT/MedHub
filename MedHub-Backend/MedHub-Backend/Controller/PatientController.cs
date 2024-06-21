@@ -7,7 +7,10 @@ using MedHub_Backend.Dto.TestRequest;
 using MedHub_Backend.Dto.User;
 using MedHub_Backend.Exceptions;
 using MedHub_Backend.Model;
-using MedHub_Backend.Service.Interface;
+using MedHub_Backend.Service.Clinic;
+using MedHub_Backend.Service.Patient;
+using MedHub_Backend.Service.TestRequest;
+using MedHub_Backend.Service.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.Controller;
