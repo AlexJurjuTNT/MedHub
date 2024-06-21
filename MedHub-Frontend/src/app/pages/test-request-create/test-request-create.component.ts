@@ -71,7 +71,8 @@ export class TestRequestCreateComponent implements OnInit {
   private getTestTypes() {
     this.testTypeService.getAllTestTypes().subscribe({
       next: (result) => {
-        this.testTypes = result;
+        // todo: fix
+        this.testTypes = result.data!;
       }
     })
   }
