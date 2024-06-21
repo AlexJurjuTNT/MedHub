@@ -85,7 +85,7 @@ public class TestRequestController(
 
     [HttpPut("{testRequestId}")]
     [ProducesResponseType(200, Type = typeof(TestRequestDto))]
-    public async Task<IActionResult> UpdateTestRequest([FromRoute] int testRequestId, [FromBody] TestRequestDto testRequestDto)
+    public async Task<IActionResult> UpdateTestRequest([FromRoute] int testRequestId, [FromBody] UpdateTestRequestDto testRequestDto)
     {
         if (testRequestId != testRequestDto.Id) return BadRequest();
 

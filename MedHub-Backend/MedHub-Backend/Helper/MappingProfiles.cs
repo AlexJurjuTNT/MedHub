@@ -29,7 +29,7 @@ public class MappingProfiles : Profile
         CreateMap<Patient, PatientDto>();
 
         CreateMap<TestRequest, TestRequestDto>();
-        CreateMap<TestRequestDto, TestRequest>();
+        CreateMap<UpdateTestRequestDto, TestRequest>();
         CreateMap<AddTestRequestDto, TestRequest>();
 
         CreateMap<AddTestResultDto, TestResult>();
