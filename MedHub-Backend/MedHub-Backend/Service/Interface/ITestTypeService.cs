@@ -4,7 +4,7 @@ namespace MedHub_Backend.Service.Interface;
 
 public interface ITestTypeService
 {
-    Task<List<TestType>> GetAllTestTypesAsync();
+    IQueryable<TestType> GetAllTestTypes();
     Task<TestType?> GetTestTypeByIdAsync(int testTypeId);
     Task<TestType> CreateTestTypeAsync(TestType testType);
     Task<TestType> UpdateTestTypeAsync(TestType testType);

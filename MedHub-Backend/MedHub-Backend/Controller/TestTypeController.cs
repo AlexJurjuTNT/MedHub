@@ -1,4 +1,7 @@
 using AutoMapper;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.ResponseModel;
+using DevExtreme.AspNet.Mvc;
 using MedHub_Backend.Dto.TestType;
 using MedHub_Backend.Model;
 using MedHub_Backend.Service.Interface;
@@ -14,11 +17,14 @@ public class TestTypeController(
 ) : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(List<TestTypeDto>))]
-    public async Task<IActionResult> GetAllTestTypes()
+    [ProducesResponseType(200, Type = typeof(LoadResult))]
+    public async Task<IActionResult> GetAllTestTypes([FromQuery] DataSourceLoadOptions loadOptions)
     {
-        var testTypes = await testTypeService.GetAllTestTypesAsync();
-        return Ok(mapper.Map<List<TestTypeDto>>(testTypes));
+        IQueryable<TestType> testTypes = testTypeService.GetAllTestTypes();
+        var resultingTestTypes = await DataSourceLoader.LoadAsync(testTypes, loadOptions);
+
+        resultingTestTypes.data = mapper.Map<List<TestTypeDto>>(resultingTestTypes.data);
+        return Ok(resultingTestTypes);
     }
 
     [HttpGet("{testTypeId}")]

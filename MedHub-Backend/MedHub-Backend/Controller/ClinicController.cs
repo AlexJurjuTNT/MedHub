@@ -1,4 +1,7 @@
 using AutoMapper;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.ResponseModel;
+using DevExtreme.AspNet.Mvc;
 using MedHub_Backend.Dto.Clinic;
 using MedHub_Backend.Dto.Laboratory;
 using MedHub_Backend.Dto.User;
@@ -21,12 +24,15 @@ public class ClinicController(
     /// <returns>List of all clinics</returns>
     /// <response code="200">Successful response</response>
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(List<ClinicDto>))]
-    public async Task<IActionResult> GetAllClinics()
+    [ProducesResponseType(200, Type = typeof(LoadResult))]
+    public async Task<IActionResult> GetAllClinics([FromQuery] DataSourceLoadOptions loadOptions)
     {
-        var clinics = await clinicService.GetAllClinicsAsync();
-        var clinicsDto = mapper.Map<List<ClinicDto>>(clinics);
-        return Ok(clinicsDto);
+        IQueryable<Clinic> clinics = clinicService.GetAllClinics();
+        var resultingClinics = await DataSourceLoader.LoadAsync(clinics, loadOptions);
+
+        resultingClinics.data = mapper.Map<List<ClinicDto>>(resultingClinics.data);
+
+        return Ok(resultingClinics);
     }
 
     /// <summary>

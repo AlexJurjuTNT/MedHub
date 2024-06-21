@@ -10,9 +10,9 @@ public class ClinicService(
     AppDbContext appDbContext
 ) : IClinicService
 {
-    public async Task<List<Clinic>> GetAllClinicsAsync()
+    public IQueryable<Clinic> GetAllClinics()
     {
-        return await appDbContext.Clinics.ToListAsync();
+        return appDbContext.Clinics;
     }
 
     public async Task<Clinic?> GetClinicByIdAsync(int clinicId)

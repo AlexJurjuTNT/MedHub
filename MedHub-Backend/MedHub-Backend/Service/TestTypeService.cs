@@ -9,9 +9,9 @@ public class TestTypeService(
     AppDbContext appDbContext
 ) : ITestTypeService
 {
-    public async Task<List<TestType>> GetAllTestTypesAsync()
+    public IQueryable<TestType> GetAllTestTypes()
     {
-        return await appDbContext.TestTypes.ToListAsync();
+        return appDbContext.TestTypes;
     }
 
     public async Task<TestType?> GetTestTypeByIdAsync(int testTypeId)
