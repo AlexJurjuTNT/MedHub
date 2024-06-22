@@ -1,0 +1,59 @@
+using Medhub_Backend.Business.Service.Interface;
+using Medhub_Backend.DataAccess.Persistence;
+using Medhub_Backend.Domain.Model;
+using Microsoft.EntityFrameworkCore;
+
+namespace Medhub_Backend.Business.Service;
+
+public class TestTypeService(
+    AppDbContext appDbContext
+) : ITestTypeService
+{
+    public IQueryable<TestType> GetAllTestTypes()
+    {
+        return appDbContext.TestTypes;
+    }
+
+    public async Task<TestType?> GetTestTypeByIdAsync(int testTypeId)
+    {
+        return await appDbContext.TestTypes.FindAsync(testTypeId);
+    }
+
+    public async Task<TestType> CreateTestTypeAsync(TestType testType)
+    {
+        await appDbContext.TestTypes.AddAsync(testType);
+        await appDbContext.SaveChangesAsync();
+        return testType;
+    }
+
+    public async Task<TestType> UpdateTestTypeAsync(TestType testType)
+    {
+        appDbContext.TestTypes.Update(testType);
+        await appDbContext.SaveChangesAsync();
+        return testType;
+    }
+
+    public async Task<bool> DeleteClinicByIdAsync(int testTypeId)
+    {
+        var testType = await appDbContext.TestTypes.FindAsync(testTypeId);
+        if (testType == null) return false;
+
+        appDbContext.TestTypes.Remove(testType);
+        await appDbContext.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<List<TestType>> GetTestTypesFromIdList(List<int> testTypesIds)
+    {
+        var testTypes = await appDbContext.TestTypes
+            .Where(tt => testTypesIds.Contains(tt.Id))
+            .ToListAsync();
+
+        // check if input testTypesIds contains an id that is not present in appDbContext.TestTypes
+        var missingTestTypeIds = testTypesIds.Except(testTypes.Select(tt => tt.Id)).ToList();
+
+        if (missingTestTypeIds.Any()) throw new ArgumentException($"One or more test type IDs are not valid: {string.Join(", ", missingTestTypeIds)}");
+
+        return testTypes;
+    }
+}
