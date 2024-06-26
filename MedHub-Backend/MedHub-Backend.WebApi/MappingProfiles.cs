@@ -16,6 +16,7 @@ public class MappingProfiles : Profile
     public MappingProfiles()
     {
         CreateMap<User, UserDto>();
+
         CreateMap<UserDto, User>();
         CreateMap<UserRegisterDto, User>();
         CreateMap<PatientRegisterDto, User>();

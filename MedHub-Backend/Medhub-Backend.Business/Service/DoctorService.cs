@@ -7,10 +7,10 @@ public class DoctorService(
     IUserService userService
 ) : IDoctorService
 {
-    public async Task<List<User>> GetAllDoctorsAsync()
+    public async Task<IQueryable<User>> GetAllDoctorsAsync()
     {
         var users = await userService.GetAllUsersAsync();
-        return users.Where(u => u.Role.Name == "Doctor").ToList();
+        return users.Where(u => u.Role.Name == "Doctor");
     }
 
     public async Task<User?> GetDoctorById(int id)

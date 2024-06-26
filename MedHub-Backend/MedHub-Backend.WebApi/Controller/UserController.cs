@@ -3,6 +3,7 @@ using Medhub_Backend.Business.Dtos.User;
 using Medhub_Backend.Business.Service.Interface;
 using Medhub_Backend.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MedHub_Backend.WebApi.Controller;
 
@@ -13,25 +14,16 @@ public class UserController(
     IMapper mapper
 ) : ControllerBase
 {
-    /// <summary>
-    ///     Get all users
-    /// </summary>
-    /// <returns>List of all users</returns>
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(List<UserDto>))]
     public async Task<IActionResult> GetAllUsers()
     {
-        var users = await userService.GetAllUsersAsync();
+        var usersQuery = await userService.GetAllUsersAsync();
+        var users = await usersQuery.ToListAsync();
         var usersDto = mapper.Map<List<UserDto>>(users);
         return Ok(usersDto);
     }
 
-    /// <summary>
-    ///     Get user by ID
-    /// </summary>
-    /// <param name="userId">ID of the user</param>
-    /// <response code="200">User with the given ID</response>
-    /// <response code="404">If the user is not found</response>
     [HttpGet("{userId}")]
     [ProducesResponseType(200, Type = typeof(UserDto))]
     [ProducesResponseType(404)]
@@ -43,11 +35,6 @@ public class UserController(
         return Ok(mapper.Map<UserDto>(user));
     }
 
-    /// <summary>
-    ///     Create a new user
-    /// </summary>
-    /// <param name="userDto">User to be created</param>
-    /// <returns>Created user</returns>
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(UserDto))]
     public async Task<IActionResult> CreateUser([FromBody] UserDto userDto)
@@ -57,32 +44,24 @@ public class UserController(
         return CreatedAtAction(nameof(GetUserById), new { userId = createdUser.Id }, mapper.Map<UserDto>(createdUser));
     }
 
-    /// <summary>
-    ///     Update an existing user
-    /// </summary>
-    /// <param name="userId">ID of the user to be updated</param>
-    /// <param name="userDto">Updated user</param>
-    /// <returns>Updated user</returns>
+
     [HttpPut("{userId}")]
     [ProducesResponseType(200, Type = typeof(UserDto))]
-    public async Task<IActionResult> UpdateUser([FromRoute] int userId, [FromBody] UserDto userDto)
+    public async Task<IActionResult> UpdateUser([FromRoute] int userId, [FromBody] UpdateUserRequest updateUserRequest)
     {
-        if (userId != userDto.Id) return BadRequest();
-
         var existingUser = await userService.GetUserByIdAsync(userId);
         if (existingUser == null) return NotFound($"User with id {userId} not found");
 
-        var user = mapper.Map<User>(userDto);
-        var updatedUser = await userService.UpdateUserAsync(user);
-        return Ok(mapper.Map<UserDto>(updatedUser));
+        existingUser.Email = updateUserRequest.Email;
+        existingUser.Username = updateUserRequest.Username;
+        existingUser.ClinicId = updateUserRequest.ClinicId;
+
+        var updatedUser = await userService.UpdateUserAsync(existingUser);
+        var updatedUserDto = mapper.Map<UserDto>(updatedUser);
+
+        return Ok(updatedUserDto);
     }
 
-    /// <summary>
-    ///     Delete a user
-    /// </summary>
-    /// <param name="userId">ID of the user to be deleted</param>
-    /// <returns>No content</returns>
-    /// <response code="404">If the user is not found</response>
     [HttpDelete("{userId}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]

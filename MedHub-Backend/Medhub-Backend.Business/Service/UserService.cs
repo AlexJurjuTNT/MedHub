@@ -21,9 +21,9 @@ public class UserService(
         return await appDbContext.Users.FindAsync(userId);
     }
 
-    public async Task<List<User>> GetAllUsersAsync()
+    public async Task<IQueryable<User>> GetAllUsersAsync()
     {
-        return await appDbContext.Users.ToListAsync();
+        return await Task.FromResult(appDbContext.Users);
     }
 
     public async Task<User> UpdateUserAsync(User user)

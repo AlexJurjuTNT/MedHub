@@ -18,11 +18,6 @@ public class ClinicController(
     IMapper mapper
 ) : ControllerBase
 {
-    /// <summary>
-    ///     Retrieves all Clinics
-    /// </summary>
-    /// <returns>List of all clinics</returns>
-    /// <response code="200">Successful response</response>
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(LoadResult))]
     public async Task<IActionResult> GetAllClinics([FromQuery] DataSourceLoadOptions loadOptions)
@@ -35,13 +30,6 @@ public class ClinicController(
         return Ok(resultingClinics);
     }
 
-    /// <summary>
-    ///     Get clinic by ID
-    /// </summary>
-    /// <param name="clinicId">ID of the clinic</param>
-    /// <returns>Clinic with the given ID</returns>
-    /// <response code="200">Clinic found successfully</response>
-    /// <response code="404">If the clinic is not found</response>
     [HttpGet("{clinicId}")]
     [ProducesResponseType(200, Type = typeof(ClinicDto))]
     [ProducesResponseType(404)]
@@ -53,11 +41,7 @@ public class ClinicController(
         return Ok(mapper.Map<ClinicDto>(clinic));
     }
 
-    /// <summary>
-    ///     Create a new clinic
-    /// </summary>
-    /// <param name="clinicDto">Clinic to be created</param>
-    /// <returns>Created clinic</returns>
+
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(ClinicDto))]
     public async Task<IActionResult> CreateClinic([FromBody] AddClinicDto clinicDto)
@@ -67,12 +51,6 @@ public class ClinicController(
         return CreatedAtAction(nameof(GetClinicById), new { clinicId = createdClinic.Id }, mapper.Map<ClinicDto>(createdClinic));
     }
 
-    /// <summary>
-    ///     Update an existing clinic
-    /// </summary>
-    /// <param name="clinicId">ID of the clinic to be updated</param>
-    /// <param name="clinicDto">Updated clinic</param>
-    /// <returns>Updated clinic</returns>
     [HttpPut("{clinicId}")]
     [ProducesResponseType(200, Type = typeof(ClinicDto))]
     public async Task<IActionResult> UpdateClinic([FromRoute] int clinicId, [FromBody] UpdateClinicDto clinicDto)
@@ -83,11 +61,6 @@ public class ClinicController(
         return Ok(mapper.Map<ClinicDto>(updatedClinic));
     }
 
-    /// <summary>
-    ///     Delete a clinic
-    /// </summary>
-    /// <param name="clinicId">ID of the clinic to be deleted</param>
-    /// <returns>No content</returns>
     [HttpDelete("{clinicId}")]
     [ProducesResponseType(204)]
     public async Task<IActionResult> DeleteClinic([FromRoute] int clinicId)
@@ -98,11 +71,7 @@ public class ClinicController(
         return NoContent();
     }
 
-    /// <summary>
-    ///     Retrieve all doctors of a clinic
-    /// </summary>
-    /// <param name="clinicId">ID of the clinic where the doctors are</param>
-    /// <returns>List of all doctors that belong to that clinic</returns>
+
     [HttpGet("{clinicId}/doctors")]
     [ProducesResponseType(200, Type = typeof(List<UserDto>))]
     public async Task<IActionResult> GetAllDoctorsOfClinic([FromRoute] int clinicId)
