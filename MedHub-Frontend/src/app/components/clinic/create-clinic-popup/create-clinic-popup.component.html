@@ -1,0 +1,46 @@
+<dx-popup
+  [(visible)]="visible"
+  [dragEnabled]="false"
+  [height]="600"
+  [showCloseButton]="true"
+  [showTitle]="true"
+  [width]="500"
+  title="Create new Clinic"
+  (onHiding)="onHiding()">
+  <div *dxTemplate="let data of 'content'">
+    <form (submit)="onSubmit($event)">
+      <dx-form [formData]="createClinicFormData">
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Name' }" dataField="name" editorType="dxTextBox">
+          <dxi-validation-rule message="Name is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Location' }" dataField="location" editorType="dxTextBox">
+          <dxi-validation-rule message="Location is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'SendGrid Api Key' }" dataField="sendgridApiKey" editorType="dxTextBox">
+          <dxi-validation-rule message="SendGrid Api Key is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Email' }" dataField="email" editorType="dxTextBox">
+          <dxi-validation-rule message="Email is required" type="required"></dxi-validation-rule>
+          <dxi-validation-rule message="Email is invalid" type="email"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item itemType="button">
+          <dxo-button-options
+            [text]="'Create New Clinic'"
+            [useSubmitBehavior]="true"
+            type="default"
+            width="100%"
+          >
+          </dxo-button-options>
+        </dxi-item>
+      </dx-form>
+    </form>
+  </div>
+</dx-popup>

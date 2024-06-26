@@ -3,103 +3,20 @@
   <div class="dx-card responsive-paddings">
     <!--    button & popup for creating a new clinic -->
     <dx-button (click)="this.createClinicPopupVisible = true;" text="Add new Clinic"></dx-button>
-    <dx-popup
+    <app-create-clinic-popup
       [(visible)]="createClinicPopupVisible"
-      [dragEnabled]="false"
-      [height]="600"
-      [showCloseButton]="true"
-      [showTitle]="true"
-      [width]="500"
-      title="Create new Clinic"
-    >
-      <div *dxTemplate="let data of 'content'">
-        <form (submit)="createClinic($event)">
-          <dx-form [formData]="createClinicFormData">
-            <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Name' }" dataField="name" editorType="dxTextBox">
-              <dxi-validation-rule message="Name is required" type="required"></dxi-validation-rule>
-              <dxo-label [visible]="false"></dxo-label>
-            </dxi-item>
+      (createClinic)="createClinic($event)">
+    </app-create-clinic-popup>
 
-            <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Location' }" dataField="location" editorType="dxTextBox">
-              <dxi-validation-rule message="Location is required" type="required"></dxi-validation-rule>
-              <dxo-label [visible]="false"></dxo-label>
-            </dxi-item>
-
-            <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'SendGrid Api Key' }" dataField="sendgridApiKey" editorType="dxTextBox">
-              <dxi-validation-rule message="SendGrid Api Key is required" type="required"></dxi-validation-rule>
-              <dxo-label [visible]="false"></dxo-label>
-            </dxi-item>
-
-            <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Email' }" dataField="email" editorType="dxTextBox">
-              <dxi-validation-rule message="Email is required" type="required"></dxi-validation-rule>
-              <dxi-validation-rule message="Email is invalid" type="email"></dxi-validation-rule>
-              <dxo-label [visible]="false"></dxo-label>
-            </dxi-item>
-
-            <dxi-item itemType="button">
-              <dxo-button-options
-                [text]="'Create New Clinic'"
-                [useSubmitBehavior]="true"
-                type="default"
-                width="100%"
-              >
-              </dxo-button-options>
-            </dxi-item>
-          </dx-form>
-        </form>
-      </div>
-    </dx-popup>
 
     <!--    button & popup for update -->
     <dx-button (click)="this.updatePopupVisible = true;" text="Update" type="normal"></dx-button>
-    <dx-popup
+    <app-update-clinic-popup
       [(visible)]="updatePopupVisible"
-      [dragEnabled]="false"
-      [height]="600"
-      [showCloseButton]="true"
-      [showTitle]="true"
-      [width]="600"
-      title="Update Clinic"
-    >
-      <div *dxTemplate="let data of 'content'">
+      [selectedClinic]="selectedRow"
+      (updateClinic)="updateClinic($event)">
+    </app-update-clinic-popup>
 
-        <form (submit)="updateClinic($event)">
-          <dx-form [formData]="updateClinicFormData">
-            <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedRow.name }" dataField="name" editorType="dxTextBox">
-              <dxi-validation-rule message="Name is required" type="required"></dxi-validation-rule>
-              <dxo-label [visible]="false"></dxo-label>
-            </dxi-item>
-
-            <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedRow.location }" dataField="location" editorType="dxTextBox">
-              <dxi-validation-rule message="Location is required" type="required"></dxi-validation-rule>
-              <dxo-label [visible]="false"></dxo-label>
-            </dxi-item>
-
-            <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedRow.sendgridApiKey }" dataField="sendgridApiKey" editorType="dxTextBox">
-              <dxi-validation-rule message="SendGrid Api Key is required" type="required"></dxi-validation-rule>
-              <dxo-label [visible]="false"></dxo-label>
-            </dxi-item>
-
-            <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedRow.email }" dataField="email" editorType="dxTextBox">
-              <dxi-validation-rule message="Email is required" type="required"></dxi-validation-rule>
-              <dxi-validation-rule message="Email is invalid" type="email"></dxi-validation-rule>
-              <dxo-label [visible]="false"></dxo-label>
-            </dxi-item>
-
-            <dxi-item itemType="button">
-              <dxo-button-options
-                [text]="'Update Clinic'"
-                [useSubmitBehavior]="true"
-                type="default"
-                width="100%"
-              >
-              </dxo-button-options>
-            </dxi-item>
-          </dx-form>
-        </form>
-
-      </div>
-    </dx-popup>
 
     <dx-data-grid [columnAutoWidth]="true"
                   [columnHidingEnabled]="true"

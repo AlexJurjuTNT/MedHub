@@ -1,0 +1,46 @@
+<dx-popup
+  [(visible)]="visible"
+  [dragEnabled]="false"
+  [height]="600"
+  [showCloseButton]="true"
+  [showTitle]="true"
+  [width]="600"
+  title="Update Clinic"
+  (onHiding)="onHiding()">
+  <div *dxTemplate="let data of 'content'">
+    <form (submit)="onSubmit($event)">
+      <dx-form [formData]="updateClinicFormData">
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedClinic.name }" dataField="name" editorType="dxTextBox">
+          <dxi-validation-rule message="Name is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedClinic.location }" dataField="location" editorType="dxTextBox">
+          <dxi-validation-rule message="Location is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedClinic.sendgridApiKey }" dataField="sendgridApiKey" editorType="dxTextBox">
+          <dxi-validation-rule message="SendGrid Api Key is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedClinic.email }" dataField="email" editorType="dxTextBox">
+          <dxi-validation-rule message="Email is required" type="required"></dxi-validation-rule>
+          <dxi-validation-rule message="Email is invalid" type="email"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item itemType="button">
+          <dxo-button-options
+            [text]="'Update Clinic'"
+            [useSubmitBehavior]="true"
+            type="default"
+            width="100%"
+          >
+          </dxo-button-options>
+        </dxi-item>
+      </dx-form>
+    </form>
+  </div>
+</dx-popup>

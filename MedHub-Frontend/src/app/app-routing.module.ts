@@ -30,6 +30,8 @@ import {ChangeDefaultPasswordComponent} from "./shared/components/change-default
 import {PatientInfoComponent} from "./pages/patient-info/patient-info.component";
 import {CreateTestTypePopupComponent} from "./components/test-type/create-test-type-popup/create-test-type-popup.component";
 import {UpdateTestTypePopupComponent} from "./components/test-type/update-test-type-popup/update-test-type-popup.component";
+import {CreateClinicPopupComponent} from "./components/clinic/create-clinic-popup/create-clinic-popup.component";
+import {UpdateClinicPopupComponent} from "./components/clinic/update-clinic-popup/update-clinic-popup.component";
 
 const routes: Routes = [
   {
@@ -147,6 +149,8 @@ const routes: Routes = [
     // To be able to use components in generated views they need to be added here and removed from app.module.ts
     CreateTestTypePopupComponent,
     UpdateTestTypePopupComponent,
+    CreateClinicPopupComponent,
+    UpdateClinicPopupComponent,
     ProfileComponent,
     TasksComponent,
     PatientAddComponent,

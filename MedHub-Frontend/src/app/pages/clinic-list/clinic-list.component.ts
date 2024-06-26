@@ -11,15 +11,11 @@ import {lastValueFrom} from "rxjs";
   styleUrls: ['./clinic-list.component.css']
 })
 export class ClinicListComponent implements OnInit {
-
-  createClinicPopupVisible: boolean = false;
-  createClinicFormData: any = {};
   customDataSource: DataSource;
-
   clinicId: number = 0;
 
+  createClinicPopupVisible: boolean = false;
   updatePopupVisible: boolean = false;
-  updateClinicFormData: any = {};
 
   selectedRowKeys: any[] = [];
   selectedRow: ClinicDto = {} as ClinicDto;
@@ -78,42 +74,22 @@ export class ClinicListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  createClinic($event: Event) {
-    $event.preventDefault();
-
-    const addClinicDto: AddClinicDto = {
-      name: this.createClinicFormData.name,
-      location: this.createClinicFormData.location,
-      sendgridApiKey: this.createClinicFormData.sendgridApiKey,
-      email: this.createClinicFormData.email
-    }
-
+  createClinic(addClinicDto: AddClinicDto) {
     this.clinicService.createClinic(addClinicDto).subscribe({
       next: () => {
         this.createClinicPopupVisible = false;
         this.customDataSource.reload();
       }
-    })
+    });
   }
 
-
-  updateClinic($event: SubmitEvent) {
-    $event.preventDefault();
-
-    const updateClinic: UpdateClinicDto = {
-      id: this.selectedRow.id,
-      name: this.updateClinicFormData.name,
-      location: this.updateClinicFormData.location,
-      sendgridApiKey: this.updateClinicFormData.sendgridApiKey,
-      email: this.updateClinicFormData.email
-    }
-
-    this.clinicService.updateClinic(this.selectedRow.id, updateClinic).subscribe({
+  updateClinic(updateClinicDto: UpdateClinicDto) {
+    this.clinicService.updateClinic(updateClinicDto.id, updateClinicDto).subscribe({
       next: () => {
         this.updatePopupVisible = false;
         this.customDataSource.reload();
       }
-    })
+    });
   }
 
   onSelectionChanged(e: any) {
