@@ -7,20 +7,9 @@ export const doctorNavigation = [
     icon: 'home'
   },
   {
-    text: 'Patient',
-    icon: 'folder',
-    items: [
-      {
-        text: 'Patient Add',
-        path: '/pages/patient-add',
-        icon: 'folder'
-      },
-      {
-        text: 'Patient List',
-        path: '/pages/patient-list',
-        icon: 'folder'
-      },
-    ]
+    text: 'Patient List',
+    path: '/pages/patient-list',
+    icon: 'folder'
   },
   {
     text: 'Test Type List',
@@ -57,20 +46,9 @@ export const adminNavigation = [
     icon: 'home'
   },
   {
-    text: 'Patient',
-    icon: 'folder',
-    items: [
-      {
-        text: 'Patient Add',
-        path: '/pages/patient-add',
-        icon: 'folder'
-      },
-      {
-        text: 'Patient List',
-        path: '/pages/patient-list',
-        icon: 'folder'
-      },
-    ]
+    text: 'Patient List',
+    path: '/pages/patient-list',
+    icon: 'folder'
   },
   {
     text: 'Test Type List',

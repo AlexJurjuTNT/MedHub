@@ -33,12 +33,16 @@
       <dxo-filter-row [visible]="true"></dxo-filter-row>
       <dxo-editing mode="row" [allowDeleting]="true" [confirmDelete]="true"></dxo-editing>
 
-      <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
+      <dxi-column [width]="90" caption="Id" cellTemplate="rowNumberTemplate"></dxi-column>
       <dxi-column caption="Name" dataField="name"></dxi-column>
       <dxi-column caption="Location" dataField="location"></dxi-column>
       <dxi-column caption="Email" dataField="email"></dxi-column>
       <dxi-column caption="Sendgrid Api Key" dataField="sendgridApiKey"></dxi-column>
       <dxo-master-detail [enabled]="true" template="details"></dxo-master-detail>
+
+      <div *dxTemplate="let data of 'rowNumberTemplate'">
+        {{ data.rowIndex + 1 }}
+      </div>
 
       <!--      todo: update, delete, create laboratories for clinic -->
       <!--      template for laboratories of clinic-->

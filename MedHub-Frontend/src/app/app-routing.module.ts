@@ -16,7 +16,6 @@ import {
   DxTagBoxModule,
   DxTextBoxModule
 } from 'devextreme-angular';
-import {PatientAddComponent} from './pages/patient-add/patient-add.component';
 import {NgForOf, NgIf} from "@angular/common";
 import {PatientListComponent} from './pages/patient-list/patient-list.component';
 import {PatientTestsComponent} from "./pages/patient-tests/patient-tests.component";
@@ -34,6 +33,7 @@ import {CreateClinicPopupComponent} from "./components/clinic/create-clinic-popu
 import {UpdateClinicPopupComponent} from "./components/clinic/update-clinic-popup/update-clinic-popup.component";
 import {DoctorCreatePopupComponent} from "./components/doctor/doctor-create-popup/doctor-create-popup.component";
 import {DoctorUpdatePopupComponent} from "./components/doctor/doctor-update-popup/doctor-update-popup.component";
+import {CreatePatientPopupComponent} from "./components/patient-list/create-patient-popup/create-patient-popup.component";
 
 const routes: Routes = [
   {
@@ -64,11 +64,6 @@ const routes: Routes = [
   {
     path: 'pages/patient-tests/:id',
     component: PatientTestsComponent,
-    canActivate: [AuthGuardService]
-  },
-  {
-    path: 'pages/patient-add',
-    component: PatientAddComponent,
     canActivate: [AuthGuardService]
   },
   {
@@ -151,13 +146,13 @@ const routes: Routes = [
     // To be able to use components in generated views they need to be added here and removed from app.module.ts
     CreateTestTypePopupComponent,
     UpdateTestTypePopupComponent,
+    CreatePatientPopupComponent,
     CreateClinicPopupComponent,
     UpdateClinicPopupComponent,
     DoctorCreatePopupComponent,
     DoctorUpdatePopupComponent,
     ProfileComponent,
     TasksComponent,
-    PatientAddComponent,
     PatientListComponent,
     TestTypeListComponent,
     TestRequestCreateComponent,

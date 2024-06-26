@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {GroupingInfo, PatientService, SortingInfo, SummaryInfo, UserDto, UserService} from "../../shared/services/swagger";
+import {AuthenticationService, GroupingInfo, PatientRegisterDto, PatientService, SortingInfo, SummaryInfo, UserDto, UserService} from "../../shared/services/swagger";
 import {AuthService} from "../../shared/services";
 import {Router} from "@angular/router";
 import {lastValueFrom} from "rxjs";
@@ -17,11 +17,13 @@ export class PatientListComponent implements OnInit {
   doctor: UserDto = {} as UserDto;
   selectedRowKeys: any[] = [];
   selectedRow: any;
+  createPopupVisible: boolean = false;
 
   constructor(
     private patientService: PatientService,
     private userService: UserService,
     private authService: AuthService,
+    private authenticationService: AuthenticationService,
     private router: Router
   ) {
     this.loadCurrentUser();
@@ -77,11 +79,11 @@ export class PatientListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  viewPatient(patientId: number): void {
+  navigateToPatientTests(patientId: number): void {
     this.router.navigate(['pages/patient-tests', patientId]);
   }
 
-  viewPatientInformation(userId: number) {
+  navigateToPatientInformation(userId: number) {
     this.router.navigate(["/patient-info", userId]);
   }
 
@@ -94,5 +96,14 @@ export class PatientListComponent implements OnInit {
 
   onSelectionChanged(e: any) {
     this.selectedRow = e.selectedRowsData[0];
+  }
+
+  createPatient(patientRegisterDto: PatientRegisterDto) {
+    this.authenticationService.registerPatient(patientRegisterDto).subscribe({
+      next: () => {
+        this.createPopupVisible = false;
+        this.customDataSource.reload();
+      }
+    })
   }
 }

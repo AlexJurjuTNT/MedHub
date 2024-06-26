@@ -73,5 +73,16 @@ export class TokenService {
     throw new Error("UserId not found");
   }
 
+  public getClinicId(): number {
+    const token = this.token;
+    if (token) {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      return Number(decodedToken.ClinicId);
+
+    }
+    throw new Error("ClinicId not found");
+  }
+
 }
 

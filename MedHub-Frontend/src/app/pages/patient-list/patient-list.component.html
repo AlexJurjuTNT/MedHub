@@ -2,15 +2,23 @@
 <div class="content-block">
   <div class="dx-card responsive-paddings">
     <dx-button
-      (click)="viewPatient(selectedRow?.id)"
+      (click)="navigateToPatientTests(selectedRow?.id)"
       [text]="'View Patient Tests'"
-      [disabled]="!selectedRow"
-    ></dx-button>
+      [disabled]="!selectedRow"></dx-button>
+
     <dx-button
-      (click)="viewPatientInformation(selectedRow?.id)"
+      (click)="navigateToPatientInformation(selectedRow?.id)"
       [text]="'View Patient Information'"
-      [disabled]="!selectedRow"
-    ></dx-button>
+      [disabled]="!selectedRow"></dx-button>
+
+    <dx-button
+      (onClick)="this.createPopupVisible=true;" text="Add New Patient"
+      type="normal"></dx-button>
+    <app-create-patient-popup
+      [(visible)]="createPopupVisible"
+      (createPatient)="createPatient($event)"
+    >
+    </app-create-patient-popup>
 
     <dx-data-grid
       [dataSource]="customDataSource"

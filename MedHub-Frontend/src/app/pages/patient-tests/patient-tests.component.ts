@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {PatientService, TestRequestDto, TestRequestService, TestTypeDto} from "../../shared/services/swagger";
+import {TestRequestDto, TestRequestService, TestTypeDto} from "../../shared/services/swagger";
 import {TokenService} from "../../shared/services/token.service";
 
 @Component({
@@ -10,6 +10,7 @@ import {TokenService} from "../../shared/services/token.service";
 })
 export class PatientTestsComponent implements OnInit {
   userId: number = 0;
+  clinicId: number = 0;
 
   role: string = "";
   dataSource: TestRequestDto[] = [];
@@ -17,7 +18,6 @@ export class PatientTestsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private patientService: PatientService,
     private testRequestService: TestRequestService,
     private tokenService: TokenService,
     private router: Router
@@ -28,13 +28,14 @@ export class PatientTestsComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.userId = Number(params.get('id'));
-      this.getTestRequestsOfPatient();
       this.role = this.tokenService.getUserRole();
+      this.getTestRequestsOfPatient();
     });
   }
 
   private getTestRequestsOfPatient() {
-    this.patientService.getTestRequestsOfPatient(this.userId).subscribe({
+    this.clinicId = this.tokenService.getClinicId();
+    this.testRequestService.getAllTestRequestsOfUserInClinic(this.userId, this.clinicId).subscribe({
       next: (result: TestRequestDto[]) => {
         this.dataSource = result;
         this.loadRemainingTestTypes();

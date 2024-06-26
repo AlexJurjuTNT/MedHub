@@ -14,5 +14,6 @@ export interface AddTestRequestDto {
   patientId: number;
   doctorId: number;
   testTypesId: Array<number>;
+  clinicId: number;
   laboratoryId: number;
 }

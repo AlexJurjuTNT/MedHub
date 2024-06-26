@@ -40,11 +40,13 @@ export class TestRequestCreateComponent implements OnInit {
   }
 
   createTestRequest() {
+    console.log(this.doctor)
     if (this.selectedUserId && this.selectedLaboratoryId && this.selectedTestTypesIds.length > 0) {
       const testRequest: AddTestRequestDto = {
         patientId: this.selectedUserId,
         doctorId: this.doctor.id,
         testTypesId: this.selectedTestTypesIds,
+        clinicId: this.doctor.clinicId,
         laboratoryId: this.selectedLaboratoryId
       };
 
