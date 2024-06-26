@@ -1,0 +1,29 @@
+<dx-popup
+  [(visible)]="visible"
+  [dragEnabled]="false"
+  [height]="400"
+  [showTitle]="true"
+  [width]="300"
+  [hideOnOutsideClick]="true"
+  [showCloseButton]="true"
+  title="Update Test Type"
+  (onHiding)="onHiding()">
+  <div *dxTemplate="let data of 'content'">
+    <form (submit)="onSubmit($event)">
+      <dx-form [formData]="updateTestTypeFormData">
+        <dxi-item [editorOptions]="{stylingMode: 'filled', placeholder: selectedTestType.name}" dataField="name" editorType="dxTextBox">
+          <dxi-validation-rule message="Name is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+        <dxi-item itemType="button">
+          <dxo-button-options
+            [text]="'Update Test Type'"
+            [useSubmitBehavior]="true"
+            type="default"
+            width="100%">
+          </dxo-button-options>
+        </dxi-item>
+      </dx-form>
+    </form>
+  </div>
+</dx-popup>

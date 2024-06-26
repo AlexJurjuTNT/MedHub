@@ -13,15 +13,11 @@ import {lastValueFrom} from "rxjs";
 export class TestTypeListComponent {
 
   customDataSource: DataSource;
-
   selectedRowKeys: any[] = [];
   selectedRow: TestTypeDto = {} as TestTypeDto;
-
   updatePopupVisible: boolean = false;
-  updateTestTypeFormData: any = {};
-
   createPopupVisible: boolean = false;
-  createTestTypeFormData: any = {};
+
 
   constructor(
     private testTypeService: TestTypeService
@@ -74,36 +70,22 @@ export class TestTypeListComponent {
     });
   }
 
-  createTestType($event: SubmitEvent) {
-    $event.preventDefault();
-
-    const addTestTypeDto: AddTestTypeDto = {
-      name: this.createTestTypeFormData.name
-    }
-
+  createTestType(addTestTypeDto: AddTestTypeDto) {
     this.testTypeService.createTestType(addTestTypeDto).subscribe({
       next: () => {
         this.createPopupVisible = false;
         this.customDataSource.reload();
       }
-    })
+    });
   }
 
-  updateTestType($event: SubmitEvent) {
-    $event.preventDefault();
-
-    const updatedTestTypeDto: TestTypeDto = {
-      name: this.updateTestTypeFormData.name,
-      id: this.selectedRow.id
-    };
-
-    this.testTypeService.updateTestType(this.selectedRow.id, updatedTestTypeDto).subscribe({
+  updateTestType(updatedTestTypeDto: TestTypeDto) {
+    this.testTypeService.updateTestType(updatedTestTypeDto.id, updatedTestTypeDto).subscribe({
       next: () => {
         this.updatePopupVisible = false;
         this.customDataSource.reload();
       }
-    })
-
+    });
   }
 
   onSelectionChanged(e: any) {

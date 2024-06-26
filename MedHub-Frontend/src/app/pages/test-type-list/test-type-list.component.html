@@ -3,78 +3,20 @@
 
   <div class="dx-card responsive-paddings">
 
-    <!--    todo: error for exiting popup-->
-    <!--    button & popup for creating new testType -->
     <dx-button (click)="this.createPopupVisible=true;" text="Add Test Type"></dx-button>
-    <dx-popup
+    <app-create-test-type-popup
       [(visible)]="createPopupVisible"
-      [dragEnabled]="false"
-      [height]="400"
-      [showTitle]="true"
-      [width]="300"
-      [hideOnOutsideClick]="true"
-      [showCloseButton]="true"
-      title="Add New Test Type">
-      <div *dxTemplate="let data of 'content'">
-
-        <form (submit)="createTestType($event)">
-          <dx-form [formData]="createTestTypeFormData">
-
-            <dxi-item [editorOptions]="{stylingMode: 'filled', placeholder: 'Test Type Name'}" dataField="name" editorType="dxTextBox">
-              <dxi-validation-rule message="Name is required" type="required"></dxi-validation-rule>
-              <dxo-label [visible]="false"></dxo-label>
-            </dxi-item>
-
-            <dxi-item itemType="button">
-              <dxo-button-options
-                [text]="'Create New Test Type'"
-                [useSubmitBehavior]="true"
-                type="default"
-                width="100%"
-              >
-              </dxo-button-options>
-            </dxi-item>
-
-          </dx-form>
-        </form>
-      </div>
-    </dx-popup>
+      (createTestType)="createTestType($event)">
+    </app-create-test-type-popup>
 
     <!--  button & popup for updating testType -->
     <dx-button (click)="this.updatePopupVisible = true" text="Update Test Type"></dx-button>
-    <dx-popup
+    <app-update-test-type-popup
       [(visible)]="updatePopupVisible"
-      [dragEnabled]="false"
-      [height]="400"
-      [showTitle]="true"
-      [width]="300"
-      [hideOnOutsideClick]="true"
-      [showCloseButton]="true"
-      title="Update Test Type">
-      <div *dxTemplate="let data of 'content'">
+      [selectedTestType]="selectedRow"
+      (updateTestType)="updateTestType($event)">
+    </app-update-test-type-popup>
 
-        <form (submit)="updateTestType($event)">
-          <dx-form [formData]="updateTestTypeFormData">
-
-            <dxi-item [editorOptions]="{stylingMode: 'filled',placeholder: selectedRow.name}" dataField="name" editorType="dxTextBox">
-              <dxi-validation-rule message="Name is required" type="required"></dxi-validation-rule>
-              <dxo-label [visible]="false"></dxo-label>
-            </dxi-item>
-
-            <dxi-item itemType="button">
-              <dxo-button-options
-                [text]="'Update Test Type'"
-                [useSubmitBehavior]="true"
-                type="default"
-                width="100%"
-              >
-              </dxo-button-options>
-            </dxi-item>
-
-          </dx-form>
-        </form>
-      </div>
-    </dx-popup>
 
     <!--    Datagrid that lists all the test types -->
     <dx-data-grid [columnAutoWidth]="true"

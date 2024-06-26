@@ -1,0 +1,29 @@
+<dx-popup
+  [(visible)]="visible"
+  [dragEnabled]="false"
+  [height]="400"
+  [showTitle]="true"
+  [width]="300"
+  [hideOnOutsideClick]="true"
+  [showCloseButton]="true"
+  title="Add New Test Type"
+  (onHiding)="onHiding()">
+  <div *dxTemplate="let data of 'content'">
+    <form (submit)="onSubmit($event)">
+      <dx-form [formData]="createTestTypeFormData">
+        <dxi-item [editorOptions]="{stylingMode: 'filled', placeholder: 'Test Type Name'}" dataField="name" editorType="dxTextBox">
+          <dxi-validation-rule message="Name is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+        <dxi-item itemType="button">
+          <dxo-button-options
+            [text]="'Create New Test Type'"
+            [useSubmitBehavior]="true"
+            type="default"
+            width="100%">
+          </dxo-button-options>
+        </dxi-item>
+      </dx-form>
+    </form>
+  </div>
+</dx-popup>

@@ -28,6 +28,8 @@ import {ClinicListComponent} from './pages/clinic-list/clinic-list.component';
 import {DoctorListComponent} from './pages/doctor-list/doctor-list.component';
 import {ChangeDefaultPasswordComponent} from "./shared/components/change-default-password/change-default-password.component";
 import {PatientInfoComponent} from "./pages/patient-info/patient-info.component";
+import {CreateTestTypePopupComponent} from "./components/test-type/create-test-type-popup/create-test-type-popup.component";
+import {UpdateTestTypePopupComponent} from "./components/test-type/update-test-type-popup/update-test-type-popup.component";
 
 const routes: Routes = [
   {
@@ -126,11 +128,25 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true}), DxDataGridModule, DxFormModule, DxLoadIndicatorModule, NgIf, DxSelectBoxModule, DxTagBoxModule, DxButtonModule, DxPopupModule, DxTextBoxModule, DxFileManagerModule, NgForOf],
+  imports: [
+    RouterModule.forRoot(routes, {useHash: true}),
+    DxDataGridModule, DxFormModule,
+    DxLoadIndicatorModule,
+    NgIf, DxSelectBoxModule,
+    DxTagBoxModule,
+    DxButtonModule,
+    DxPopupModule,
+    DxTextBoxModule,
+    DxFileManagerModule,
+    NgForOf],
   providers: [AuthGuardService],
   exports: [RouterModule],
   declarations: [
     HomeComponent,
+    // Components created with ng generate are added automatically in app.module.ts and they cant be reached in components created with the template create view command
+    // To be able to use components in generated views they need to be added here and removed from app.module.ts
+    CreateTestTypePopupComponent,
+    UpdateTestTypePopupComponent,
     ProfileComponent,
     TasksComponent,
     PatientAddComponent,
