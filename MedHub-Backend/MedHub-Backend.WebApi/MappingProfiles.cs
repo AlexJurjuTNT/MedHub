@@ -42,7 +42,7 @@ public class MappingProfiles : Profile
         CreateMap<TestType, TestTypeDto>();
 
         CreateMap<LaboratoryDto, Laboratory>();
-        CreateMap<AddLaboratoryDto, Laboratory>();
+        CreateMap<CreateLaboratoryRequest, Laboratory>();
         CreateMap<Laboratory, LaboratoryDto>();
     }
 }

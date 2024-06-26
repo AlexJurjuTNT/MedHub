@@ -140,4 +140,29 @@ public class TestRequestController(
 
         return Ok(remainingTestTypes);
     }
+
+    [HttpGet("{userId}/test-requests")]
+    [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
+    public async Task<IActionResult> GetAllTestRequestsOfUser([FromRoute] int userId)
+    {
+        var userPatient = await userService.GetUserByIdAsync(userId);
+        if (userPatient == null) return NotFound($"User with id {userId} not found");
+        if (userPatient.Role.Name != "Patient") return BadRequest();
+
+        var testRequests = await testRequestService.GetAllTestRequestsOfUserAsync(userPatient.Id);
+        return Ok(mapper.Map<List<TestRequestDto>>(testRequests));
+    }
+
+    [HttpGet("{userId}/{clinicId}/test-requests")]
+    [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
+    public async Task<IActionResult> GetAllTestRequestsOfUserInClinic([FromRoute] int userId, [FromRoute] int clinicId)
+    {
+        var user = await userService.GetUserByIdAsync(userId);
+        if (user == null) return NotFound($"User with id {userId} not found");
+        if (user.Role.Name != "Patient") return BadRequest();
+
+        var testRequests = await testRequestService.GetAllTestRequestsOfUserInClinicAsync(userId, clinicId);
+        var testRequestsDtos = mapper.Map<List<TestRequestDto>>(testRequests);
+        return Ok(testRequestsDtos);
+    }
 }

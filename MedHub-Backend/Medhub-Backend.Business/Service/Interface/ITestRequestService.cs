@@ -10,5 +10,6 @@ public interface ITestRequestService
     Task<TestRequest> UpdateTestRequestAsync(TestRequest testRequest);
     Task<bool> DeleteTestRequestAsync(int testRequestId);
     Task<List<TestRequest>> GetAllTestRequestsOfUserAsync(int userId);
+    Task<List<TestRequest>> GetAllTestRequestsOfUserInClinicAsync(int userId, int clinicId);
     Task<List<int>> GetExistingTestTypeIdsForTestRequestAsync(int testRequestId);
 }

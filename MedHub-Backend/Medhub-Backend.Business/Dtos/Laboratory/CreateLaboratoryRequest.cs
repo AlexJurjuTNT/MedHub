@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Medhub_Backend.Business.Dtos.Laboratory;
 
-public class AddLaboratoryDto
+public class CreateLaboratoryRequest
 {
     [Required]
     public string Location { get; set; }

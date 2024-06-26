@@ -25,7 +25,7 @@ public class TestRequestService(
         await appDbContext.SaveChangesAsync();
         return testRequest;
     }
-    
+
     public async Task<TestRequest> UpdateTestRequestAsync(TestRequest testRequest)
     {
         appDbContext.TestRequests.Update(testRequest);
@@ -46,6 +46,13 @@ public class TestRequestService(
     public async Task<List<TestRequest>> GetAllTestRequestsOfUserAsync(int userId)
     {
         return await appDbContext.TestRequests.Where(t => t.PatientId == userId).ToListAsync();
+    }
+
+    public async Task<List<TestRequest>> GetAllTestRequestsOfUserInClinicAsync(int userId, int clinicId)
+    {
+        return await appDbContext.TestRequests.Where(
+                t => t.PatientId == userId && t.ClinicId == clinicId)
+            .ToListAsync();
     }
 
     public async Task<List<int>> GetExistingTestTypeIdsForTestRequestAsync(int testRequestId)

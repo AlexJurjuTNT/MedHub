@@ -18,7 +18,6 @@ public class PatientController(
     IPatientService patientService,
     IUserService userService,
     IClinicService clinicService,
-    ITestRequestService testRequestService,
     IMapper mapper
 ) : ControllerBase
 {
@@ -96,18 +95,5 @@ public class PatientController(
         {
             return NotFound(ex.Message);
         }
-    }
-
-    [HttpGet("{patientId}/test-requests")]
-    [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
-    public async Task<IActionResult> GetTestRequestsOfPatient([FromRoute] int patientId)
-    {
-        var userPatient = await userService.GetUserByIdAsync(patientId);
-        if (userPatient == null) return NotFound($"User with id {patientId} not found");
-
-        if (userPatient.Role.Name != "Patient") return BadRequest();
-
-        var testRequests = await testRequestService.GetAllTestRequestsOfUserAsync(userPatient.Id);
-        return Ok(mapper.Map<List<TestRequestDto>>(testRequests));
     }
 }

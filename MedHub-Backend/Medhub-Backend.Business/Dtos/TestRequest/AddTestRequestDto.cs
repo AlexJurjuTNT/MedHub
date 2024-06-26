@@ -14,5 +14,8 @@ public class AddTestRequestDto
     public List<int> TestTypesId { get; set; }
 
     [Required]
+    public int ClinicId { get; set; }
+
+    [Required]
     public int LaboratoryId { get; set; }
 }

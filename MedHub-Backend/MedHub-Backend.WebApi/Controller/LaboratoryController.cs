@@ -39,15 +39,15 @@ public class LaboratoryController(
 
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(LaboratoryDto))]
-    public async Task<IActionResult> CreateLaboratory([FromBody] AddLaboratoryDto addLaboratoryRequest)
+    public async Task<IActionResult> CreateLaboratory([FromBody] CreateLaboratoryRequest createLaboratoryRequest)
     {
-        var clinic = await clinicService.GetClinicByIdAsync(addLaboratoryRequest.ClinicId);
+        var clinic = await clinicService.GetClinicByIdAsync(createLaboratoryRequest.ClinicId);
         if (clinic is null) return NotFound();
 
         try
         {
-            var laboratory = mapper.Map<Laboratory>(addLaboratoryRequest);
-            var testTypes = await testTypeService.GetTestTypesFromIdList(addLaboratoryRequest.TestTypesId);
+            var laboratory = mapper.Map<Laboratory>(createLaboratoryRequest);
+            var testTypes = await testTypeService.GetTestTypesFromIdList(createLaboratoryRequest.TestTypesId);
             var createdLaboratory = await laboratoryService.CreateLaboratoryAsync(laboratory, testTypes);
             return CreatedAtAction(nameof(GetLaboratoryById), new { laboratoryId = createdLaboratory.Id }, mapper.Map<LaboratoryDto>(createdLaboratory));
         }
@@ -69,15 +69,15 @@ public class LaboratoryController(
 
     [HttpPut("{laboratoryId}")]
     [ProducesResponseType(200, Type = typeof(LaboratoryDto))]
-    public async Task<IActionResult> UpdateLaboratory([FromRoute] int laboratoryId, [FromBody] AddLaboratoryDto laboratoryDto)
+    public async Task<IActionResult> UpdateLaboratory([FromRoute] int laboratoryId, [FromBody] UpdateLaboratoryRequest updateLaboratoryRequest)
     {
         var existingLaboratory = await laboratoryService.GetLaboratoryByIdAsync(laboratoryId);
         if (existingLaboratory == null) return NotFound();
 
-        var testTypes = await testTypeService.GetTestTypesFromIdList(laboratoryDto.TestTypesId);
+        var testTypes = await testTypeService.GetTestTypesFromIdList(updateLaboratoryRequest.TestTypesId);
 
-        existingLaboratory.ClinicId = laboratoryDto.ClinicId;
-        existingLaboratory.Location = laboratoryDto.Location;
+        existingLaboratory.ClinicId = updateLaboratoryRequest.ClinicId;
+        existingLaboratory.Location = updateLaboratoryRequest.Location;
         // clear needs to be added because of proxies, without clear the testTypes will not be changed
         existingLaboratory.TestTypes.Clear();
         existingLaboratory.TestTypes = testTypes;
