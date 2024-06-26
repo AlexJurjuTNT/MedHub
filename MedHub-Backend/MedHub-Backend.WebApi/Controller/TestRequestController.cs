@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Medhub_Backend.Business.Dtos.TestRequest;
 using Medhub_Backend.Business.Dtos.TestResult;
@@ -5,164 +6,180 @@ using Medhub_Backend.Business.Dtos.TestType;
 using Medhub_Backend.Business.Service.Interface;
 using Medhub_Backend.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
+using SendGrid.Helpers.Errors.Model;
 
 namespace MedHub_Backend.WebApi.Controller;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class TestRequestController(
-    ITestRequestService testRequestService,
-    ITestTypeService testTypeService,
-    IUserService userService,
-    IClinicService clinicService,
-    IEmailService emailService,
-    ILaboratoryService laboratoryService,
-    IMapper mapper
-) : ControllerBase
+public class TestRequestController : ControllerBase
 {
+    private readonly ITestRequestService _testRequestService;
+    private readonly ITestTypeService _testTypeService;
+    private readonly IUserService _userService;
+    private readonly IEmailService _emailService;
+    private readonly ILaboratoryService _laboratoryService;
+    private readonly IMapper _mapper;
+
+    public TestRequestController(
+        ITestRequestService testRequestService,
+        ITestTypeService testTypeService,
+        IUserService userService,
+        IClinicService clinicService,
+        IEmailService emailService,
+        ILaboratoryService laboratoryService,
+        IMapper mapper)
+    {
+        _testRequestService = testRequestService;
+        _testTypeService = testTypeService;
+        _userService = userService;
+        _emailService = emailService;
+        _laboratoryService = laboratoryService;
+        _mapper = mapper;
+    }
+
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
     public async Task<IActionResult> GetAllTestRequests()
     {
-        var testRequests = await testRequestService.GetAllTestRequestsAsync();
-        var testRequestsDto = mapper.Map<List<TestRequestDto>>(testRequests);
-        return Ok(testRequestsDto);
+        var testRequests = await _testRequestService.GetAllTestRequestsAsync();
+        var testRequestsDtos = _mapper.Map<List<TestRequestDto>>(testRequests);
+        return Ok(testRequestsDtos);
     }
 
     [HttpGet("{testRequestId}")]
     [ProducesResponseType(200, Type = typeof(TestRequestDto))]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetTestRequestById([FromRoute] int testRequestId)
+    public async Task<IActionResult> GetTestRequestById(int testRequestId)
     {
-        var testRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
+        var testRequest = await _testRequestService.GetTestRequestByIdAsync(testRequestId);
         if (testRequest == null) return NotFound($"Test request with id {testRequestId} not found");
 
-        var testRequestDto = mapper.Map<TestRequestDto>(testRequest);
-        testRequestDto.RequestDate = testRequest.RequestDate.ToString("yyyy-mm-dd HH:mm");
+        var testRequestDto = _mapper.Map<TestRequestDto>(testRequest);
+        // todo: change this
+        testRequestDto.RequestDate = testRequest.RequestDate.ToString("yyyy-MM-dd HH:mm");
         return Ok(testRequestDto);
     }
 
-    // todo: check if laboratory does not have a testType for the required testRequest
     [HttpPost]
-    [ProducesResponseType(201, Type = typeof(AddTestRequestDto))]
+    [ProducesResponseType(201, Type = typeof(TestRequestDto))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> CreateTestRequest([FromBody] AddTestRequestDto testRequestDto)
     {
-        var userPatient = await userService.GetUserByIdAsync(testRequestDto.PatientId);
-        if (userPatient == null) return NotFound($"Patient with id {testRequestDto.PatientId} not found");
-        if (userPatient.Role.Name != "Patient") return BadRequest($"User with id {testRequestDto.PatientId} is not a patient");
+        var (patient, doctor, laboratory, testTypes) = await ValidateAndGetEntities(testRequestDto);
 
-        var userDoctor = await userService.GetUserByIdAsync(testRequestDto.DoctorId);
-        if (userDoctor == null) return NotFound($"Doctor with id {testRequestDto.DoctorId} not found");
-        if (userDoctor.Role.Name != "Doctor") return BadRequest($"User with id {testRequestDto.DoctorId} is not a doctor");
-
-        var clinic = await clinicService.GetClinicByIdAsync(userDoctor.ClinicId);
-        if (clinic == null) return NotFound($"Clinic with id {userDoctor.ClinicId} not found");
-
-        var laboratory = await laboratoryService.GetLaboratoryByIdAsync(testRequestDto.LaboratoryId);
-        if (laboratory == null) return NotFound($"Laboratory with id {testRequestDto.LaboratoryId} not found");
-
-        try
+        var testRequest = new TestRequest
         {
-            var testTypes = await testTypeService.GetTestTypesFromIdList(testRequestDto.TestTypesId);
+            PatientId = patient.Id,
+            DoctorId = doctor.Id,
+            LaboratoryId = laboratory.Id,
+            TestTypes = testTypes,
+            RequestDate = DateTime.UtcNow,
+            ClinicId = doctor.ClinicId
+        };
 
-            var testRequest = mapper.Map<TestRequest>(testRequestDto);
-
-            testRequest.TestTypes = testTypes;
-            testRequest.RequestDate = DateTime.Now;
-            var createdTestRequest = await testRequestService.CreateNewTestRequestAsync(testRequest);
-
-            await emailService.SendCreatedTestRequestEmail(clinic, createdTestRequest);
-
-            return CreatedAtAction(nameof(GetTestRequestById), new { testRequestId = createdTestRequest.Id }, mapper.Map<TestRequestDto>(createdTestRequest));
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var createdTestRequest = await _testRequestService.CreateNewTestRequestAsync(testRequest, doctor.Clinic);
+        return CreatedAtAction(nameof(GetTestRequestById), new { testRequestId = createdTestRequest.Id }, _mapper.Map<TestRequestDto>(createdTestRequest));
     }
 
     [HttpPut("{testRequestId}")]
     [ProducesResponseType(200, Type = typeof(TestRequestDto))]
-    public async Task<IActionResult> UpdateTestRequest([FromRoute] int testRequestId, [FromBody] UpdateTestRequestDto testRequestDto)
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> UpdateTestRequest(int testRequestId, [FromBody] UpdateTestRequestDto testRequestDto)
     {
-        if (testRequestId != testRequestDto.Id) return BadRequest();
+        if (testRequestId != testRequestDto.Id) return BadRequest("Id mismatch");
 
-        var patientUser = await userService.GetUserByIdAsync(testRequestDto.PatientId);
-        if (patientUser == null) return NotFound($"Patient with id {testRequestDto.PatientId} not found");
-        if (patientUser.Role.Name != "Patient") return BadRequest($"User with id {testRequestDto.PatientId} is not a patient");
+        var patient = await ValidateUser(testRequestDto.PatientId, "Patient");
+        var doctor = await ValidateUser(testRequestDto.DoctorId, "Doctor");
 
-        var doctorUser = await userService.GetUserByIdAsync(testRequestDto.DoctorId);
-        if (doctorUser == null) return NotFound($"Doctor with id {testRequestDto.DoctorId} not found");
-        if (doctorUser.Role.Name != "Doctor") return BadRequest($"User with id {testRequestDto.DoctorId} is not a doctor");
+        var existingTestRequest = await _testRequestService.GetTestRequestByIdAsync(testRequestId) ??
+                                  throw new NotFoundException($"Test request with id {testRequestId} not found");
 
-        var existingTestRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
-        if (existingTestRequest == null) return NotFound($"Patient with id {testRequestId} not found");
-
-        var testRequest = mapper.Map<TestRequest>(testRequestDto);
-        var updatedTestRequest = await testRequestService.UpdateTestRequestAsync(testRequest);
-        return Ok(mapper.Map<TestRequestDto>(updatedTestRequest));
+        var testRequest = _mapper.Map<TestRequest>(testRequestDto);
+        var updatedTestRequest = await _testRequestService.UpdateTestRequestAsync(testRequest);
+        return Ok(_mapper.Map<TestRequestDto>(updatedTestRequest));
     }
 
     [HttpDelete("{testRequestId}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> DeleteTestRequest([FromRoute] int testRequestId)
+    public async Task<IActionResult> DeleteTestRequest(int testRequestId)
     {
-        var result = await testRequestService.DeleteTestRequestAsync(testRequestId);
-        if (!result) return NotFound($"Test request with id {testRequestId} not found");
-
-        return NoContent();
+        var result = await _testRequestService.DeleteTestRequestAsync(testRequestId);
+        return result ? NoContent() : NotFound($"Test request with id {testRequestId} not found");
     }
 
     [HttpGet("{testRequestId}/results")]
     [ProducesResponseType(200, Type = typeof(List<TestResultDto>))]
-    public async Task<IActionResult> GetAllResultsOfRequest([FromRoute] int testRequestId)
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetAllResultsOfRequest(int testRequestId)
     {
-        var testRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
+        var testRequest = await _testRequestService.GetTestRequestByIdAsync(testRequestId);
         if (testRequest == null) return NotFound($"Test request with id {testRequestId} not found");
 
-        var testResultsDto = mapper.Map<List<TestResultDto>>(testRequest.TestResults);
-        return Ok(testResultsDto);
+        return Ok(_mapper.Map<List<TestResultDto>>(testRequest.TestResults));
     }
 
     [HttpGet("{testRequestId}/remaining")]
     [ProducesResponseType(200, Type = typeof(List<TestTypeDto>))]
-    public async Task<IActionResult> GetRemainingTestTypes([FromRoute] int testRequestId)
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetRemainingTestTypes(int testRequestId)
     {
-        var testRequest = await testRequestService.GetTestRequestByIdAsync(testRequestId);
-        if (testRequest == null) return NotFound($"Test request with id {testRequestId} not found");
-
-        var existingTestTypeIds = await testRequestService.GetExistingTestTypeIdsForTestRequestAsync(testRequestId);
-        var remainingTestTypes = testRequest.TestTypes
-            .Where(tt => !existingTestTypeIds.Contains(tt.Id))
-            .Select(tt => mapper.Map<TestTypeDto>(tt))
-            .ToList();
-
+        var remainingTestTypes = await _testRequestService.GetRemainingTestTypesAsync(testRequestId);
         return Ok(remainingTestTypes);
     }
 
-    [HttpGet("{userId}/test-requests")]
+    [HttpGet("user/{userId}")]
     [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
-    public async Task<IActionResult> GetAllTestRequestsOfUser([FromRoute] int userId)
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetAllTestRequestsOfUser(int userId)
     {
-        var userPatient = await userService.GetUserByIdAsync(userId);
-        if (userPatient == null) return NotFound($"User with id {userId} not found");
-        if (userPatient.Role.Name != "Patient") return BadRequest();
-
-        var testRequests = await testRequestService.GetAllTestRequestsOfUserAsync(userPatient.Id);
-        return Ok(mapper.Map<List<TestRequestDto>>(testRequests));
+        var patient = await ValidateUser(userId, "Patient");
+        var testRequests = await _testRequestService.GetAllTestRequestsOfUserAsync(patient.Id);
+        var testRequestDtos = _mapper.Map<List<TestRequestDto>>(testRequests);
+        return Ok(testRequestDtos);
     }
 
-    [HttpGet("{userId}/{clinicId}/test-requests")]
+    [HttpGet("user/{userId}/clinic/{clinicId}")]
     [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
-    public async Task<IActionResult> GetAllTestRequestsOfUserInClinic([FromRoute] int userId, [FromRoute] int clinicId)
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetAllTestRequestsOfUserInClinic(int userId, int clinicId)
     {
-        var user = await userService.GetUserByIdAsync(userId);
-        if (user == null) return NotFound($"User with id {userId} not found");
-        if (user.Role.Name != "Patient") return BadRequest();
+        var patient = await ValidateUser(userId, "Patient");
+        var testRequests = await _testRequestService.GetAllTestRequestsOfUserInClinicAsync(userId, clinicId);
+        var testRequestDtos = _mapper.Map<List<TestRequestDto>>(testRequests);
+        return Ok(testRequestDtos);
+    }
 
-        var testRequests = await testRequestService.GetAllTestRequestsOfUserInClinicAsync(userId, clinicId);
-        var testRequestsDtos = mapper.Map<List<TestRequestDto>>(testRequests);
-        return Ok(testRequestsDtos);
+    private async Task<(User patient, User doctor, Laboratory laboratory, List<TestType> testTypes)> ValidateAndGetEntities(AddTestRequestDto testRequestDto)
+    {
+        var patient = await ValidateUser(testRequestDto.PatientId, "Patient");
+        var doctor = await ValidateUser(testRequestDto.DoctorId, "Doctor");
+
+        var laboratory = await _laboratoryService.GetLaboratoryByIdAsync(testRequestDto.LaboratoryId)
+                         ?? throw new NotFoundException($"Laboratory with id {testRequestDto.LaboratoryId} not found");
+
+        var testTypes = await _testTypeService.GetTestTypesFromIdList(testRequestDto.TestTypesId);
+        if (testTypes.Count != testRequestDto.TestTypesId.Count)
+        {
+            throw new ValidationException("One or more test types were not found");
+        }
+
+        return (patient, doctor, laboratory, testTypes);
+    }
+
+    private async Task<User> ValidateUser(int userId, string expectedRole)
+    {
+        var user = await _userService.GetUserByIdAsync(userId)
+                   ?? throw new NotFoundException($"User with id {userId} not found");
+
+        if (user.Role.Name != expectedRole)
+            throw new ValidationException($"User with id {userId} is not a {expectedRole}");
+
+        return user;
     }
 }

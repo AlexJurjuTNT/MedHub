@@ -5,63 +5,71 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Medhub_Backend.Business.Service;
 
-public class TestRequestService(
-    AppDbContext appDbContext
-) : ITestRequestService
+public class TestRequestService : ITestRequestService
 {
+    private readonly AppDbContext _appDbContext;
+    private readonly IEmailService _emailService;
+
+    public TestRequestService(AppDbContext appDbContext, IEmailService emailService)
+    {
+        _appDbContext = appDbContext;
+        _emailService = emailService;
+    }
+
     public async Task<List<TestRequest>> GetAllTestRequestsAsync()
     {
-        return await appDbContext.TestRequests.ToListAsync();
+        return await _appDbContext.TestRequests.ToListAsync();
     }
 
     public async Task<TestRequest?> GetTestRequestByIdAsync(int testRequestId)
     {
-        return await appDbContext.TestRequests.FindAsync(testRequestId);
+        return await _appDbContext.TestRequests.FindAsync(testRequestId);
     }
 
-    public async Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest)
+    public async Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest, Clinic clinic)
     {
-        await appDbContext.TestRequests.AddAsync(testRequest);
-        await appDbContext.SaveChangesAsync();
+        await _appDbContext.TestRequests.AddAsync(testRequest);
+        await _appDbContext.SaveChangesAsync();
+
+        await _emailService.SendCreatedTestRequestEmail(clinic, testRequest);
+
         return testRequest;
     }
 
     public async Task<TestRequest> UpdateTestRequestAsync(TestRequest testRequest)
     {
-        appDbContext.TestRequests.Update(testRequest);
-        await appDbContext.SaveChangesAsync();
+        _appDbContext.TestRequests.Update(testRequest);
+        await _appDbContext.SaveChangesAsync();
         return testRequest;
     }
 
     public async Task<bool> DeleteTestRequestAsync(int testRequestId)
     {
-        var testRequest = await appDbContext.TestRequests.FindAsync(testRequestId);
+        var testRequest = await _appDbContext.TestRequests.FindAsync(testRequestId);
         if (testRequest == null) return false;
 
-        appDbContext.TestRequests.Remove(testRequest);
-        await appDbContext.SaveChangesAsync();
+        _appDbContext.TestRequests.Remove(testRequest);
+        await _appDbContext.SaveChangesAsync();
         return true;
     }
 
     public async Task<List<TestRequest>> GetAllTestRequestsOfUserAsync(int userId)
     {
-        return await appDbContext.TestRequests.Where(t => t.PatientId == userId).ToListAsync();
+        return await _appDbContext.TestRequests.Where(t => t.PatientId == userId).ToListAsync();
     }
 
     public async Task<List<TestRequest>> GetAllTestRequestsOfUserInClinicAsync(int userId, int clinicId)
     {
-        return await appDbContext.TestRequests.Where(
+        return await _appDbContext.TestRequests.Where(
                 t => t.PatientId == userId && t.ClinicId == clinicId)
             .ToListAsync();
     }
 
-    public async Task<List<int>> GetExistingTestTypeIdsForTestRequestAsync(int testRequestId)
+    public async Task<List<TestType>> GetRemainingTestTypesAsync(int testRequestId)
     {
-        return await appDbContext.TestResults
-            .Where(tr => tr.TestRequestId == testRequestId)
-            .SelectMany(tr => tr.TestTypes)
-            .Select(tt => tt.Id)
-            .Distinct()
+        return await _appDbContext.TestRequests
+            .Where(tr => tr.Id == testRequestId)
+            .SelectMany(tr => tr.TestTypes.Where(tt => !tr.TestResults.Any(r => r.TestTypes.Contains(tt))))
             .ToListAsync();
     }
 }

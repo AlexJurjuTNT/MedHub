@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using SendGrid.Helpers.Errors.Model;
 using IExceptionHandler = Microsoft.AspNetCore.Diagnostics.IExceptionHandler;
 
 namespace MedHub_Backend.WebApi;
@@ -34,6 +36,9 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         return exception switch
         {
+            NotFoundException => StatusCodes.Status404NotFound,
+            ValidationException => StatusCodes.Status400BadRequest,
+            
             ArgumentException => StatusCodes.Status400BadRequest,
             InvalidOperationException => StatusCodes.Status400BadRequest,
             UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
