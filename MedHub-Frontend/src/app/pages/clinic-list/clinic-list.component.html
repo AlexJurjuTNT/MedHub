@@ -2,9 +2,9 @@
 <div class="content-block">
   <div class="dx-card responsive-paddings">
     <!--    button & popup for creating a new clinic -->
-    <dx-button (click)="this.createClinicPopupVisible = true;" text="Add new Clinic"></dx-button>
+    <dx-button (click)="this.createPopupVisible = true;" text="Add new Clinic"></dx-button>
     <app-create-clinic-popup
-      [(visible)]="createClinicPopupVisible"
+      [(visible)]="createPopupVisible"
       (createClinic)="createClinic($event)">
     </app-create-clinic-popup>
 

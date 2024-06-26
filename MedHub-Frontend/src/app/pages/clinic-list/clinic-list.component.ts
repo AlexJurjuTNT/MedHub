@@ -12,9 +12,8 @@ import {lastValueFrom} from "rxjs";
 })
 export class ClinicListComponent implements OnInit {
   customDataSource: DataSource;
-  clinicId: number = 0;
 
-  createClinicPopupVisible: boolean = false;
+  createPopupVisible: boolean = false;
   updatePopupVisible: boolean = false;
 
   selectedRowKeys: any[] = [];
@@ -77,7 +76,7 @@ export class ClinicListComponent implements OnInit {
   createClinic(addClinicDto: AddClinicDto) {
     this.clinicService.createClinic(addClinicDto).subscribe({
       next: () => {
-        this.createClinicPopupVisible = false;
+        this.createPopupVisible = false;
         this.customDataSource.reload();
       }
     });

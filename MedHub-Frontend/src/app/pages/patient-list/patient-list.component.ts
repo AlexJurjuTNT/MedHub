@@ -6,6 +6,7 @@ import {lastValueFrom} from "rxjs";
 import DataSource from 'devextreme/data/data_source';
 import CustomStore from 'devextreme/data/custom_store';
 import {LoadOptions} from 'devextreme/data';
+import {TokenService} from "../../shared/services/token.service";
 
 @Component({
   selector: 'app-patient-list',
@@ -22,11 +23,10 @@ export class PatientListComponent implements OnInit {
   constructor(
     private patientService: PatientService,
     private userService: UserService,
-    private authService: AuthService,
+    private tokenService: TokenService,
     private authenticationService: AuthenticationService,
     private router: Router
   ) {
-    this.loadCurrentUser();
     this.customDataSource = new DataSource({
       store: new CustomStore({
         key: 'id',
@@ -34,7 +34,7 @@ export class PatientListComponent implements OnInit {
           try {
             let response = await lastValueFrom(
               this.patientService.getAllPatientsOfClinic(
-                this.doctor.clinicId, // clinicId
+                this.tokenService.getClinicId(), // clinicId
                 loadOptions.requireTotalCount,
                 loadOptions.requireGroupCount,
                 false, // isCountQuery
@@ -85,13 +85,6 @@ export class PatientListComponent implements OnInit {
 
   navigateToPatientInformation(userId: number) {
     this.router.navigate(["/patient-info", userId]);
-  }
-
-  private loadCurrentUser() {
-    let result = this.authService.getUserSync();
-    if (result.isOk) {
-      this.doctor = result.data!;
-    }
   }
 
   onSelectionChanged(e: any) {

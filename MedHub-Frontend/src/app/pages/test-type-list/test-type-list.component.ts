@@ -11,13 +11,11 @@ import {lastValueFrom} from "rxjs";
   styleUrls: ['./test-type-list.component.css']
 })
 export class TestTypeListComponent {
-
   customDataSource: DataSource;
   selectedRowKeys: any[] = [];
   selectedRow: TestTypeDto = {} as TestTypeDto;
   updatePopupVisible: boolean = false;
   createPopupVisible: boolean = false;
-
 
   constructor(
     private testTypeService: TestTypeService
