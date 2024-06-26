@@ -20,7 +20,7 @@ public class AuthenticationService(
         if (userByUsername != null) throw new UserAlreadyExistsException($"User with username {user.Username} already exists");
 
         var clinic = await clinicService.GetClinicByIdAsync(user.ClinicId);
-        if (clinic == null) throw new ClinicNotFoundException($"Clinic with id {user.ClinicId} doesn't exist");
+        if (clinic == null) throw new ClinicNotFoundException(user.ClinicId);
 
         user.Username = clinic.Name + clinic.Id + user.Email.Substring(0, user.Email.IndexOf('@'));
         user.Role = (await roleService.GetRoleByName("Patient"))!;
@@ -41,7 +41,7 @@ public class AuthenticationService(
         var user = await userService.GetUserByUsernameAsync(loginRequest.Username);
         if (user == null) throw new UserNotFoundException($"User with username {loginRequest.Username} not found");
 
-        if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password)) throw new PasswordMismatchException("Passwords don't match");
+        if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password)) throw new PasswordMismatchException();
 
         return new AuthenticationResponse
         {
@@ -54,13 +54,10 @@ public class AuthenticationService(
     public async Task<User> RegisterDoctorAsync(User user)
     {
         var userByUsername = await userService.GetUserByUsernameAsync(user.Username);
-        if (userByUsername != null) throw new UserAlreadyExistsException($"Doctor with {user.Username}  already exists");
-
-        var userByEmail = await userService.GetUserByEmail(user.Email);
-        if (userByEmail != null) throw new UserAlreadyExistsException($"Doctor with email {user.Email} exists");
+        if (userByUsername != null) throw new UserAlreadyExistsException(user.Username);
 
         var clinic = await clinicService.GetClinicByIdAsync(user.ClinicId);
-        if (clinic == null) throw new ClinicNotFoundException($"Clinic with id {user.ClinicId} doesn't exist");
+        if (clinic == null) throw new ClinicNotFoundException(user.ClinicId);
 
         user.Role = (await roleService.GetRoleByName("Doctor"))!;
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
@@ -71,10 +68,7 @@ public class AuthenticationService(
     public async Task<User> RegisterAdminAsync(User user)
     {
         var userByUsername = await userService.GetUserByUsernameAsync(user.Username);
-        if (userByUsername != null) throw new UserAlreadyExistsException($"Admin with username {user.Username} already exists");
-
-        var userByEmail = await userService.GetUserByEmail(user.Email);
-        if (userByEmail != null) throw new UserAlreadyExistsException($"Admin with email {user.Email} already exists");
+        if (userByUsername != null) throw new UserAlreadyExistsException(user.Username);
 
         user.Role = (await roleService.GetRoleByName("Admin"))!;
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
@@ -85,7 +79,7 @@ public class AuthenticationService(
     public async Task ForgotPassword(string email)
     {
         var user = await userService.GetUserByEmail(email);
-        if (user == null) throw new UserNotFoundException($"User with email {email} not found");
+        if (user == null) throw new UserNotFoundException(email);
 
         user.PasswordResetCode = passwordService.GenerateRandomPassword(8);
 

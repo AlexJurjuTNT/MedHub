@@ -9,6 +9,7 @@ public static class DependencyInjection
     {
         services.AddSwaggerDoc();
         services.AddAutomapper();
+        services.AddGlobalExceptionHandling();
         return services;
     }
 
@@ -63,6 +64,13 @@ public static class DependencyInjection
             options.AddServer(new OpenApiServer { Url = "http://localhost:5210", Description = "Local server" });
         });
 
+        return services;
+    }
+    
+    private static IServiceCollection AddGlobalExceptionHandling(this IServiceCollection services)
+    {
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
         return services;
     }
 }

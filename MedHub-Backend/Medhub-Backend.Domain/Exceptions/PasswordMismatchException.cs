@@ -2,7 +2,7 @@ namespace Medhub_Backend.Domain.Exceptions;
 
 public class PasswordMismatchException : Exception
 {
-    public PasswordMismatchException(string message) : base(message)
+    public PasswordMismatchException() : base("Passwords don't match")
     {
     }
 }
