@@ -63,10 +63,13 @@ public class TestRequestController(
 
         try
         {
-            var testRequest = mapper.Map<TestRequest>(testRequestDto);
-            testRequest.RequestDate = DateTime.Now;
             var testTypes = await testTypeService.GetTestTypesFromIdList(testRequestDto.TestTypesId);
-            var createdTestRequest = await testRequestService.CreateNewTestRequestAsync(testRequest, testTypes);
+
+            var testRequest = mapper.Map<TestRequest>(testRequestDto);
+
+            testRequest.TestTypes = testTypes;
+            testRequest.RequestDate = DateTime.Now;
+            var createdTestRequest = await testRequestService.CreateNewTestRequestAsync(testRequest);
 
             await emailService.SendCreatedTestRequestEmail(clinic, createdTestRequest);
 

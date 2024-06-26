@@ -6,7 +6,7 @@ public interface ITestRequestService
 {
     Task<List<TestRequest>> GetAllTestRequestsAsync();
     Task<TestRequest?> GetTestRequestByIdAsync(int testRequestId);
-    Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest, List<TestType> testTypes);
+    Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest);
     Task<TestRequest> UpdateTestRequestAsync(TestRequest testRequest);
     Task<bool> DeleteTestRequestAsync(int testRequestId);
     Task<List<TestRequest>> GetAllTestRequestsOfUserAsync(int userId);

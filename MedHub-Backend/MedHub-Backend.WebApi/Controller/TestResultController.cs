@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using AutoMapper;
 using Medhub_Backend.Business.Dtos.TestResult;
 using Medhub_Backend.Business.Service.Interface;
@@ -10,38 +10,48 @@ namespace MedHub_Backend.WebApi.Controller;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class TestResultController(
-    ITestResultService testResultService,
-    IFileService fileService,
-    ITestRequestService testRequestService,
-    IClinicService clinicService,
-    IUserService userService,
-    ITestTypeService testTypeService,
-    IMapper mapper
-) : ControllerBase
+public class TestResultController : ControllerBase
 {
+    private readonly ITestResultService _testResultService;
+    private readonly IUserService _userService;
+    private readonly ITestRequestService _testRequestService;
+    private readonly IMapper _mapper;
+
+    public TestResultController(
+        ITestResultService testResultService,
+        IUserService userService,
+        ITestRequestService testRequestService,
+        IMapper mapper)
+    {
+        _testResultService = testResultService;
+        _userService = userService;
+        _testRequestService = testRequestService;
+        _mapper = mapper;
+    }
+
+    [Authorize]
     [HttpPost]
     [ProducesResponseType(200, Type = typeof(TestResultDto))]
     public async Task<IActionResult> AddTestResult([FromForm] AddTestResultDto testResultDto, IFormFile formFile)
     {
         if (!ModelState.IsValid || formFile == null) return BadRequest(ModelState);
 
-        var testResult = mapper.Map<TestResult>(testResultDto);
-        var testRequest = await testRequestService.GetTestRequestByIdAsync(testResult.TestRequestId);
-        if (testRequest == null) return NotFound($"Test request with id {testResult.TestRequestId} not found");
-
-        var validTestTypeIds = testRequest.TestTypes.Select(tt => tt.Id).ToList();
-        var invalidTestTypeIds = testResultDto.TestTypesIds.Except(validTestTypeIds).ToList();
-        if (invalidTestTypeIds.Any()) return BadRequest($"The following test type IDs are not valid for this test request: {string.Join(", ", invalidTestTypeIds)}");
-
-
-        var createdTestResult = await testResultService.UploadResult(testResult, testRequest, formFile);
-
         try
         {
-            var testTypes = await testTypeService.GetTestTypesFromIdList(testResultDto.TestTypesIds);
-            createdTestResult = await testResultService.AddTestTypesAsync(createdTestResult, testTypes);
-            return Ok(mapper.Map<TestResultDto>(createdTestResult));
+            var testRequest = await _testRequestService.GetTestRequestByIdAsync(testResultDto.TestRequestId);
+            if (testRequest == null)
+            {
+                return NotFound($"Test request with id {testResultDto.TestRequestId} not found");
+            }
+
+            if (!ValidateTestTypeIds(testRequest, testResultDto.TestTypesIds))
+            {
+                return BadRequest("Invalid test type IDs for this test request");
+            }
+
+            var testResult = _mapper.Map<TestResult>(testResultDto);
+            var createdTestResult = await _testResultService.CreateTestResultWithFile(testResult, testResultDto.TestTypesIds, testRequest, formFile);
+            return Ok(_mapper.Map<TestResultDto>(createdTestResult));
         }
         catch (ArgumentException ex)
         {
@@ -49,10 +59,32 @@ public class TestResultController(
         }
     }
 
+    [Authorize]
+    [HttpGet("{resultId}")]
+    [ProducesResponseType(200, Type = typeof(FileResult))]
+    public async Task<IActionResult> DownloadPdf([FromRoute] int resultId)
+    {
+        var user = await GetCurrentUser();
+        if (user == null)
+            return Unauthorized("Invalid user");
+
+        var testResult = await _testResultService.GetTestResultByIdAsync(resultId);
+        if (testResult == null) return NotFound();
+
+        if (!IsUserAuthorizedForTestResult(user, testResult))
+            return Unauthorized("User not authorized to access this result");
+
+        var result = await _testResultService.DownloadTestResultPdf(resultId);
+        if (result == null) return NotFound();
+
+        var (fileBytes, contentType, fileName) = result.Value;
+        return File(fileBytes, contentType, fileName);
+    }
+
     [HttpDelete("{testResultId}")]
     public async Task<IActionResult> DeleteTestResult([FromRoute] int testResultId)
     {
-        var result = await testResultService.DeleteTestResultAsync(testResultId);
+        var result = await _testResultService.DeleteTestResultAsync(testResultId);
         if (!result) return NotFound($"Test result with id {testResultId} not found");
 
         return Ok();
@@ -62,44 +94,35 @@ public class TestResultController(
     [ProducesResponseType(200, Type = typeof(List<TestResultDto>))]
     public async Task<IActionResult> GetAllTestResults()
     {
-        var testResults = await testResultService.GetAllTestResultsAsync();
-        var testResultsDto = mapper.Map<List<TestResultDto>>(testResults);
+        var testResults = await _testResultService.GetAllTestResultsAsync();
+        var testResultsDto = _mapper.Map<List<TestResultDto>>(testResults);
         return Ok(testResultsDto);
     }
 
-    [Authorize]
-    [HttpGet("{resultId}")]
-    [ProducesResponseType(200, Type = typeof(FileResult))]
-    public async Task<IActionResult> DownloadPdf([FromRoute] int resultId)
+    private async Task<User?> GetCurrentUser()
     {
-        string authHeader = Request.Headers["Authorization"];
-        if (authHeader == null || !authHeader.StartsWith("Bearer")) return Unauthorized();
+        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(username))
+            return null;
 
-        var tokenString = authHeader.Substring("Bearer ".Length);
-        var handler = new JwtSecurityTokenHandler();
-        var token = handler.ReadJwtToken(tokenString);
+        return await _userService.GetUserByUsernameAsync(username);
+    }
 
-        var clinicId = token.Claims.FirstOrDefault(c => c.Type == "ClinicId")?.Value;
-        var username = token.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+    private bool IsUserAuthorizedForTestResult(User user, TestResult testResult)
+    {
+        if (user.Role.Name == "Patient")
+            return testResult.TestRequest.PatientId == user.Id;
 
-        if (clinicId == null || username == null) return Unauthorized();
+        if (user.Role.Name == "Doctor")
+            return testResult.TestRequest.DoctorId == user.Id;
 
-        var clinic = await clinicService.GetClinicByIdAsync(int.Parse(clinicId));
-        if (clinic == null) return NotFound($"Clinic with id {clinicId} not found");
+        return false;
+    }
 
-        var user = await userService.GetUserByUsernameAsync(username);
-        if (user == null) return NotFound($"User with username {username} not found");
-
-        var testResult = await testResultService.GetTestResultByIdAsync(resultId);
-        if (testResult == null) return NotFound($"Result with id {resultId} not found");
-
-
-        if (user.Role.Name == "Patient" && testResult.TestRequest.PatientId != user.Id) return Unauthorized();
-        if (user.Role.Name == "Doctor" && testResult.TestRequest.DoctorId != user.Id) return Unauthorized();
-
-
-        var pdfPath = testResult.FilePath;
-        var pdf = await fileService.DownloadFile(pdfPath);
-        return File(pdf.Item1, pdf.Item2, pdf.Item3);
+    private bool ValidateTestTypeIds(TestRequest testRequest, List<int> testTypeIds)
+    {
+        var validTestTypeIds = testRequest.TestTypes.Select(tt => tt.Id).ToList();
+        var invalidTestTypeIds = testTypeIds.Except(validTestTypeIds).ToList();
+        return !invalidTestTypeIds.Any();
     }
 }

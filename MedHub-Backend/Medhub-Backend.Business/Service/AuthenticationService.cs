@@ -34,12 +34,12 @@ public class AuthenticationService(
         return createdUser;
     }
 
-    public async Task<AuthenticationResponse> LoginUserAsync(LoginRequestDto loginRequestDto)
+    public async Task<AuthenticationResponse> LoginUserAsync(LoginRequest loginRequest)
     {
-        var user = await userService.GetUserByEmail(loginRequestDto.Email);
-        if (user == null) throw new UserNotFoundException($"User with email {loginRequestDto.Email} not found");
+        var user = await userService.GetUserByUsernameAsync(loginRequest.Username);
+        if (user == null) throw new UserNotFoundException($"User with username {loginRequest.Username} not found");
 
-        if (!BCrypt.Net.BCrypt.Verify(loginRequestDto.Password, user.Password)) throw new PasswordMismatchException("Passwords don't match");
+        if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password)) throw new PasswordMismatchException("Passwords don't match");
 
         return new AuthenticationResponse
         {

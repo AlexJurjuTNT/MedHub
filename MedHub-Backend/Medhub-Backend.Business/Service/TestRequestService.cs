@@ -19,14 +19,13 @@ public class TestRequestService(
         return await appDbContext.TestRequests.FindAsync(testRequestId);
     }
 
-    public async Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest, List<TestType> testTypes)
+    public async Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest)
     {
         await appDbContext.TestRequests.AddAsync(testRequest);
-        testRequest.TestTypes = testTypes;
         await appDbContext.SaveChangesAsync();
         return testRequest;
     }
-
+    
     public async Task<TestRequest> UpdateTestRequestAsync(TestRequest testRequest)
     {
         appDbContext.TestRequests.Update(testRequest);

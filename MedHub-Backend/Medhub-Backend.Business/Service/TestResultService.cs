@@ -7,75 +7,95 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Medhub_Backend.Business.Service;
 
-public class TestResultService(
-    AppDbContext appDbContext,
-    IFileService fileService,
-    IEmailService emailService
-) : ITestResultService
+public class TestResultService : ITestResultService
 {
+    private readonly AppDbContext _appDbContext;
+    private readonly IFileService _fileService;
+    private readonly IEmailService _emailService;
+    private readonly ITestTypeService _testTypeService;
+
+    public TestResultService(
+        AppDbContext appDbContext,
+        IFileService fileService,
+        IEmailService emailService,
+        ITestTypeService testTypeService)
+    {
+        _appDbContext = appDbContext;
+        _fileService = fileService;
+        _emailService = emailService;
+        _testTypeService = testTypeService;
+    }
+
     public async Task<List<TestResult>> GetAllTestResultsAsync()
     {
-        return await appDbContext.TestResults.ToListAsync();
+        return await _appDbContext.TestResults.ToListAsync();
     }
 
     public async Task<TestResult?> GetTestResultByIdAsync(int testResultId)
     {
-        return await appDbContext.TestResults.FindAsync(testResultId);
+        return await _appDbContext.TestResults.FindAsync(testResultId);
     }
 
     public async Task<bool> DeleteTestResultAsync(int testResultId)
     {
-        var testResult = await appDbContext.TestResults.FindAsync(testResultId);
+        var testResult = await _appDbContext.TestResults.FindAsync(testResultId);
         if (testResult == null) return false;
 
-        appDbContext.TestResults.Remove(testResult);
-        await appDbContext.SaveChangesAsync();
+        _appDbContext.TestResults.Remove(testResult);
+        await _appDbContext.SaveChangesAsync();
         return true;
     }
 
-    public async Task<TestResult> CreateTestResultAsync(TestResult testResult)
+    public async Task<TestResult> CreateTestResultWithFile(TestResult testResult, List<int> testTypeIds, TestRequest testRequest, IFormFile formFile)
     {
-        await appDbContext.TestResults.AddAsync(testResult);
-        await appDbContext.SaveChangesAsync();
-        return testResult;
-    }
+        var createdTestResult = await UploadResult(testResult, testRequest, formFile);
 
-    public async Task<TestResult> UploadResult(TestResult testResult, TestRequest testRequest, IFormFile formFile)
-    {
-        // upload the pdf
-        var patientUser = testRequest.Patient;
-        var clinic = patientUser.Clinic;
-        var pdfPath = await UploadResultFile(formFile, patientUser, clinic);
-
-        // insert testResult object to the db
-        testResult.FilePath = pdfPath;
-        testResult.CompletionDate = DateTime.UtcNow;
-        var createdTestResult = await CreateTestResultAsync(testResult);
-
-        await emailService.SendPatientResultsCompleteEmail(clinic, patientUser);
+        var testTypes = await _testTypeService.GetTestTypesFromIdList(testTypeIds);
+        createdTestResult = await AddTestTypesAsync(createdTestResult, testTypes);
 
         return createdTestResult;
     }
 
-    public async Task<TestResult> AddTestTypesAsync(TestResult testResult, List<TestType> testTypes)
+    public async Task<(byte[], string, string)?> DownloadTestResultPdf(int resultId)
     {
-        testResult.TestTypes = testTypes;
-        appDbContext.TestResults.Update(testResult);
-        await appDbContext.SaveChangesAsync();
+        var testResult = await GetTestResultByIdAsync(resultId);
+        if (testResult == null) return null;
+        return await _fileService.DownloadFile(testResult.FilePath);
+    }
+
+    private async Task<TestResult> UploadResult(TestResult testResult, TestRequest testRequest, IFormFile formFile)
+    {
+        var patientUser = testRequest.Patient;
+        var clinic = patientUser.Clinic;
+        var pdfPath = await UploadResultFile(formFile, patientUser, clinic);
+
+        testResult.FilePath = pdfPath;
+        testResult.CompletionDate = DateTime.UtcNow;
+        var createdTestResult = await CreateTestResultAsync(testResult);
+
+        await _emailService.SendPatientResultsCompleteEmail(clinic, patientUser);
+
+        return createdTestResult;
+    }
+
+    private async Task<TestResult> CreateTestResultAsync(TestResult testResult)
+    {
+        await _appDbContext.TestResults.AddAsync(testResult);
+        await _appDbContext.SaveChangesAsync();
         return testResult;
     }
 
-    public async Task<TestResult> UpdateTestResultAsync(TestResult testResult)
+    private async Task<TestResult> AddTestTypesAsync(TestResult testResult, List<TestType> testTypes)
     {
-        appDbContext.TestResults.Update(testResult);
-        await appDbContext.SaveChangesAsync();
+        testResult.TestTypes = testTypes;
+        _appDbContext.TestResults.Update(testResult);
+        await _appDbContext.SaveChangesAsync();
         return testResult;
     }
 
     private async Task<string> UploadResultFile(IFormFile formFile, User patient, Clinic clinic)
     {
         var uploadPath = LocalStorageHelper.GetClinicUserPath(clinic.Name, patient.Username);
-        var pdfPath = await fileService.UploadFile(formFile, uploadPath);
-        return pdfPath;
+        return await _fileService.UploadFile(formFile, uploadPath);
     }
 }

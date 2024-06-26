@@ -19,11 +19,11 @@ public class AuthenticationController(
 {
     [HttpPost("login")]
     [ProducesResponseType(200, Type = typeof(AuthenticationResponse))]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+    public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
         try
         {
-            var authenticationResponse = await authenticationService.LoginUserAsync(loginRequestDto);
+            var authenticationResponse = await authenticationService.LoginUserAsync(loginRequest);
             return Ok(authenticationResponse);
         }
         catch (UserNotFoundException ex)
