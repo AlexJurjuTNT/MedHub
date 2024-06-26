@@ -1,0 +1,41 @@
+<dx-popup
+  [(visible)]="visible"
+  [dragEnabled]="false"
+  [height]="600"
+  [showCloseButton]="true"
+  [showTitle]="true"
+  [width]="500"
+  title="Update Doctor"
+  (onHiding)="onHiding()">
+  <div *dxTemplate="let data of 'content'">
+    <form (submit)="onSubmit($event)">
+      <dx-form [formData]="updateDoctorFormData">
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedDoctor.username }" dataField="username" editorType="dxTextBox">
+          <dxi-validation-rule message="Username is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedDoctor.email }" dataField="email" editorType="dxTextBox">
+          <dxi-validation-rule message="Email is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'ClinicId' }" dataField="clinicId" editorType="dxTextBox">
+          <dxi-validation-rule message="ClinicId is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item itemType="button">
+          <dxo-button-options
+            [text]="'Update Doctor'"
+            [useSubmitBehavior]="true"
+            type="default"
+            width="100%"
+          >
+          </dxo-button-options>
+        </dxi-item>      </dx-form>
+    </form>
+  </div>
+</dx-popup>

@@ -1,5 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService, DoctorService, UserDto, UserRegisterDto} from "../../shared/services/swagger";
+import {AuthenticationService, DoctorService, GroupingInfo, SortingInfo, SummaryInfo, UpdateUserRequest, UserDto, UserRegisterDto} from "../../shared/services/swagger";
+import DataSource from "devextreme/data/data_source";
+import CustomStore from "devextreme/data/custom_store";
+import {LoadOptions} from "devextreme/data";
+import {lastValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-doctor-list',
@@ -7,92 +11,89 @@ import {AuthenticationService, DoctorService, UserDto, UserRegisterDto} from "..
   styleUrls: ['./doctor-list.component.css']
 })
 export class DoctorListComponent implements OnInit {
+  customDataSource: DataSource;
 
-  dataSource: any;
-  createDoctorPopupVisible: boolean = false;
-
-
-  createDoctorFormData: any = {};
-
-  doctorId: number = 0;
-  deletePopupVisible: boolean = false;
-
+  createPopupVisible: boolean = false;
   updatePopupVisible: boolean = false;
-  updateDoctorFormData: any = {};
-  selectedDoctor: UserDto = {} as UserDto;
+
+  selectedRowKeys: any[] = [];
+  selectedRow: UserDto | null = null;
 
   constructor(
     private doctorService: DoctorService,
     private authenticationService: AuthenticationService,
   ) {
+    this.customDataSource = new DataSource({
+      store: new CustomStore({
+        key: 'id',
+        load: async (loadOptions: LoadOptions) => {
+          try {
+            let response = await lastValueFrom(
+              this.doctorService.getAllDoctors(
+                loadOptions.requireTotalCount,
+                loadOptions.requireGroupCount,
+                false, // isCountQuery
+                false, // isSummaryQuery
+                loadOptions.skip,
+                loadOptions.take,
+                loadOptions.sort as SortingInfo[],
+                loadOptions.group as GroupingInfo[],
+                loadOptions.filter,
+                loadOptions.totalSummary as SummaryInfo[],
+                loadOptions.groupSummary as SummaryInfo[],
+                loadOptions.select as string[],
+                undefined, // preSelect
+                undefined, // remoteSelect
+                undefined, // remoteGrouping
+                undefined, // expandLinqSumType
+                undefined, // primaryKey
+                undefined, // defaultSort
+                undefined, // stringToLower
+                undefined, // paginateViaPrimaryKey
+                undefined, // sortByPrimaryKey
+                undefined  // allowAsyncOverSync
+              )
+            );
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          } catch (e) {
+            throw 'Data loading error';
+          }
+        },
+        remove: (key) => {
+          return lastValueFrom(this.doctorService.deleteDoctor(key));
+        }
+      }),
+    });
   }
 
   ngOnInit(): void {
-    this.getAllDoctors();
   }
 
-  createDoctor($event: SubmitEvent) {
-    $event.preventDefault();
-
-    const addDoctorDto: UserRegisterDto = {
-      username: this.createDoctorFormData.username,
-      password: this.createDoctorFormData.password,
-      email: this.createDoctorFormData.email,
-      clinicId: this.createDoctorFormData.clinicId
-    }
-
-    this.authenticationService.registerDoctor(addDoctorDto).subscribe({
-      next: result => {
-        this.createDoctorPopupVisible = false;
-        this.getAllDoctors();
-      }
-    })
-
-  }
-
-  openDeletePopup(doctorId: number) {
-    this.doctorId = doctorId;
-    this.deletePopupVisible = true;
-  }
-
-  openUpdatePopup(doctor: UserDto) {
-    this.selectedDoctor = {...doctor};
-    this.updatePopupVisible = true;
-  }
-
-  deleteDoctor() {
-    this.doctorService.deleteDoctor(this.doctorId).subscribe({
-      next: result => {
-        this.deletePopupVisible = false;
-        this.getAllDoctors();
-      }
-    })
-  }
-
-  updateDoctor($event: SubmitEvent) {
-    $event.preventDefault();
-
-    const updateDoctor: UserDto = {
-      id: this.selectedDoctor.id,
-      email: this.updateDoctorFormData.email,
-      username: this.updateDoctorFormData.username,
-      clinicId: this.updateDoctorFormData.clinicId
-    }
-
-    this.doctorService.updateDoctor(this.selectedDoctor.id, updateDoctor).subscribe({
-      next: result => {
-        this.updatePopupVisible = false;
-        this.getAllDoctors();
-      }
-    })
-
-  }
-
-  private getAllDoctors() {
-    this.doctorService.getAllDoctors().subscribe({
-      next: result => {
-        this.dataSource = result;
+  createDoctor(userRegisterRequest: UserRegisterDto) {
+    this.authenticationService.registerDoctor(userRegisterRequest).subscribe({
+      next: () => {
+        this.createPopupVisible = false;
+        this.customDataSource.reload();
       }
     });
   }
+
+  updateDoctor(updateUserRequest: UpdateUserRequest) {
+    this.doctorService.updateDoctor(updateUserRequest.id, updateUserRequest).subscribe({
+      next: () => {
+        this.updatePopupVisible = false;
+        this.customDataSource.reload();
+      }
+    });
+  }
+
+  onSelectionChanged(e: any) {
+    this.selectedRow = e.selectedRowsData[0];
+  }
+
 }

@@ -32,6 +32,8 @@ import {CreateTestTypePopupComponent} from "./components/test-type/create-test-t
 import {UpdateTestTypePopupComponent} from "./components/test-type/update-test-type-popup/update-test-type-popup.component";
 import {CreateClinicPopupComponent} from "./components/clinic/create-clinic-popup/create-clinic-popup.component";
 import {UpdateClinicPopupComponent} from "./components/clinic/update-clinic-popup/update-clinic-popup.component";
+import {DoctorCreatePopupComponent} from "./components/doctor/doctor-create-popup/doctor-create-popup.component";
+import {DoctorUpdatePopupComponent} from "./components/doctor/doctor-update-popup/doctor-update-popup.component";
 
 const routes: Routes = [
   {
@@ -151,6 +153,8 @@ const routes: Routes = [
     UpdateTestTypePopupComponent,
     CreateClinicPopupComponent,
     UpdateClinicPopupComponent,
+    DoctorCreatePopupComponent,
+    DoctorUpdatePopupComponent,
     ProfileComponent,
     TasksComponent,
     PatientAddComponent,
