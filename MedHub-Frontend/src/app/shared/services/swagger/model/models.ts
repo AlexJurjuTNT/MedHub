@@ -9,7 +9,7 @@ export * from './clinicDto';
 export * from './groupingInfo';
 export * from './laboratoryDto';
 export * from './loadResult';
-export * from './loginRequestDto';
+export * from './loginRequest';
 export * from './patientDto';
 export * from './patientRegisterDto';
 export * from './resetPasswordRequestDto';

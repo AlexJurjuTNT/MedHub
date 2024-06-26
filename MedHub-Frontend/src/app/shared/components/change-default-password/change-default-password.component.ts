@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {AuthenticationResponse, AuthenticationService, ChangeDefaultPasswordDto, LoginRequestDto, UserDto, UserService} from "../../services/swagger";
-import {TokenService} from "../../services/token.service";
-import {AuthService} from "../../services";
+import {AuthenticationService, ChangeDefaultPasswordDto} from "../../services/swagger";
 
 @Component({
   selector: 'app-change-default-password',

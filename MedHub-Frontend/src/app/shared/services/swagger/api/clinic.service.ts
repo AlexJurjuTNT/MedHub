@@ -48,9 +48,9 @@ export class ClinicService {
   }
 
   /**
-   * Create a new clinic
    *
-   * @param body Clinic to be created
+   *
+   * @param body
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
@@ -106,9 +106,9 @@ export class ClinicService {
   }
 
   /**
-   * Delete a clinic
    *
-   * @param clinicId ID of the clinic to be deleted
+   *
+   * @param clinicId
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
@@ -154,7 +154,7 @@ export class ClinicService {
   }
 
   /**
-   * Retrieves all Clinics
+   *
    *
    * @param requireTotalCount
    * @param requireGroupCount
@@ -309,9 +309,9 @@ export class ClinicService {
   }
 
   /**
-   * Retrieve all doctors of a clinic
    *
-   * @param clinicId ID of the clinic where the doctors are
+   *
+   * @param clinicId
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
@@ -413,9 +413,9 @@ export class ClinicService {
   }
 
   /**
-   * Get clinic by ID
    *
-   * @param clinicId ID of the clinic
+   *
+   * @param clinicId
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
@@ -465,10 +465,10 @@ export class ClinicService {
   }
 
   /**
-   * Update an existing clinic
    *
-   * @param clinicId ID of the clinic to be updated
-   * @param body Updated clinic
+   *
+   * @param clinicId
+   * @param body
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */

@@ -18,7 +18,7 @@ import {Observable} from 'rxjs';
 
 import {AuthenticationResponse} from '../model/authenticationResponse';
 import {ChangeDefaultPasswordDto} from '../model/changeDefaultPasswordDto';
-import {LoginRequestDto} from '../model/loginRequestDto';
+import {LoginRequest} from '../model/loginRequest';
 import {PatientRegisterDto} from '../model/patientRegisterDto';
 import {ResetPasswordRequestDto} from '../model/resetPasswordRequestDto';
 import {UserDto} from '../model/userDto';
@@ -160,13 +160,13 @@ export class AuthenticationService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public login(body?: LoginRequestDto, observe?: 'body', reportProgress?: boolean): Observable<AuthenticationResponse>;
+  public login(body?: LoginRequest, observe?: 'body', reportProgress?: boolean): Observable<AuthenticationResponse>;
 
-  public login(body?: LoginRequestDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AuthenticationResponse>>;
+  public login(body?: LoginRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AuthenticationResponse>>;
 
-  public login(body?: LoginRequestDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AuthenticationResponse>>;
+  public login(body?: LoginRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AuthenticationResponse>>;
 
-  public login(body?: LoginRequestDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public login(body?: LoginRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
 
     let headers = this.defaultHeaders;

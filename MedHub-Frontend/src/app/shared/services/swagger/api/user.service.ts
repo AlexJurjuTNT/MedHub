@@ -39,9 +39,9 @@ export class UserService {
   }
 
   /**
-   * Create a new user
    *
-   * @param body User to be created
+   *
+   * @param body
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
@@ -97,9 +97,9 @@ export class UserService {
   }
 
   /**
-   * Delete a user
    *
-   * @param userId ID of the user to be deleted
+   *
+   * @param userId
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
@@ -149,7 +149,7 @@ export class UserService {
   }
 
   /**
-   * Get all users
+   *
    *
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
@@ -196,9 +196,9 @@ export class UserService {
   }
 
   /**
-   * Get user by ID
    *
-   * @param userId ID of the user
+   *
+   * @param userId
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */

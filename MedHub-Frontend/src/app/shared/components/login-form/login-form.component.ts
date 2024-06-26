@@ -4,7 +4,7 @@ import {Router, RouterModule} from '@angular/router';
 import {DxFormModule} from 'devextreme-angular/ui/form';
 import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
 import {AuthService} from '../../services';
-import {AuthenticationResponse, AuthenticationService, LoginRequestDto, UserDto, UserService} from "../../services/swagger";
+import {AuthenticationResponse, AuthenticationService, LoginRequest, UserDto, UserService} from "../../services/swagger";
 import {TokenService} from "../../services/token.service";
 
 
@@ -26,37 +26,36 @@ export class LoginFormComponent {
   ) {
   }
 
+  private redirectPatientToChangePassword(response: AuthenticationResponse) {
+    this.userService.getUserById(response.userId).subscribe({
+      next: (userResult: UserDto) => {
+        this.authService.setUser(userResult);
+        this.tokenService.token = response.token;
+        this.router.navigate(["/home"])
+      },
+      error: (error) => {
+        console.error('Error fetching response:', error);
+        this.loading = false;
+      }
+    });
+  }
+
   onSubmit(e: Event) {
     e.preventDefault();
-
     this.loading = true;
-
-    const loginRequest: LoginRequestDto = {
-      email: this.formData.email,
+    const loginRequest: LoginRequest = {
+      username: this.formData.username,
       password: this.formData.password,
     };
 
     this.authenticationService.login(loginRequest).subscribe({
       next: (result: AuthenticationResponse) => {
-
-        console.log(result);
-
         if (result.hasToResetPassword) {
           this.router.navigate(['/change-default-password', result.userId]);
           this.loading = false;
         } else {
-          this.userService.getUserById(result.userId).subscribe({
-            next: (userResult: UserDto) => {
-              this.authService.setUser(userResult);
-              this.tokenService.token = result.token;
-              this.loading = false;
-              this.router.navigate(["/home"])
-            },
-            error: (error) => {
-              console.error('Error fetching user:', error);
-              this.loading = false;
-            }
-          });
+          this.redirectPatientToChangePassword(result);
+          this.loading = false;
         }
       },
       error: (error) => {
