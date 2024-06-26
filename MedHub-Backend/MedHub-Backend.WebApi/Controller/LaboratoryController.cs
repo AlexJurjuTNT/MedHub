@@ -11,6 +11,7 @@ namespace MedHub_Backend.WebApi.Controller;
 public class LaboratoryController(
     ILaboratoryService laboratoryService,
     ITestTypeService testTypeService,
+    IClinicService clinicService,
     IMapper mapper
 )
     : ControllerBase
@@ -38,12 +39,15 @@ public class LaboratoryController(
 
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(LaboratoryDto))]
-    public async Task<IActionResult> CreateLaboratory([FromBody] AddLaboratoryDto laboratoryDto)
+    public async Task<IActionResult> CreateLaboratory([FromBody] AddLaboratoryDto addLaboratoryRequest)
     {
+        var clinic = await clinicService.GetClinicByIdAsync(addLaboratoryRequest.ClinicId);
+        if (clinic is null) return NotFound();
+
         try
         {
-            var laboratory = mapper.Map<Laboratory>(laboratoryDto);
-            var testTypes = await testTypeService.GetTestTypesFromIdList(laboratoryDto.TestTypesId);
+            var laboratory = mapper.Map<Laboratory>(addLaboratoryRequest);
+            var testTypes = await testTypeService.GetTestTypesFromIdList(addLaboratoryRequest.TestTypesId);
             var createdLaboratory = await laboratoryService.CreateLaboratoryAsync(laboratory, testTypes);
             return CreatedAtAction(nameof(GetLaboratoryById), new { laboratoryId = createdLaboratory.Id }, mapper.Map<LaboratoryDto>(createdLaboratory));
         }

@@ -11,6 +11,7 @@ public class EmailService : IEmailService
     {
         var subject = "MedHub - Account Information";
         var content = $"This is an automated message from {clinic.Name} \n " +
+                      $"Your username is {user.Username} \n " +
                       $"Your password is {tempPassword} \n " +
                       $"Use it to signin to your account and change it";
 

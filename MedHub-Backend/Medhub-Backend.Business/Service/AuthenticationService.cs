@@ -28,6 +28,8 @@ public class AuthenticationService(
         user.Password = BCrypt.Net.BCrypt.HashPassword(tempPassword);
         user.HasToResetPassword = true;
 
+        Console.WriteLine(tempPassword);
+
         var createdUser = await userService.CreateUserAsync(user);
         await emailService.SendPatientResetPasswordEmail(clinic, user, tempPassword);
 

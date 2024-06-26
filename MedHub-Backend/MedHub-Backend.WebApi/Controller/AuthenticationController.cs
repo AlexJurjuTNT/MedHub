@@ -14,6 +14,7 @@ namespace MedHub_Backend.WebApi.Controller;
 public class AuthenticationController(
     IAuthenticationService authenticationService,
     IUserService userService,
+    IClinicService clinicService,
     IMapper mapper
 ) : ControllerBase
 {
@@ -39,6 +40,9 @@ public class AuthenticationController(
     [HttpPost("register-admin")]
     public async Task<IActionResult> RegisterAdmin([FromBody] UserRegisterDto userRegisterDto)
     {
+        var clinic = await clinicService.GetClinicByIdAsync(userRegisterDto.ClinicId);
+        if (clinic is null) return NotFound();
+
         try
         {
             var user = mapper.Map<User>(userRegisterDto);
