@@ -4,10 +4,12 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
 using Medhub_Backend.Business.Dtos.User;
 using Medhub_Backend.Business.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.WebApi.Controller;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class DoctorController : ControllerBase

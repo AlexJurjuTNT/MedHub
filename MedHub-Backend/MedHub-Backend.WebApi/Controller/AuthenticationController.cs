@@ -5,10 +5,12 @@ using Medhub_Backend.Business.Dtos.User;
 using Medhub_Backend.Business.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Medhub_Backend.Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.WebApi.Controller;
 
+[AllowAnonymous]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class AuthenticationController : ControllerBase
@@ -45,6 +47,7 @@ public class AuthenticationController : ControllerBase
         return Ok(_mapper.Map<UserDto>(admin));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("register-doctor")]
     public async Task<IActionResult> RegisterDoctor([FromBody] UserRegisterRequest userRegisterRequest)
     {
@@ -53,6 +56,7 @@ public class AuthenticationController : ControllerBase
         return Ok(_mapper.Map<UserDto>(doctor));
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpPost("register-patient")]
     [ProducesResponseType(200, Type = typeof(UserDto))]
     public async Task<IActionResult> RegisterPatient([FromBody] PatientRegisterRequest patientRegisterRequest)

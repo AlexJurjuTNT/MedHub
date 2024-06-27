@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.WebApi.Controller;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class TestResultController : ControllerBase
@@ -29,7 +30,6 @@ public class TestResultController : ControllerBase
         _mapper = mapper;
     }
 
-    [Authorize]
     [HttpPost]
     [ProducesResponseType(200, Type = typeof(TestResultDto))]
     public async Task<IActionResult> AddTestResult([FromForm] AddTestResultDto testResultDto, IFormFile formFile)

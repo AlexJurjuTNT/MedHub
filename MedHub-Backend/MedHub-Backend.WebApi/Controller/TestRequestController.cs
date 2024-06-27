@@ -8,11 +8,13 @@ using Medhub_Backend.Business.Dtos.TestResult;
 using Medhub_Backend.Business.Dtos.TestType;
 using Medhub_Backend.Business.Service.Interface;
 using Medhub_Backend.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SendGrid.Helpers.Errors.Model;
 
 namespace MedHub_Backend.WebApi.Controller;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class TestRequestController : ControllerBase
