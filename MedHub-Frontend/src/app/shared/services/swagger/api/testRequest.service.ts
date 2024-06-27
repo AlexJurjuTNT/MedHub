@@ -11,11 +11,16 @@
  *//* tslint:disable:no-unused-variable member-ordering */
 
 import {Inject, Injectable, Optional} from '@angular/core';
-import {HttpClient, HttpEvent, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
+import {CustomHttpUrlEncodingCodec} from '../encoder';
 
 import {Observable} from 'rxjs';
 
 import {AddTestRequestDto} from '../model/addTestRequestDto';
+import {GroupingInfo} from '../model/groupingInfo';
+import {LoadResult} from '../model/loadResult';
+import {SortingInfo} from '../model/sortingInfo';
+import {SummaryInfo} from '../model/summaryInfo';
 import {TestRequestDto} from '../model/testRequestDto';
 import {TestResultDto} from '../model/testResultDto';
 import {TestTypeDto} from '../model/testTypeDto';
@@ -49,11 +54,11 @@ export class TestRequestService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public createTestRequest(body?: AddTestRequestDto, observe?: 'body', reportProgress?: boolean): Observable<AddTestRequestDto>;
+  public createTestRequest(body?: AddTestRequestDto, observe?: 'body', reportProgress?: boolean): Observable<TestRequestDto>;
 
-  public createTestRequest(body?: AddTestRequestDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AddTestRequestDto>>;
+  public createTestRequest(body?: AddTestRequestDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestRequestDto>>;
 
-  public createTestRequest(body?: AddTestRequestDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AddTestRequestDto>>;
+  public createTestRequest(body?: AddTestRequestDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestRequestDto>>;
 
   public createTestRequest(body?: AddTestRequestDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
@@ -89,7 +94,7 @@ export class TestRequestService {
       headers = headers.set('Content-Type', httpContentTypeSelected);
     }
 
-    return this.httpClient.request<AddTestRequestDto>('post', `${this.basePath}/api/v1/TestRequest`,
+    return this.httpClient.request<TestRequestDto>('post', `${this.basePath}/api/v1/TestRequest`,
       {
         body: body,
         withCredentials: this.configuration.withCredentials,
@@ -293,7 +298,7 @@ export class TestRequestService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<Array<TestRequestDto>>('get', `${this.basePath}/api/v1/TestRequest/${encodeURIComponent(String(userId))}/test-requests`,
+    return this.httpClient.request<Array<TestRequestDto>>('get', `${this.basePath}/api/v1/TestRequest/user/${encodeURIComponent(String(userId))}`,
       {
         withCredentials: this.configuration.withCredentials,
         headers: headers,
@@ -307,24 +312,125 @@ export class TestRequestService {
    *
    *
    * @param userId
-   * @param clinicId
+   * @param requireTotalCount
+   * @param requireGroupCount
+   * @param isCountQuery
+   * @param isSummaryQuery
+   * @param skip
+   * @param take
+   * @param sort
+   * @param group
+   * @param filter
+   * @param totalSummary
+   * @param groupSummary
+   * @param select
+   * @param preSelect
+   * @param remoteSelect
+   * @param remoteGrouping
+   * @param expandLinqSumType
+   * @param primaryKey
+   * @param defaultSort
+   * @param stringToLower
+   * @param paginateViaPrimaryKey
+   * @param sortByPrimaryKey
+   * @param allowAsyncOverSync
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getAllTestRequestsOfUserInClinic(userId: number, clinicId: number, observe?: 'body', reportProgress?: boolean): Observable<Array<TestRequestDto>>;
+  public getAllTestRequestsOfUserInClinic(userId?: number, requireTotalCount?: boolean, requireGroupCount?: boolean, isCountQuery?: boolean, isSummaryQuery?: boolean, skip?: number, take?: number, sort?: Array<SortingInfo>, group?: Array<GroupingInfo>, filter?: Array<any>, totalSummary?: Array<SummaryInfo>, groupSummary?: Array<SummaryInfo>, select?: Array<string>, preSelect?: Array<string>, remoteSelect?: boolean, remoteGrouping?: boolean, expandLinqSumType?: boolean, primaryKey?: Array<string>, defaultSort?: string, stringToLower?: boolean, paginateViaPrimaryKey?: boolean, sortByPrimaryKey?: boolean, allowAsyncOverSync?: boolean, observe?: 'body', reportProgress?: boolean): Observable<LoadResult>;
 
-  public getAllTestRequestsOfUserInClinic(userId: number, clinicId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TestRequestDto>>>;
+  public getAllTestRequestsOfUserInClinic(userId?: number, requireTotalCount?: boolean, requireGroupCount?: boolean, isCountQuery?: boolean, isSummaryQuery?: boolean, skip?: number, take?: number, sort?: Array<SortingInfo>, group?: Array<GroupingInfo>, filter?: Array<any>, totalSummary?: Array<SummaryInfo>, groupSummary?: Array<SummaryInfo>, select?: Array<string>, preSelect?: Array<string>, remoteSelect?: boolean, remoteGrouping?: boolean, expandLinqSumType?: boolean, primaryKey?: Array<string>, defaultSort?: string, stringToLower?: boolean, paginateViaPrimaryKey?: boolean, sortByPrimaryKey?: boolean, allowAsyncOverSync?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadResult>>;
 
-  public getAllTestRequestsOfUserInClinic(userId: number, clinicId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TestRequestDto>>>;
+  public getAllTestRequestsOfUserInClinic(userId?: number, requireTotalCount?: boolean, requireGroupCount?: boolean, isCountQuery?: boolean, isSummaryQuery?: boolean, skip?: number, take?: number, sort?: Array<SortingInfo>, group?: Array<GroupingInfo>, filter?: Array<any>, totalSummary?: Array<SummaryInfo>, groupSummary?: Array<SummaryInfo>, select?: Array<string>, preSelect?: Array<string>, remoteSelect?: boolean, remoteGrouping?: boolean, expandLinqSumType?: boolean, primaryKey?: Array<string>, defaultSort?: string, stringToLower?: boolean, paginateViaPrimaryKey?: boolean, sortByPrimaryKey?: boolean, allowAsyncOverSync?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadResult>>;
 
-  public getAllTestRequestsOfUserInClinic(userId: number, clinicId: number, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public getAllTestRequestsOfUserInClinic(userId?: number, requireTotalCount?: boolean, requireGroupCount?: boolean, isCountQuery?: boolean, isSummaryQuery?: boolean, skip?: number, take?: number, sort?: Array<SortingInfo>, group?: Array<GroupingInfo>, filter?: Array<any>, totalSummary?: Array<SummaryInfo>, groupSummary?: Array<SummaryInfo>, select?: Array<string>, preSelect?: Array<string>, remoteSelect?: boolean, remoteGrouping?: boolean, expandLinqSumType?: boolean, primaryKey?: Array<string>, defaultSort?: string, stringToLower?: boolean, paginateViaPrimaryKey?: boolean, sortByPrimaryKey?: boolean, allowAsyncOverSync?: boolean, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-    if (userId === null || userId === undefined) {
-      throw new Error('Required parameter userId was null or undefined when calling getAllTestRequestsOfUserInClinic.');
+
+    let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+    if (userId !== undefined && userId !== null) {
+      queryParameters = queryParameters.set('userId', <any>userId);
     }
-
-    if (clinicId === null || clinicId === undefined) {
-      throw new Error('Required parameter clinicId was null or undefined when calling getAllTestRequestsOfUserInClinic.');
+    if (requireTotalCount !== undefined && requireTotalCount !== null) {
+      queryParameters = queryParameters.set('RequireTotalCount', <any>requireTotalCount);
+    }
+    if (requireGroupCount !== undefined && requireGroupCount !== null) {
+      queryParameters = queryParameters.set('RequireGroupCount', <any>requireGroupCount);
+    }
+    if (isCountQuery !== undefined && isCountQuery !== null) {
+      queryParameters = queryParameters.set('IsCountQuery', <any>isCountQuery);
+    }
+    if (isSummaryQuery !== undefined && isSummaryQuery !== null) {
+      queryParameters = queryParameters.set('IsSummaryQuery', <any>isSummaryQuery);
+    }
+    if (skip !== undefined && skip !== null) {
+      queryParameters = queryParameters.set('Skip', <any>skip);
+    }
+    if (take !== undefined && take !== null) {
+      queryParameters = queryParameters.set('Take', <any>take);
+    }
+    if (sort) {
+      sort.forEach((element) => {
+        queryParameters = queryParameters.append('Sort', <any>element);
+      })
+    }
+    if (group) {
+      group.forEach((element) => {
+        queryParameters = queryParameters.append('Group', <any>element);
+      })
+    }
+    if (filter) {
+      filter.forEach((element) => {
+        queryParameters = queryParameters.append('Filter', <any>element);
+      })
+    }
+    if (totalSummary) {
+      totalSummary.forEach((element) => {
+        queryParameters = queryParameters.append('TotalSummary', <any>element);
+      })
+    }
+    if (groupSummary) {
+      groupSummary.forEach((element) => {
+        queryParameters = queryParameters.append('GroupSummary', <any>element);
+      })
+    }
+    if (select) {
+      select.forEach((element) => {
+        queryParameters = queryParameters.append('Select', <any>element);
+      })
+    }
+    if (preSelect) {
+      preSelect.forEach((element) => {
+        queryParameters = queryParameters.append('PreSelect', <any>element);
+      })
+    }
+    if (remoteSelect !== undefined && remoteSelect !== null) {
+      queryParameters = queryParameters.set('RemoteSelect', <any>remoteSelect);
+    }
+    if (remoteGrouping !== undefined && remoteGrouping !== null) {
+      queryParameters = queryParameters.set('RemoteGrouping', <any>remoteGrouping);
+    }
+    if (expandLinqSumType !== undefined && expandLinqSumType !== null) {
+      queryParameters = queryParameters.set('ExpandLinqSumType', <any>expandLinqSumType);
+    }
+    if (primaryKey) {
+      primaryKey.forEach((element) => {
+        queryParameters = queryParameters.append('PrimaryKey', <any>element);
+      })
+    }
+    if (defaultSort !== undefined && defaultSort !== null) {
+      queryParameters = queryParameters.set('DefaultSort', <any>defaultSort);
+    }
+    if (stringToLower !== undefined && stringToLower !== null) {
+      queryParameters = queryParameters.set('StringToLower', <any>stringToLower);
+    }
+    if (paginateViaPrimaryKey !== undefined && paginateViaPrimaryKey !== null) {
+      queryParameters = queryParameters.set('PaginateViaPrimaryKey', <any>paginateViaPrimaryKey);
+    }
+    if (sortByPrimaryKey !== undefined && sortByPrimaryKey !== null) {
+      queryParameters = queryParameters.set('SortByPrimaryKey', <any>sortByPrimaryKey);
+    }
+    if (allowAsyncOverSync !== undefined && allowAsyncOverSync !== null) {
+      queryParameters = queryParameters.set('AllowAsyncOverSync', <any>allowAsyncOverSync);
     }
 
     let headers = this.defaultHeaders;
@@ -350,8 +456,9 @@ export class TestRequestService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<Array<TestRequestDto>>('get', `${this.basePath}/api/v1/TestRequest/${encodeURIComponent(String(userId))}/${encodeURIComponent(String(clinicId))}/test-requests`,
+    return this.httpClient.request<LoadResult>('get', `${this.basePath}/api/v1/TestRequest/user/clinic/tests`,
       {
+        params: queryParameters,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

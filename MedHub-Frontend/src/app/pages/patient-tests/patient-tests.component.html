@@ -3,14 +3,16 @@
   <div class="dx-card responsive-paddings">
     <dx-data-grid [columnAutoWidth]="true"
                   [columnHidingEnabled]="true"
-                  [dataSource]="dataSource"
+                  [dataSource]="customDataSource"
                   [focusedRowEnabled]="false"
                   [showBorders]="true"
                   class="dx-card wide-card">
 
+      <dxo-selection mode="single"></dxo-selection>
       <dxo-paging [pageSize]="10"></dxo-paging>
       <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
       <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-editing mode="row" [allowDeleting]="true" [confirmDelete]="true"></dxo-editing>
 
       <!-- Define the columns for TestRequestDto data -->
       <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
@@ -20,11 +22,13 @@
       <dxi-column caption="Test Types" cellTemplate="testTypesTemplate"></dxi-column>
 
       <div *dxTemplate="let request of 'testTypesTemplate'">
+
         <div *ngFor="let testResult of request.data.testResults">
           <span>{{ getTestTypeNames(testResult.testTypes) }}</span>
           <dx-button (onClick)="navigateToViewTestResult(testResult.id)"
                      [text]="'View'"></dx-button>
         </div>
+
         <div *ngIf="remainingTestTypes[request.data.id]?.length!> 0">
           <span>Remaining Test Types: {{ getTestTypeNames(remainingTestTypes[request.data.id]) }}</span>
           <div *ngIf="role !== 'Patient'">

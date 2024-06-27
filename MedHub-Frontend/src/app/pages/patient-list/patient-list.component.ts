@@ -157,10 +157,12 @@ export class PatientListComponent implements OnInit {
   }
 
   createTestRequest(addTestRequestDto: AddTestRequestDto) {
+    console.log(addTestRequestDto);
+
     this.testRequestService.createTestRequest(addTestRequestDto).subscribe({
       next: value => {
         this.customDataSource.reload();
-        this.createPatientPopupVisible = false;
+        this.createTestRequestPopupVisible = false;
       }
     });
   }

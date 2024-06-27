@@ -42,7 +42,6 @@ export class TestRequestCreatePopupComponent {
       laboratoryId: this.selectedLaboratoryId,
       patientId: this.user.id,
       doctorId: this.doctor.id,
-      clinicId: this.doctor.clinicId
     }
 
     this.createTestRequest.emit(createTestRequest);

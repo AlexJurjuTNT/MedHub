@@ -1,6 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {TestRequestDto, TestRequestService, TestTypeDto} from "../../shared/services/swagger";
+import DataSource from "devextreme/data/data_source";
+import CustomStore from "devextreme/data/custom_store";
+import {LoadOptions} from "devextreme/data";
+import {lastValueFrom} from "rxjs";
+import {GroupingInfo, SortingInfo, SummaryInfo, TestRequestDto, TestRequestService, TestTypeDto} from "../../shared/services/swagger";
 import {TokenService} from "../../shared/services/token.service";
 
 @Component({
@@ -11,10 +15,11 @@ import {TokenService} from "../../shared/services/token.service";
 export class PatientTestsComponent implements OnInit {
   userId: number = 0;
   clinicId: number = 0;
-
   role: string = "";
-  dataSource: TestRequestDto[] = [];
   remainingTestTypes: { [key: number]: TestTypeDto[] } = {};
+
+  customDataSource: DataSource;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -22,35 +27,76 @@ export class PatientTestsComponent implements OnInit {
     private tokenService: TokenService,
     private router: Router
   ) {
-  }
 
-// todo: improve this, dont chain calls
-  ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.userId = Number(params.get('id'));
-      this.role = this.tokenService.getUserRole();
-      this.getTestRequestsOfPatient();
+    });
+
+    this.role = this.tokenService.getUserRole();
+
+    this.customDataSource = new DataSource({
+      store: new CustomStore({
+        key: 'id',
+        load: async (loadOptions: LoadOptions) => {
+          try {
+            let response = await lastValueFrom(
+              this.testRequestService.getAllTestRequestsOfUserInClinic(
+                this.userId,
+                loadOptions.requireTotalCount,
+                loadOptions.requireGroupCount,
+                false, // isCountQuery
+                false, // isSummaryQuery
+                loadOptions.skip,
+                loadOptions.take,
+                loadOptions.sort as SortingInfo[],
+                loadOptions.group as GroupingInfo[],
+                loadOptions.filter,
+                loadOptions.totalSummary as SummaryInfo[],
+                loadOptions.groupSummary as SummaryInfo[],
+                loadOptions.select as string[],
+                undefined, // preSelect
+                undefined, // remoteSelect
+                undefined, // remoteGrouping
+                undefined, // expandLinqSumType
+                undefined, // primaryKey
+                undefined, // defaultSort
+                undefined, // stringToLower
+                undefined, // paginateViaPrimaryKey
+                undefined, // sortByPrimaryKey
+                undefined  // allowAsyncOverSync
+              )
+            );
+
+            for (let testRequest of response.data!) {
+              this.getRemainingTestTypes(testRequest.id);
+            }
+
+            return {
+              data: response.data,
+              totalCount: response.totalCount,
+              summary: response.summary,
+              groupCount: response.groupCount,
+            };
+          } catch (e) {
+            throw 'Data loading error';
+          }
+        },
+        remove: (key) => {
+          return lastValueFrom(this.testRequestService.deleteTestRequest(key));
+        }
+      }),
     });
   }
 
-  private getTestRequestsOfPatient() {
-    this.clinicId = this.tokenService.getClinicId();
-    this.testRequestService.getAllTestRequestsOfUserInClinic(this.userId, this.clinicId).subscribe({
-      next: (result: TestRequestDto[]) => {
-        this.dataSource = result;
-        this.loadRemainingTestTypes();
+  getRemainingTestTypes(testRequestId: number): void {
+    this.testRequestService.getRemainingTestTypes(testRequestId).subscribe({
+      next: (result: TestTypeDto[]) => {
+        this.remainingTestTypes[testRequestId] = result;
       }
     });
   }
 
-  private loadRemainingTestTypes() {
-    this.dataSource.forEach(testRequest => {
-      this.testRequestService.getRemainingTestTypes(testRequest.id).subscribe({
-        next: (result: TestTypeDto[]) => {
-          this.remainingTestTypes[testRequest.id] = result;
-        }
-      });
-    });
+  ngOnInit(): void {
   }
 
   getTestTypeNames(testTypes: TestTypeDto[]): string {
