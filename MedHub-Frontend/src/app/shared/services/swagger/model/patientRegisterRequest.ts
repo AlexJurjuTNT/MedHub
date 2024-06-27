@@ -10,9 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface UserRegisterDto {
-  username: string;
+export interface PatientRegisterRequest {
   email: string;
-  password: string;
   clinicId: number;
+  firstName: string;
+  familyName: string;
 }

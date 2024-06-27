@@ -1,10 +1,10 @@
 <dx-popup
   [(visible)]="visible"
   [dragEnabled]="false"
-  [height]="600"
+  [height]="750"
   [showCloseButton]="true"
   [showTitle]="true"
-  [width]="500"
+  [width]="750"
   title="Update Doctor"
   (onHiding)="onHiding()">
   <div *dxTemplate="let data of 'content'">
@@ -16,13 +16,27 @@
           <dxo-label [visible]="false"></dxo-label>
         </dxi-item>
 
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedDoctor.firstName }" dataField="firstName" editorType="dxTextBox">
+          <dxi-validation-rule message="First Name is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedDoctor.familyName }" dataField="familyName" editorType="dxTextBox">
+          <dxi-validation-rule message="Family Name is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedDoctor.username }" dataField="username" editorType="dxTextBox">
+          <dxi-validation-rule message="Username is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
 
         <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedDoctor.email }" dataField="email" editorType="dxTextBox">
           <dxi-validation-rule message="Email is required" type="required"></dxi-validation-rule>
           <dxo-label [visible]="false"></dxo-label>
         </dxi-item>
 
-        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'ClinicId' }" dataField="clinicId" editorType="dxTextBox">
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedDoctor.clinicId }" dataField="clinicId" editorType="dxTextBox">
           <dxi-validation-rule message="ClinicId is required" type="required"></dxi-validation-rule>
           <dxo-label [visible]="false"></dxo-label>
         </dxi-item>
@@ -35,7 +49,8 @@
             width="100%"
           >
           </dxo-button-options>
-        </dxi-item>      </dx-form>
+        </dxi-item>
+      </dx-form>
     </form>
   </div>
 </dx-popup>

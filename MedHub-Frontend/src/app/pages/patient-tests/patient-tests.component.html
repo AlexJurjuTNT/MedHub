@@ -36,7 +36,6 @@
       <dxi-column caption="Test Types" cellTemplate="testTypesTemplate"></dxi-column>
 
       <div *dxTemplate="let request of 'testTypesTemplate'">
-
         <div *ngFor="let testResult of request.data.testResults">
           <span>{{ getTestTypeNames(testResult.testTypes) }}</span>
           <dx-button (onClick)="navigateToViewTestResult(testResult.id)"

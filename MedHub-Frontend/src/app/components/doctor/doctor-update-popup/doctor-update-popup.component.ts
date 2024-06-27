@@ -12,7 +12,14 @@ export class DoctorUpdatePopupComponent {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() updateDoctor = new EventEmitter<UpdateUserRequest>();
 
-  formData: any = {};
+  formData: UpdateUserRequest = {
+    id: this.selectedDoctor.id,
+    email: '',
+    username: '',
+    clinicId: this.selectedDoctor.clinicId,
+    firstName: '',
+    familyName: '',
+  };
 
   onHiding() {
     this.visibleChange.emit(false);
@@ -25,7 +32,9 @@ export class DoctorUpdatePopupComponent {
       id: this.selectedDoctor.id,
       email: this.formData.email,
       username: this.formData.username,
-      clinicId: this.formData.clinicId
+      clinicId: this.formData.clinicId,
+      firstName: this.formData.firstName,
+      familyName: this.formData.familyName,
     };
 
     this.updateDoctor.emit(updateUserRequest);

@@ -10,7 +10,11 @@
  * Do not edit the class manually.
  */
 
-export interface PatientRegisterDto {
+export interface UserRegisterRequest {
+  username: string;
   email: string;
+  password: string;
   clinicId: number;
+  firstName: string;
+  familyName: string;
 }

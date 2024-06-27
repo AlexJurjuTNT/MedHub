@@ -18,6 +18,16 @@
           <dxo-label [visible]="false"></dxo-label>
         </dxi-item>
 
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'First Name' }" dataField="firstName" editorType="dxTextBox">
+          <dxi-validation-rule message="First Name is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Family Name' }" dataField="familyName" editorType="dxTextBox">
+          <dxi-validation-rule message="Family Name is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
         <dxi-item itemType="button">
           <dxo-button-options
             [text]="'Create New Patient'"

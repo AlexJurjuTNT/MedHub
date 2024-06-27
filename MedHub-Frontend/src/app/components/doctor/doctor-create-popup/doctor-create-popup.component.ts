@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {UserRegisterDto} from "../../../shared/services/swagger";
+import {UserRegisterRequest} from "../../../shared/services/swagger";
 
 @Component({
   selector: 'app-doctor-create-popup',
@@ -9,9 +9,16 @@ import {UserRegisterDto} from "../../../shared/services/swagger";
 export class DoctorCreatePopupComponent {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() createDoctor = new EventEmitter<UserRegisterDto>();
+  @Output() createDoctor = new EventEmitter<UserRegisterRequest>();
 
-  formData: any = {};
+  formData: UserRegisterRequest = {
+    username: '',
+    email: '',
+    password: '',
+    clinicId: 0,
+    firstName: '',
+    familyName: ''
+  };
 
   onHiding() {
     this.visibleChange.emit(false);
@@ -19,12 +26,14 @@ export class DoctorCreatePopupComponent {
 
   onSubmit($event: SubmitEvent) {
     $event.preventDefault();
-    const addDoctorDto: UserRegisterDto = {
+    const userRegisterRequest: UserRegisterRequest = {
       username: this.formData.username,
-      password: this.formData.password,
       email: this.formData.email,
-      clinicId: this.formData.clinicId
+      password: this.formData.password,
+      clinicId: this.formData.clinicId,
+      firstName: this.formData.firstName,
+      familyName: this.formData.familyName,
     };
-    this.createDoctor.emit(addDoctorDto);
+    this.createDoctor.emit(userRegisterRequest);
   }
 }

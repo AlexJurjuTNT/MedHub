@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService, DoctorService, GroupingInfo, SortingInfo, SummaryInfo, UpdateUserRequest, UserDto, UserRegisterDto} from "../../shared/services/swagger";
+import {AuthenticationService, DoctorService, GroupingInfo, SortingInfo, SummaryInfo, UpdateUserRequest, UserDto, UserRegisterRequest} from "../../shared/services/swagger";
 import DataSource from "devextreme/data/data_source";
 import CustomStore from "devextreme/data/custom_store";
 import {LoadOptions} from "devextreme/data";
@@ -76,7 +76,7 @@ export class DoctorListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  createDoctor(userRegisterRequest: UserRegisterDto) {
+  createDoctor(userRegisterRequest: UserRegisterRequest) {
     this.authenticationService.registerDoctor(userRegisterRequest).subscribe({
       next: () => {
         this.createPopupVisible = false;

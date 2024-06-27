@@ -30,17 +30,21 @@ export class TestResultCreateComponent implements OnInit {
   }
 
   uploadFile() {
-    if (!this.selectedFiles) {
+    if (this.selectedFiles.length == 0) {
       this.notificationService.error("Please select a file");
+    } else if (this.selectedTestTypesIds.length == 0) {
+      this.notificationService.error("Please select at least one test type");
+    } else {
+      this.testResultService.addTestResultForm(this.testRequestId, this.selectedTestTypesIds, this.selectedFiles[0]).subscribe({
+        next: () => {
+          this.notificationService.success("Test result uploaded successfully");
+          this.location.back();
+        },
+        error: err => {
+          this.notificationService.error("Error uploading test result", err);
+        }
+      });
     }
-    this.testResultService.addTestResultForm(this.testRequestId, this.selectedTestTypesIds, this.selectedFiles[0]).subscribe({
-      next: (result) => {
-        this.notificationService.success("Test result uploaded successfully");
-        this.location.back();
-      }, error: err => {
-        this.notificationService.error("Error uploading test result", err);
-      }
-    });
   }
 
   private getRemainingTestTypes(): void {

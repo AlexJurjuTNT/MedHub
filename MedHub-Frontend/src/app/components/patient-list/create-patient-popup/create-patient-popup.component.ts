@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {PatientRegisterDto} from "../../../shared/services/swagger";
+import {PatientRegisterRequest} from "../../../shared/services/swagger";
 
 @Component({
   selector: 'app-create-patient-popup',
@@ -9,9 +9,14 @@ import {PatientRegisterDto} from "../../../shared/services/swagger";
 export class CreatePatientPopupComponent {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() createPatient = new EventEmitter<PatientRegisterDto>();
+  @Output() createPatient = new EventEmitter<PatientRegisterRequest>();
 
-  formData: any = {};
+  formData: PatientRegisterRequest = {
+    email: '',
+    clinicId: 0,
+    firstName: '',
+    familyName: ''
+  };
 
   onHiding() {
     this.visibleChange.emit(false);
@@ -20,12 +25,14 @@ export class CreatePatientPopupComponent {
   onSubmit($event: SubmitEvent) {
     $event.preventDefault();
 
-    const registerPatientDto: PatientRegisterDto = {
+    const patientRegisterRequest: PatientRegisterRequest = {
       email: this.formData.email,
+      familyName: this.formData.familyName,
+      firstName: this.formData.firstName,
       clinicId: 0,
     }
 
-    this.createPatient.emit(registerPatientDto);
+    this.createPatient.emit(patientRegisterRequest);
   }
 
 }

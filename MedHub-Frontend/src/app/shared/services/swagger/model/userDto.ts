@@ -15,4 +15,6 @@ export interface UserDto {
   email: string;
   username: string;
   clinicId: number;
+  firstName: string;
+  familyName: string;
 }

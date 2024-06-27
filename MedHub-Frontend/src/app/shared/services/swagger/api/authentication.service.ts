@@ -19,10 +19,10 @@ import {Observable} from 'rxjs';
 import {AuthenticationResponse} from '../model/authenticationResponse';
 import {ChangeDefaultPasswordDto} from '../model/changeDefaultPasswordDto';
 import {LoginRequest} from '../model/loginRequest';
-import {PatientRegisterDto} from '../model/patientRegisterDto';
+import {PatientRegisterRequest} from '../model/patientRegisterRequest';
 import {ResetPasswordRequestDto} from '../model/resetPasswordRequestDto';
 import {UserDto} from '../model/userDto';
-import {UserRegisterDto} from '../model/userRegisterDto';
+import {UserRegisterRequest} from '../model/userRegisterRequest';
 
 import {BASE_PATH} from '../variables';
 import {Configuration} from '../configuration';
@@ -218,13 +218,13 @@ export class AuthenticationService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public registerAdmin(body?: UserRegisterDto, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public registerAdmin(body?: UserRegisterRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
 
-  public registerAdmin(body?: UserRegisterDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public registerAdmin(body?: UserRegisterRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
 
-  public registerAdmin(body?: UserRegisterDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public registerAdmin(body?: UserRegisterRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
 
-  public registerAdmin(body?: UserRegisterDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public registerAdmin(body?: UserRegisterRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
 
     let headers = this.defaultHeaders;
@@ -272,13 +272,13 @@ export class AuthenticationService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public registerDoctor(body?: UserRegisterDto, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public registerDoctor(body?: UserRegisterRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
 
-  public registerDoctor(body?: UserRegisterDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public registerDoctor(body?: UserRegisterRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
 
-  public registerDoctor(body?: UserRegisterDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public registerDoctor(body?: UserRegisterRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
 
-  public registerDoctor(body?: UserRegisterDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public registerDoctor(body?: UserRegisterRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
 
     let headers = this.defaultHeaders;
@@ -326,13 +326,13 @@ export class AuthenticationService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public registerPatient(body?: PatientRegisterDto, observe?: 'body', reportProgress?: boolean): Observable<UserDto>;
+  public registerPatient(body?: PatientRegisterRequest, observe?: 'body', reportProgress?: boolean): Observable<UserDto>;
 
-  public registerPatient(body?: PatientRegisterDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<UserDto>>;
+  public registerPatient(body?: PatientRegisterRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<UserDto>>;
 
-  public registerPatient(body?: PatientRegisterDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<UserDto>>;
+  public registerPatient(body?: PatientRegisterRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<UserDto>>;
 
-  public registerPatient(body?: PatientRegisterDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public registerPatient(body?: PatientRegisterRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
 
     let headers = this.defaultHeaders;

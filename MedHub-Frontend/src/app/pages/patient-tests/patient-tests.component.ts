@@ -144,7 +144,7 @@ export class PatientTestsComponent implements OnInit {
   }
 
   getDoctorName(testRequestDto: TestRequestDto): string {
-    return testRequestDto.doctor ? testRequestDto.doctor.email : 'N/A';
+    return testRequestDto.doctor ? testRequestDto.doctor.firstName + " " + testRequestDto.doctor.familyName : 'N/A';
   }
 
   getLaboratoryLocation(testRequestDto: TestRequestDto): string {

@@ -1,10 +1,10 @@
 <dx-popup
   [(visible)]="visible"
   [dragEnabled]="false"
-  [height]="600"
+  [height]="750"
   [showCloseButton]="true"
   [showTitle]="true"
-  [width]="500"
+  [width]="750"
   title="Create new Doctor"
   (onHiding)="onHiding()">
   <div *dxTemplate="let data of 'content'">
@@ -13,6 +13,16 @@
 
         <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Username' }" dataField="username" editorType="dxTextBox">
           <dxi-validation-rule message="Username is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'First Name' }" dataField="firstName" editorType="dxTextBox">
+          <dxi-validation-rule message="First Name is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: 'Family Name' }" dataField="familyName" editorType="dxTextBox">
+          <dxi-validation-rule message="Family Name is required" type="required"></dxi-validation-rule>
           <dxo-label [visible]="false"></dxo-label>
         </dxi-item>
 

@@ -15,4 +15,6 @@ export interface UpdateUserRequest {
   email: string;
   username: string;
   clinicId: number;
+  firstName: string;
+  familyName: string;
 }
