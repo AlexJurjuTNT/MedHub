@@ -6,6 +6,7 @@ export * from './authenticationResponse';
 export * from './changeDefaultPasswordDto';
 export * from './clinicDto';
 export * from './createLaboratoryRequest';
+export * from './forgotPasswordRequest';
 export * from './groupingInfo';
 export * from './laboratoryDto';
 export * from './loadResult';

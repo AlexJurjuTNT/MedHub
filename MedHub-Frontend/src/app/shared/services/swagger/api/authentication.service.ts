@@ -11,13 +11,13 @@
  *//* tslint:disable:no-unused-variable member-ordering */
 
 import {Inject, Injectable, Optional} from '@angular/core';
-import {HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
-import {CustomHttpUrlEncodingCodec} from '../encoder';
+import {HttpClient, HttpEvent, HttpHeaders, HttpResponse} from '@angular/common/http';
 
 import {Observable} from 'rxjs';
 
 import {AuthenticationResponse} from '../model/authenticationResponse';
 import {ChangeDefaultPasswordDto} from '../model/changeDefaultPasswordDto';
+import {ForgotPasswordRequest} from '../model/forgotPasswordRequest';
 import {LoginRequest} from '../model/loginRequest';
 import {PatientRegisterRequest} from '../model/patientRegisterRequest';
 import {ResetPasswordRequestDto} from '../model/resetPasswordRequestDto';
@@ -102,26 +102,18 @@ export class AuthenticationService {
   /**
    *
    *
-   * @param email
+   * @param body
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public forgotPassword(email: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+  public forgotPassword(body?: ForgotPasswordRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
 
-  public forgotPassword(email: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+  public forgotPassword(body?: ForgotPasswordRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
 
-  public forgotPassword(email: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+  public forgotPassword(body?: ForgotPasswordRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
 
-  public forgotPassword(email: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public forgotPassword(body?: ForgotPasswordRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
-    if (email === null || email === undefined) {
-      throw new Error('Required parameter email was null or undefined when calling forgotPassword.');
-    }
-
-    let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-    if (email !== undefined && email !== null) {
-      queryParameters = queryParameters.set('email', <any>email);
-    }
 
     let headers = this.defaultHeaders;
 
@@ -140,11 +132,19 @@ export class AuthenticationService {
     }
 
     // to determine the Content-Type header
-    const consumes: string[] = [];
+    const consumes: string[] = [
+      'application/json',
+      'text/json',
+      'application/_*+json'
+    ];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected != undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
 
     return this.httpClient.request<any>('post', `${this.basePath}/api/v1/Authentication/forgot-password`,
       {
-        params: queryParameters,
+        body: body,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

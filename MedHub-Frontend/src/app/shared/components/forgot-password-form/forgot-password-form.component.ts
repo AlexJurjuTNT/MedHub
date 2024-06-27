@@ -3,13 +3,9 @@ import {Component, NgModule} from '@angular/core';
 import {Router, RouterModule} from '@angular/router';
 import {DxFormModule} from 'devextreme-angular/ui/form';
 import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
-import {AuthenticationService} from "../../services/swagger";
+import {AuthenticationService, ForgotPasswordRequest} from "../../services/swagger";
 import {NotificationService} from "../../services/notification.service";
 
-
-interface ForgotPasswordFormData {
-  email: string;
-}
 
 @Component({
   selector: 'app-forgot-password-form',
@@ -18,8 +14,9 @@ interface ForgotPasswordFormData {
 })
 export class ForgotPasswordFormComponent {
   loading = false;
-  formData: ForgotPasswordFormData = {
-    email: ''
+
+  formData: ForgotPasswordRequest = {
+    username: ''
   };
 
   constructor(
@@ -32,8 +29,12 @@ export class ForgotPasswordFormComponent {
   async onSubmit(e: Event) {
     e.preventDefault();
 
+    const forgotPasswordRequest: ForgotPasswordRequest = {
+      username: this.formData.username
+    }
+
     this.loading = true;
-    this.authenticationService.forgotPassword(this.formData.email).subscribe({
+    this.authenticationService.forgotPassword(forgotPasswordRequest).subscribe({
       next: () => {
         this.notificationService.success("Reset link sent to email");
         this.router.navigate(['/change-password']);
