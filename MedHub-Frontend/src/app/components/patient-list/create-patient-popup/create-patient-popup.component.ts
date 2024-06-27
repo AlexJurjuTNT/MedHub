@@ -17,14 +17,15 @@ export class CreatePatientPopupComponent {
     this.visibleChange.emit(false);
   }
 
-
   onSubmit($event: SubmitEvent) {
     $event.preventDefault();
 
     const registerPatientDto: PatientRegisterDto = {
       email: this.formData.email,
-      clinicId: this.formData.clinicId,
+      clinicId: 0,
     }
+
+    this.createPatient.emit(registerPatientDto);
   }
 
 }

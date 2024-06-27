@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService, GroupingInfo, PatientRegisterDto, PatientService, SortingInfo, SummaryInfo, UserDto, UserService} from "../../shared/services/swagger";
-import {AuthService} from "../../shared/services";
+import {AuthenticationService, GroupingInfo, PatientRegisterDto, PatientService, SortingInfo, SummaryInfo, UserService} from "../../shared/services/swagger";
 import {Router} from "@angular/router";
 import {lastValueFrom} from "rxjs";
 import DataSource from 'devextreme/data/data_source';
@@ -15,7 +14,6 @@ import {TokenService} from "../../shared/services/token.service";
 })
 export class PatientListComponent implements OnInit {
   customDataSource: DataSource;
-  doctor: UserDto = {} as UserDto;
   selectedRowKeys: any[] = [];
   selectedRow: any;
   createPopupVisible: boolean = false;
@@ -92,6 +90,9 @@ export class PatientListComponent implements OnInit {
   }
 
   createPatient(patientRegisterDto: PatientRegisterDto) {
+
+    patientRegisterDto.clinicId = this.tokenService.getClinicId();
+
     this.authenticationService.registerPatient(patientRegisterDto).subscribe({
       next: () => {
         this.createPopupVisible = false;
