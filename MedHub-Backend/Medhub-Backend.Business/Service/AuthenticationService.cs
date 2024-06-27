@@ -89,10 +89,10 @@ public class AuthenticationService : IAuthenticationService
     }
 
 
-    public async Task ForgotPassword(string email)
+    public async Task ForgotPassword(ForgotPasswordRequest forgotPasswordRequest)
     {
-        var user = await _userService.GetUserByEmail(email);
-        if (user == null) throw new UserNotFoundException(email);
+        var user = await _userService.GetUserByUsernameAsync(forgotPasswordRequest.Username);
+        if (user == null) throw new UserNotFoundException(forgotPasswordRequest.Username);
 
         user.PasswordResetCode = _passwordService.GenerateRandomPassword(8);
 

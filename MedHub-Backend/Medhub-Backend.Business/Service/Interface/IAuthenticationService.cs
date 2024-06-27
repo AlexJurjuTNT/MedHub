@@ -9,6 +9,6 @@ public interface IAuthenticationService
     Task<AuthenticationResponse> LoginUserAsync(LoginRequest loginRequest);
     Task<User> RegisterDoctorAsync(User user);
     Task<User> RegisterAdminAsync(User user);
-    Task ForgotPassword(string email);
+    Task ForgotPassword(ForgotPasswordRequest forgotPasswordRequest);
     Task ResetPassword(User existingUser, string password);
 }
