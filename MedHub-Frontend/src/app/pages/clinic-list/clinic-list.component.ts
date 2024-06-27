@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AddClinicDto, ClinicDto, ClinicService, GroupingInfo, SortingInfo, SummaryInfo, UpdateClinicDto} from "../../shared/services/swagger";
 import DataSource from "devextreme/data/data_source";
 import CustomStore from "devextreme/data/custom_store";
@@ -11,7 +11,7 @@ import {NotificationService} from "../../shared/services/notification.service";
   templateUrl: './clinic-list.component.html',
   styleUrls: ['./clinic-list.component.css']
 })
-export class ClinicListComponent implements OnInit {
+export class ClinicListComponent {
   customDataSource: DataSource;
 
   createPopupVisible: boolean = false;
@@ -27,52 +27,39 @@ export class ClinicListComponent implements OnInit {
     this.customDataSource = new DataSource({
       store: new CustomStore({
         key: 'id',
-        load: async (loadOptions: LoadOptions) => {
-          try {
-            let response = await lastValueFrom(
-              this.clinicService.getAllClinics(
-                loadOptions.requireTotalCount,
-                loadOptions.requireGroupCount,
-                false, // isCountQuery
-                false, // isSummaryQuery
-                loadOptions.skip,
-                loadOptions.take,
-                loadOptions.sort as SortingInfo[],
-                loadOptions.group as GroupingInfo[],
-                loadOptions.filter,
-                loadOptions.totalSummary as SummaryInfo[],
-                loadOptions.groupSummary as SummaryInfo[],
-                loadOptions.select as string[],
-                undefined, // preSelect
-                undefined, // remoteSelect
-                undefined, // remoteGrouping
-                undefined, // expandLinqSumType
-                undefined, // primaryKey
-                undefined, // defaultSort
-                undefined, // stringToLower
-                undefined, // paginateViaPrimaryKey
-                undefined, // sortByPrimaryKey
-                undefined  // allowAsyncOverSync
-              )
-            );
-            return {
-              data: response.data,
-              totalCount: response.totalCount,
-              summary: response.summary,
-              groupCount: response.groupCount,
-            };
-          } catch (e) {
-            throw 'Data loading error';
-          }
-        },
-        remove: (key) => {
-          return lastValueFrom(this.clinicService.deleteClinic(key));
-        }
+        load: (loadOptions: LoadOptions) => this.loadClinics(loadOptions),
+        remove: (key) => lastValueFrom(this.clinicService.deleteClinic(key))
       }),
     });
   }
 
-  ngOnInit(): void {
+  async loadClinics(loadOptions: LoadOptions) {
+    try {
+      const response = await lastValueFrom(
+        this.clinicService.getAllClinics(
+          loadOptions.requireTotalCount,
+          loadOptions.requireGroupCount,
+          false,
+          false,
+          loadOptions.skip,
+          loadOptions.take,
+          loadOptions.sort as SortingInfo[],
+          loadOptions.group as GroupingInfo[],
+          loadOptions.filter,
+          loadOptions.totalSummary as SummaryInfo[],
+          loadOptions.groupSummary as SummaryInfo[],
+          loadOptions.select as string[]
+        )
+      );
+      return {
+        data: response.data,
+        totalCount: response.totalCount,
+        summary: response.summary,
+        groupCount: response.groupCount,
+      };
+    } catch (e) {
+      throw 'Data loading error';
+    }
   }
 
   createClinic(addClinicDto: AddClinicDto) {

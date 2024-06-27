@@ -44,12 +44,9 @@
         {{ data.rowIndex + 1 }}
       </div>
 
-      <!--      todo: update, delete, create laboratories for clinic -->
-      <!--      template for laboratories of clinic-->
       <div *dxTemplate="let clinic of 'details'">
         <app-laboratories-datagrid
-          [clinic]="clinic.data"
-        >
+          [clinic]="clinic.data">
         </app-laboratories-datagrid>
       </div>
 
