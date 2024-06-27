@@ -11,7 +11,7 @@ export class DoctorCreatePopupComponent {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() createDoctor = new EventEmitter<UserRegisterDto>();
 
-  createDoctorFormData: any = {};
+  formData: any = {};
 
   onHiding() {
     this.visibleChange.emit(false);
@@ -20,10 +20,10 @@ export class DoctorCreatePopupComponent {
   onSubmit($event: SubmitEvent) {
     $event.preventDefault();
     const addDoctorDto: UserRegisterDto = {
-      username: this.createDoctorFormData.username,
-      password: this.createDoctorFormData.password,
-      email: this.createDoctorFormData.email,
-      clinicId: this.createDoctorFormData.clinicId
+      username: this.formData.username,
+      password: this.formData.password,
+      email: this.formData.email,
+      clinicId: this.formData.clinicId
     };
     this.createDoctor.emit(addDoctorDto);
   }

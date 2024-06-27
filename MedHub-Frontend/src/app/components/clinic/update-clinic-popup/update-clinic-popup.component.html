@@ -9,7 +9,7 @@
   (onHiding)="onHiding()">
   <div *dxTemplate="let data of 'content'">
     <form (submit)="onSubmit($event)">
-      <dx-form [formData]="updateClinicFormData">
+      <dx-form [formData]="formData">
         <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedClinic.name }" dataField="name" editorType="dxTextBox">
           <dxi-validation-rule message="Name is required" type="required"></dxi-validation-rule>
           <dxo-label [visible]="false"></dxo-label>

@@ -1,0 +1,50 @@
+<dx-popup
+  [(visible)]="visible"
+  [dragEnabled]="false"
+  [height]="600"
+  [showCloseButton]="true"
+  [showTitle]="true"
+  [width]="600"
+  title="Update Laboratory"
+  (onHiding)="onHiding()">
+  <div *dxTemplate="let data of 'content'">
+    <form (submit)="onSubmit($event)">
+
+      <dx-tag-box
+        label="'Select TestTypes'"
+        (onValueChanged)="selectedTestTypesIds = $event.value"
+        [applyValueMode]="'useButtons'"
+        [dataSource]="testTypes"
+        [searchEnabled]="true"
+        [searchExpr]="['name']"
+        [searchMode]="'contains'"
+        [showClearButton]="true"
+        [value]="selectedTestTypesIds"
+        displayExpr="name"
+        valueExpr="id"
+      ></dx-tag-box>
+
+      <dx-form [formData]="formData">
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedLaboratory.location }" dataField="location" editorType="dxTextBox">
+          <dxi-validation-rule message="Location is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="true"></dxo-label>
+        </dxi-item>
+
+        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: selectedLaboratory.clinicId }" dataField="clinicId" editorType="dxTextBox">
+          <dxi-validation-rule message="ClinicId is required" type="required"></dxi-validation-rule>
+          <dxo-label [visible]="true"></dxo-label>
+        </dxi-item>
+
+        <dxi-item itemType="button">
+          <dxo-button-options
+            [text]="'Update Clinic'"
+            [useSubmitBehavior]="true"
+            type="default"
+            width="100%"
+          >
+          </dxo-button-options>
+        </dxi-item>
+      </dx-form>
+    </form>
+  </div>
+</dx-popup>

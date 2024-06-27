@@ -11,7 +11,7 @@ export class UpdateClinicPopupComponent {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() updateClinic = new EventEmitter<UpdateClinicDto>();
 
-  updateClinicFormData: any = {};
+  formData: any = {};
 
   onHiding() {
     this.visibleChange.emit(false);
@@ -21,10 +21,10 @@ export class UpdateClinicPopupComponent {
     $event.preventDefault();
     const updateClinicDto: UpdateClinicDto = {
       id: this.selectedClinic.id,
-      name: this.updateClinicFormData.name,
-      location: this.updateClinicFormData.location,
-      sendgridApiKey: this.updateClinicFormData.sendgridApiKey,
-      email: this.updateClinicFormData.email
+      name: this.formData.name,
+      location: this.formData.location,
+      sendgridApiKey: this.formData.sendgridApiKey,
+      email: this.formData.email
     };
     this.updateClinic.emit(updateClinicDto);
   }

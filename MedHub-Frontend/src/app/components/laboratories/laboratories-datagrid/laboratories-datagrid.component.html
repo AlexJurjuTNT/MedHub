@@ -1,0 +1,43 @@
+<div class="master-detail-caption">
+  {{ clinic.name }}
+</div>
+
+<dx-button (click)="this.createPopupVisible = true;" text="Add Laboratory"></dx-button>
+<app-laboratory-create-popup
+  [(visible)]="createPopupVisible"
+  [clinicId]="clinic.id"
+  (createLaboratory)="createLaboratory($event)">
+</app-laboratory-create-popup>
+
+<dx-button (click)="this.updatePopupVisible = true;" text="Update Laboratory"></dx-button>
+<app-laboratory-update-popup
+  [(visible)]="updatePopupVisible"
+  [selectedLaboratory]="selectedRow"
+  (updatedLaboratory)="updateLaboratory($event)">
+</app-laboratory-update-popup>
+
+<dx-data-grid [columnAutoWidth]="true"
+              [columnHidingEnabled]="true"
+              [showBorders]="true"
+              [focusedRowEnabled]="false"
+              (onSelectionChanged)="onSelectionChanged($event)"
+              [(selectedRowKeys)]="selectedRowKeys"
+              [dataSource]="clinic.laboratories"
+              class="dx-card wide-card">
+
+  <dxo-selection mode="single"></dxo-selection>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-editing mode="row" [allowDeleting]="true" [confirmDelete]="true"></dxo-editing>
+
+  <dxi-column caption="ID" dataField="id"></dxi-column>
+  <dxi-column caption="Location" dataField="location"></dxi-column>
+  <dxi-column caption="TestTypes" cellTemplate="testTypesTemplate"></dxi-column>
+
+  <div *dxTemplate="let laboratory of 'testTypesTemplate'">
+    <div *ngFor="let testType of laboratory.data.testTypes">
+      <span>{{ testType.name }}</span>
+    </div>
+  </div>
+</dx-data-grid>

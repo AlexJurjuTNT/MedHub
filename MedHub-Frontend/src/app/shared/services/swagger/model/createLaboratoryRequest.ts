@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-export interface AddLaboratoryDto {
+export interface CreateLaboratoryRequest {
   location: string;
   clinicId: number;
   testTypesId: Array<number>;

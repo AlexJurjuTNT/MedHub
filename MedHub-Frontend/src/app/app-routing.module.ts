@@ -34,6 +34,9 @@ import {UpdateClinicPopupComponent} from "./components/clinic/update-clinic-popu
 import {DoctorCreatePopupComponent} from "./components/doctor/doctor-create-popup/doctor-create-popup.component";
 import {DoctorUpdatePopupComponent} from "./components/doctor/doctor-update-popup/doctor-update-popup.component";
 import {CreatePatientPopupComponent} from "./components/patient-list/create-patient-popup/create-patient-popup.component";
+import {LaboratoriesDatagridComponent} from "./components/laboratories/laboratories-datagrid/laboratories-datagrid.component";
+import {LaboratoryCreatePopupComponent} from "./components/laboratories/laboratory-create-popup/laboratory-create-popup.component";
+import {LaboratoryUpdatePopupComponent} from "./components/laboratories/laboratory-update-popup/laboratory-update-popup.component";
 
 const routes: Routes = [
   {
@@ -147,6 +150,9 @@ const routes: Routes = [
     CreateTestTypePopupComponent,
     UpdateTestTypePopupComponent,
     CreatePatientPopupComponent,
+    LaboratoriesDatagridComponent,
+    LaboratoryCreatePopupComponent,
+    LaboratoryUpdatePopupComponent,
     CreateClinicPopupComponent,
     UpdateClinicPopupComponent,
     DoctorCreatePopupComponent,

@@ -15,8 +15,9 @@ import {HttpClient, HttpEvent, HttpHeaders, HttpResponse} from '@angular/common/
 
 import {Observable} from 'rxjs';
 
-import {AddLaboratoryDto} from '../model/addLaboratoryDto';
+import {CreateLaboratoryRequest} from '../model/createLaboratoryRequest';
 import {LaboratoryDto} from '../model/laboratoryDto';
+import {UpdateLaboratoryRequest} from '../model/updateLaboratoryRequest';
 
 import {BASE_PATH} from '../variables';
 import {Configuration} from '../configuration';
@@ -46,13 +47,13 @@ export class LaboratoryService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public createLaboratory(body?: AddLaboratoryDto, observe?: 'body', reportProgress?: boolean): Observable<LaboratoryDto>;
+  public createLaboratory(body?: CreateLaboratoryRequest, observe?: 'body', reportProgress?: boolean): Observable<LaboratoryDto>;
 
-  public createLaboratory(body?: AddLaboratoryDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LaboratoryDto>>;
+  public createLaboratory(body?: CreateLaboratoryRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LaboratoryDto>>;
 
-  public createLaboratory(body?: AddLaboratoryDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LaboratoryDto>>;
+  public createLaboratory(body?: CreateLaboratoryRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LaboratoryDto>>;
 
-  public createLaboratory(body?: AddLaboratoryDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public createLaboratory(body?: CreateLaboratoryRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
 
     let headers = this.defaultHeaders;
@@ -252,13 +253,13 @@ export class LaboratoryService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public updateLaboratory(laboratoryId: number, body?: AddLaboratoryDto, observe?: 'body', reportProgress?: boolean): Observable<LaboratoryDto>;
+  public updateLaboratory(laboratoryId: number, body?: UpdateLaboratoryRequest, observe?: 'body', reportProgress?: boolean): Observable<LaboratoryDto>;
 
-  public updateLaboratory(laboratoryId: number, body?: AddLaboratoryDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LaboratoryDto>>;
+  public updateLaboratory(laboratoryId: number, body?: UpdateLaboratoryRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LaboratoryDto>>;
 
-  public updateLaboratory(laboratoryId: number, body?: AddLaboratoryDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LaboratoryDto>>;
+  public updateLaboratory(laboratoryId: number, body?: UpdateLaboratoryRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LaboratoryDto>>;
 
-  public updateLaboratory(laboratoryId: number, body?: AddLaboratoryDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public updateLaboratory(laboratoryId: number, body?: UpdateLaboratoryRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     if (laboratoryId === null || laboratoryId === undefined) {
       throw new Error('Required parameter laboratoryId was null or undefined when calling updateLaboratory.');

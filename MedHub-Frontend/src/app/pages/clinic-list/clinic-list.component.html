@@ -2,7 +2,7 @@
 <div class="content-block">
   <div class="dx-card responsive-paddings">
     <!--    button & popup for creating a new clinic -->
-    <dx-button (click)="this.createPopupVisible = true;" text="Add new Clinic"></dx-button>
+    <dx-button (click)="this.createPopupVisible = true;" text="Add Clinic"></dx-button>
     <app-create-clinic-popup
       [(visible)]="createPopupVisible"
       (createClinic)="createClinic($event)">
@@ -10,7 +10,7 @@
 
 
     <!--    button & popup for update -->
-    <dx-button (click)="this.updatePopupVisible = true;" text="Update" type="normal"></dx-button>
+    <dx-button (click)="this.updatePopupVisible = true;" text="Update Clinic" type="normal"></dx-button>
     <app-update-clinic-popup
       [(visible)]="updatePopupVisible"
       [selectedClinic]="selectedRow"
@@ -47,25 +47,10 @@
       <!--      todo: update, delete, create laboratories for clinic -->
       <!--      template for laboratories of clinic-->
       <div *dxTemplate="let clinic of 'details'">
-        <div class="master-detail-caption">
-          {{ clinic.name }}
-        </div>
-
-        <dx-data-grid
-          [dataSource]="clinic.data.laboratories"
-          [showBorders]="true"
-          [columnAutoWidth]="true"
+        <app-laboratories-datagrid
+          [clinic]="clinic.data"
         >
-          <dxi-column caption="ID" dataField="id"></dxi-column>
-          <dxi-column caption="Location" dataField="location"></dxi-column>
-          <dxi-column caption="TestTypes" cellTemplate="testTypesTemplate"></dxi-column>
-
-          <div *dxTemplate="let laboratory of 'testTypesTemplate'">
-            <div *ngFor="let testType of laboratory.data.testTypes">
-              <span>{{ testType.name }}</span>
-            </div>
-          </div>
-        </dx-data-grid>
+        </app-laboratories-datagrid>
       </div>
 
     </dx-data-grid>

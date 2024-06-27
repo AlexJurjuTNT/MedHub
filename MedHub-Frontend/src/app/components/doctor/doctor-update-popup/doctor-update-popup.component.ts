@@ -12,7 +12,7 @@ export class DoctorUpdatePopupComponent {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() updateDoctor = new EventEmitter<UpdateUserRequest>();
 
-  updateDoctorFormData: any = {};
+  formData: any = {};
 
   onHiding() {
     this.visibleChange.emit(false);
@@ -23,9 +23,9 @@ export class DoctorUpdatePopupComponent {
 
     const updateUserRequest: UpdateUserRequest = {
       id: this.selectedDoctor.id,
-      email: this.updateDoctorFormData.email,
-      username: this.updateDoctorFormData.username,
-      clinicId: this.updateDoctorFormData.clinicId
+      email: this.formData.email,
+      username: this.formData.username,
+      clinicId: this.formData.clinicId
     };
 
     this.updateDoctor.emit(updateUserRequest);
