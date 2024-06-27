@@ -4,9 +4,12 @@ import {Router, RouterModule} from '@angular/router';
 import {DxFormModule} from 'devextreme-angular/ui/form';
 import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
 import {AuthenticationService} from "../../services/swagger";
-import notify from "devextreme/ui/notify";
+import {NotificationService} from "../../services/notification.service";
 
-const notificationText = 'We\'ve sent a link to reset your password. Check your inbox.';
+
+interface ForgotPasswordFormData {
+  email: string;
+}
 
 @Component({
   selector: 'app-forgot-password-form',
@@ -15,29 +18,32 @@ const notificationText = 'We\'ve sent a link to reset your password. Check your 
 })
 export class ForgotPasswordFormComponent {
   loading = false;
-  formData: any = {};
+  formData: ForgotPasswordFormData = {
+    email: ''
+  };
 
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
+    private notificationService: NotificationService,
   ) {
   }
 
   async onSubmit(e: Event) {
     e.preventDefault();
 
-    const {email} = this.formData
-
-    this.authenticationService.forgotPassword(email).subscribe({
-      next: result => {
-        notify("Email sent successfully!");
+    this.loading = true;
+    this.authenticationService.forgotPassword(this.formData.email).subscribe({
+      next: () => {
+        this.notificationService.success("Reset link sent to email");
         this.router.navigate(['/change-password']);
       },
-      error: err => {
-        notify("Error sending email")
-      }
-    })
-
+      error: (err) => {
+        console.error('Error sending password reset email:', err);
+        this.notificationService.error('Error sending password reset email. Please try again');
+      },
+      complete: () => this.loading = false
+    });
   }
 }
 

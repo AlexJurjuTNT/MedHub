@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {TestRequestService, TestResultService, TestTypeDto} from "../../shared/services/swagger";
 import {ActivatedRoute} from "@angular/router";
+import {NotificationService} from "../../shared/services/notification.service";
+import {Location} from "@angular/common";
 
 
 @Component({
@@ -16,8 +18,10 @@ export class TestResultCreateComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private location: Location,
     private testResultService: TestResultService,
     private testRequestService: TestRequestService,
+    private notificationService: NotificationService
   ) {
   }
 
@@ -27,12 +31,16 @@ export class TestResultCreateComponent implements OnInit {
 
   uploadFile() {
     if (!this.selectedFiles) {
-      alert("Please select a file");
+      this.notificationService.error("Please select a file");
     }
-
-    this.testResultService.addTestResultForm(this.testRequestId, this.selectedTestTypesIds, this.selectedFiles[0]).subscribe({});
-
-    alert("Uploaded test result");
+    this.testResultService.addTestResultForm(this.testRequestId, this.selectedTestTypesIds, this.selectedFiles[0]).subscribe({
+      next: (result) => {
+        this.notificationService.success("Test result uploaded successfully");
+        this.location.back();
+      }, error: err => {
+        this.notificationService.error("Error uploading test result", err);
+      }
+    });
   }
 
   private getRemainingTestTypes(): void {

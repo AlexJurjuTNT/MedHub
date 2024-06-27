@@ -4,33 +4,33 @@
     <dx-button (click)="this.createPopupVisible = true;"
                text="Add new Doctor"></dx-button>
     <app-doctor-create-popup
-      [(visible)]="createPopupVisible"
-      (createDoctor)="createDoctor($event)">
+      (createDoctor)="createDoctor($event)"
+      [(visible)]="createPopupVisible">
     </app-doctor-create-popup>
 
     <dx-button (click)="this.updatePopupVisible = true;"
-               text="Update" type="normal"
-               [disabled]="!this.selectedRow"></dx-button>
+               [disabled]="!this.selectedRow" text="Update"
+               type="normal"></dx-button>
     <app-doctor-update-popup
+      (updateDoctor)="updateDoctor($event)"
       [(visible)]="updatePopupVisible"
-      [selectedDoctor]="selectedRow!"
-      (updateDoctor)="updateDoctor($event)">
+      [selectedDoctor]="selectedRow!">
     </app-doctor-update-popup>
 
-    <dx-data-grid [columnAutoWidth]="true"
+    <dx-data-grid (onSelectionChanged)="onSelectionChanged($event)"
+                  [(selectedRowKeys)]="selectedRowKeys"
+                  [columnAutoWidth]="true"
                   [columnHidingEnabled]="true"
                   [dataSource]="customDataSource"
                   [focusedRowEnabled]="false"
                   [showBorders]="true"
-                  (onSelectionChanged)="onSelectionChanged($event)"
-                  [(selectedRowKeys)]="selectedRowKeys"
                   class="dx-card wide-card">
 
       <dxo-selection mode="single"></dxo-selection>
       <dxo-paging [pageSize]="10"></dxo-paging>
       <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
       <dxo-filter-row [visible]="true"></dxo-filter-row>
-      <dxo-editing mode="row" [allowDeleting]="true" [confirmDelete]="true"></dxo-editing>
+      <dxo-editing [allowDeleting]="true" [confirmDelete]="true" mode="row"></dxo-editing>
 
       <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
       <dxi-column caption="Username" dataField="username"></dxi-column>

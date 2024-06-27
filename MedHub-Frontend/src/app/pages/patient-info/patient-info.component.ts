@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AddPatientDataDto, PatientDto, PatientService, UpdatePatientDto} from "../../shared/services/swagger";
 import {ActivatedRoute} from "@angular/router";
-import { format } from 'date-fns';
+import {format} from 'date-fns';
 
 @Component({
   selector: 'app-patient-info',
@@ -31,21 +31,6 @@ export class PatientInfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPatientInfo();
-  }
-
-  private getPatientInfo() {
-    this.route.paramMap.subscribe(params => {
-      this.userId = Number(params.get('userId'));
-
-      this.patientService.getPatientInformationForUser(this.userId).subscribe({
-        next: result => {
-          this.patient = result;
-        },
-        error: () => {
-          this.patient = null;
-        }
-      });
-    });
   }
 
   showUpdatePopup() {
@@ -96,5 +81,20 @@ export class PatientInfoComponent implements OnInit {
         }
       });
     }
+  }
+
+  private getPatientInfo() {
+    this.route.paramMap.subscribe(params => {
+      this.userId = Number(params.get('userId'));
+
+      this.patientService.getPatientInformationForUser(this.userId).subscribe({
+        next: result => {
+          this.patient = result;
+        },
+        error: () => {
+          this.patient = null;
+        }
+      });
+    });
   }
 }

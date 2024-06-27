@@ -5,6 +5,7 @@ import {ValidationCallbackData} from 'devextreme-angular/common';
 import {DxFormModule} from 'devextreme-angular/ui/form';
 import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
 import {AuthenticationService, ResetPasswordRequestDto} from "../../services/swagger";
+import {NotificationService} from "../../services/notification.service";
 
 
 @Component({
@@ -18,6 +19,7 @@ export class ChangePasswordFormComponent {
 
   constructor(
     private authenticationService: AuthenticationService,
+    private notificationService: NotificationService,
   ) {
   }
 
@@ -36,17 +38,14 @@ export class ChangePasswordFormComponent {
     this.authenticationService.resetPassword(resetRequest).subscribe({
       next: (response) => {
         this.loading = false;
-        alert("Password changed successfully");
+        this.notificationService.success("Password changed successfully.");
       },
       error: err => {
-        console.log(err);
-        this.loading = false;
-        alert("Error changing password");
+        this.notificationService.error("Error updating password reset email:", err);
+      }, complete: () => {
+        this.loading = false
       }
     })
-
-
-    this.loading = false;
   }
 
   confirmPassword = (e: ValidationCallbackData) => {

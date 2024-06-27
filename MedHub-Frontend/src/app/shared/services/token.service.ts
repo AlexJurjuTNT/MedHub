@@ -1,11 +1,10 @@
 import {Injectable} from "@angular/core";
 import {JwtHelperService} from '@auth0/angular-jwt';
-
+import {Role} from "./role.enum";
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class TokenService {
   get token() {
     return localStorage.getItem('token') as string;
@@ -21,14 +20,12 @@ export class TokenService {
 
   isTokenValid() {
     const token = this.token;
-    // check if token doesnt exist
     if (!token) {
       return false;
     }
 
     const jwtHelper = new JwtHelperService();
 
-    // check expiry date
     const isTokenExpired = jwtHelper.isTokenExpired(token);
     if (isTokenExpired) {
       localStorage.clear();
@@ -41,14 +38,14 @@ export class TokenService {
     return !this.isTokenValid();
   }
 
-  public getUserRole(): string {
+  public getUserRole(): Role | null {
     const token = this.token;
     if (token) {
       const jwtHelper = new JwtHelperService();
       const decodedToken = jwtHelper.decodeToken(token);
-      return decodedToken.role;
+      return decodedToken.role as Role;
     }
-    return "";
+    return null;
   }
 
   public getUsername(): string {
@@ -57,7 +54,6 @@ export class TokenService {
       const jwtHelper = new JwtHelperService();
       const decodedToken = jwtHelper.decodeToken(token);
       return decodedToken.sub;
-
     }
     throw new Error("Username not found");
   }
@@ -68,7 +64,6 @@ export class TokenService {
       const jwtHelper = new JwtHelperService();
       const decodedToken = jwtHelper.decodeToken(token);
       return Number(decodedToken.UserId);
-
     }
     throw new Error("UserId not found");
   }
@@ -79,10 +74,7 @@ export class TokenService {
       const jwtHelper = new JwtHelperService();
       const decodedToken = jwtHelper.decodeToken(token);
       return Number(decodedToken.ClinicId);
-
     }
     throw new Error("ClinicId not found");
   }
-
 }
-

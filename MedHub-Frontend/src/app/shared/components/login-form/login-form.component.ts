@@ -4,9 +4,9 @@ import {Router, RouterModule} from '@angular/router';
 import {DxFormModule} from 'devextreme-angular/ui/form';
 import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
 import {AuthService} from '../../services';
-import {AuthenticationResponse, AuthenticationService, LoginRequest, UserDto, UserService} from "../../services/swagger";
+import {AuthenticationResponse, AuthenticationService, LoginRequest, UserDto, UserService} from '../../services/swagger';
 import {TokenService} from "../../services/token.service";
-
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-login-form',
@@ -15,7 +15,11 @@ import {TokenService} from "../../services/token.service";
 })
 export class LoginFormComponent {
   loading = false;
-  formData: any = {};
+
+  formData: LoginRequest = {
+    username: '',
+    password: ''
+  };
 
   constructor(
     private authService: AuthService,
@@ -23,46 +27,54 @@ export class LoginFormComponent {
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private tokenService: TokenService,
+    private notificationService: NotificationService,
   ) {
-  }
-
-  private redirectPatientToChangePassword(response: AuthenticationResponse) {
-    this.userService.getUserById(response.userId).subscribe({
-      next: (userResult: UserDto) => {
-        this.authService.setUser(userResult);
-        this.tokenService.token = response.token;
-        this.router.navigate(["/home"])
-      },
-      error: (error) => {
-        console.error('Error fetching response:', error);
-        this.loading = false;
-      }
-    });
   }
 
   onSubmit(e: Event) {
     e.preventDefault();
     this.loading = true;
+
     const loginRequest: LoginRequest = {
       username: this.formData.username,
       password: this.formData.password,
     };
 
     this.authenticationService.login(loginRequest).subscribe({
-      next: (result: AuthenticationResponse) => {
-        if (result.hasToResetPassword) {
-          this.router.navigate(['/change-default-password', result.userId]);
-          this.loading = false;
-        } else {
-          this.redirectPatientToChangePassword(result);
-          this.loading = false;
-        }
-      },
-      error: (error) => {
-        console.error('Error during login:', error);
-        this.loading = false;
-      }
+      next: (result: AuthenticationResponse) => this.handleLoginResponse(result),
+      error: (error) => this.handleError('Login failed', error),
+      complete: () => this.loading = false
     });
+  }
+
+  private handleLoginResponse(result: AuthenticationResponse) {
+    if (result.hasToResetPassword) {
+      this.router.navigate(['/change-default-password', result.userId]);
+      this.notificationService.warning('Please change your password');
+    } else {
+      this.fetchUserAndRedirect(result);
+    }
+  }
+
+  private fetchUserAndRedirect(response: AuthenticationResponse) {
+    this.userService.getUserById(response.userId)
+      .subscribe({
+        next: (userResult: UserDto) => this.setUserAndRedirect(userResult, response.token),
+        error: (error) => this.handleError('Error fetching user data', error)
+      });
+  }
+
+  private setUserAndRedirect(user: UserDto, token: string) {
+    this.authService.setUser(user);
+    this.tokenService.token = token;
+    this.router.navigate(['/home']);
+    this.notificationService.success('Login successful');
+  }
+
+  private handleError(message: string, error: any) {
+    console.error(message, error);
+    this.loading = false;
+    this.notificationService.error(message);
   }
 }
 

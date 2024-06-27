@@ -3,43 +3,29 @@
   <div class="dx-card responsive-paddings">
     <dx-button
       (click)="navigateToPatientTests(selectedPatient!.id)"
-      [text]="'View Patient Tests'"
-      [disabled]="!selectedPatient"></dx-button>
+      [disabled]="!selectedPatient"
+      [text]="'View Patient Tests'"></dx-button>
 
     <dx-button
       (click)="navigateToPatientInformation(selectedPatient!.id)"
-      [text]="'View Patient Information'"
-      [disabled]="!selectedPatient"></dx-button>
+      [disabled]="!selectedPatient"
+      [text]="'View Patient Information'"></dx-button>
 
     <dx-button
       (onClick)="this.createPatientPopupVisible=true;" text="Add New Patient"
       type="normal"></dx-button>
     <app-create-patient-popup
-      [(visible)]="createPatientPopupVisible"
-      (createPatient)="createPatient($event)"></app-create-patient-popup>
-
-    <dx-button
-      (onClick)="this.createTestRequestPopupVisible=true;"
-      text="Create Test Tequest"
-      [disabled]="!selectedPatient"
-      type="normal"></dx-button>
-    <app-test-request-create-popup
-      [(visible)]="createTestRequestPopupVisible"
-      [doctor]="this.doctor"
-      [user]="selectedPatient!"
-      [laboratories]="laboratories"
-      (createTestRequest)="createTestRequest($event)"
-    >
-    </app-test-request-create-popup>
+      (createPatient)="createPatient($event)"
+      [(visible)]="createPatientPopupVisible"></app-create-patient-popup>
 
     <dx-data-grid
-      [dataSource]="customDataSource"
-      [columnAutoWidth]="true"
-      [columnHidingEnabled]="true"
-      [focusedRowEnabled]="true"
-      [showBorders]="true"
       (onSelectionChanged)="onSelectionChanged($event)"
       [(selectedRowKeys)]="selectedRowKeys"
+      [columnAutoWidth]="true"
+      [columnHidingEnabled]="true"
+      [dataSource]="customDataSource"
+      [focusedRowEnabled]="true"
+      [showBorders]="true"
       class="dx-card wide-card">
 
       <dxo-selection mode="single"></dxo-selection>
@@ -47,7 +33,7 @@
       <dxo-paging [pageSize]="10"></dxo-paging>
       <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
       <dxo-filter-row [visible]="true"></dxo-filter-row>
-      <dxo-editing mode="row" [allowDeleting]="true" [confirmDelete]="true"></dxo-editing>
+      <dxo-editing [allowDeleting]="true" [confirmDelete]="true" mode="row"></dxo-editing>
 
       <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
       <dxi-column caption="Email" dataField="email"></dxi-column>

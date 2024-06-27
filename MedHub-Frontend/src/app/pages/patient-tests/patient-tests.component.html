@@ -1,6 +1,20 @@
 <h2 class="content-block">Patient Test Requests</h2>
 <div class="content-block">
   <div class="dx-card responsive-paddings">
+
+    <dx-button
+      (onClick)="this.createTestRequestPopupVisible=true;"
+      text="Create Test Tequest"
+      type="normal"></dx-button>
+    <app-test-request-create-popup
+      (createTestRequest)="createTestRequest($event)"
+      [(visible)]="createTestRequestPopupVisible"
+      [doctor]="this.doctor"
+      [laboratories]="laboratories"
+      [user]="user"
+    >
+    </app-test-request-create-popup>
+
     <dx-data-grid [columnAutoWidth]="true"
                   [columnHidingEnabled]="true"
                   [dataSource]="customDataSource"
@@ -12,13 +26,13 @@
       <dxo-paging [pageSize]="10"></dxo-paging>
       <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
       <dxo-filter-row [visible]="true"></dxo-filter-row>
-      <dxo-editing mode="row" [allowDeleting]="true" [confirmDelete]="true"></dxo-editing>
+      <dxo-editing [allowDeleting]="true" [confirmDelete]="true" mode="row"></dxo-editing>
 
       <!-- Define the columns for TestRequestDto data -->
       <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
       <dxi-column caption="Request Date" dataField="requestDate"></dxi-column>
-      <dxi-column caption="Doctor" [calculateCellValue]="getDoctorName"></dxi-column>
-      <dxi-column caption="Laboratory" [calculateCellValue]="getLaboratoryLocation"></dxi-column>
+      <dxi-column [calculateCellValue]="getDoctorName" caption="Doctor"></dxi-column>
+      <dxi-column [calculateCellValue]="getLaboratoryLocation" caption="Laboratory"></dxi-column>
       <dxi-column caption="Test Types" cellTemplate="testTypesTemplate"></dxi-column>
 
       <div *dxTemplate="let request of 'testTypesTemplate'">
@@ -26,14 +40,16 @@
         <div *ngFor="let testResult of request.data.testResults">
           <span>{{ getTestTypeNames(testResult.testTypes) }}</span>
           <dx-button (onClick)="navigateToViewTestResult(testResult.id)"
-                     [text]="'View'"></dx-button>
+                     [text]="'View'">
+          </dx-button>
         </div>
 
         <div *ngIf="remainingTestTypes[request.data.id]?.length!> 0">
           <span>Remaining Test Types: {{ getTestTypeNames(remainingTestTypes[request.data.id]) }}</span>
-          <div *ngIf="role !== 'Patient'">
+          <div *ngIf="role !== Role.Patient">
             <dx-button (onClick)="navigateToAddTestResult(request.data.id, remainingTestTypes[request.data.id])"
-                       [text]="'Add Test Result'"></dx-button>
+                       [text]="'Add Test Result'">
+            </dx-button>
           </div>
         </div>
       </div>

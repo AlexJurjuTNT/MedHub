@@ -30,7 +30,6 @@ import {PatientInfoComponent} from './pages/patient-info/patient-info.component'
 @NgModule({
   declarations: [
     AppComponent,
-    PatientTestsComponent,
     TestResultCreateComponent,
     TestResultView,
     ChangeDefaultPasswordComponent,

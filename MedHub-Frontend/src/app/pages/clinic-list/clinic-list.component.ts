@@ -4,6 +4,7 @@ import DataSource from "devextreme/data/data_source";
 import CustomStore from "devextreme/data/custom_store";
 import {LoadOptions} from "devextreme/data";
 import {lastValueFrom} from "rxjs";
+import {NotificationService} from "../../shared/services/notification.service";
 
 @Component({
   selector: 'app-clinic-list',
@@ -21,6 +22,7 @@ export class ClinicListComponent implements OnInit {
 
   constructor(
     private clinicService: ClinicService,
+    private notificationService: NotificationService
   ) {
     this.customDataSource = new DataSource({
       store: new CustomStore({
@@ -78,6 +80,9 @@ export class ClinicListComponent implements OnInit {
       next: () => {
         this.createPopupVisible = false;
         this.customDataSource.reload();
+        this.notificationService.success("Successfully added new clinic");
+      }, error: (error) => {
+        this.notificationService.error("Error adding clinic " + error.message);
       }
     });
   }
@@ -86,7 +91,9 @@ export class ClinicListComponent implements OnInit {
     this.clinicService.updateClinic(updateClinicDto.id, updateClinicDto).subscribe({
       next: () => {
         this.updatePopupVisible = false;
-        this.customDataSource.reload();
+        this.notificationService.success("Successfully updated clinic");
+      }, error: (error) => {
+        this.notificationService.error("Error updating clinic " + error.message);
       }
     });
   }

@@ -4,6 +4,9 @@ import DataSource from "devextreme/data/data_source";
 import CustomStore from "devextreme/data/custom_store";
 import {LoadOptions} from "devextreme/data";
 import {lastValueFrom} from "rxjs";
+import {NotificationService} from "../../shared/services/notification.service";
+import {TokenService} from "../../shared/services/token.service";
+import {Role} from "../../shared/services/role.enum";
 
 @Component({
   selector: 'app-test-type-list',
@@ -12,14 +15,22 @@ import {lastValueFrom} from "rxjs";
 })
 export class TestTypeListComponent {
   customDataSource: DataSource;
+
   selectedRowKeys: any[] = [];
   selectedRow: TestTypeDto = {} as TestTypeDto;
+
   updatePopupVisible: boolean = false;
   createPopupVisible: boolean = false;
 
+  isAdmin: boolean;
+
   constructor(
-    private testTypeService: TestTypeService
+    private testTypeService: TestTypeService,
+    private notificationService: NotificationService,
+    private tokenService: TokenService
   ) {
+    const role = this.tokenService.getUserRole();
+    this.isAdmin = role == Role.Admin;
     this.customDataSource = new DataSource({
       store: new CustomStore({
         key: 'id',
@@ -73,6 +84,10 @@ export class TestTypeListComponent {
       next: () => {
         this.createPopupVisible = false;
         this.customDataSource.reload();
+        this.notificationService.success("Added new Test Type");
+      },
+      error: (error) => {
+        this.notificationService.error("Failed to add new Test Type: " + error.message);
       }
     });
   }
@@ -82,6 +97,10 @@ export class TestTypeListComponent {
       next: () => {
         this.updatePopupVisible = false;
         this.customDataSource.reload();
+        this.notificationService.success("Updated Test Type");
+      },
+      error: (error) => {
+        this.notificationService.error("Failed to update Test Type: " + error.message);
       }
     });
   }

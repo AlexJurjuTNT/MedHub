@@ -4,6 +4,7 @@ import DataSource from "devextreme/data/data_source";
 import CustomStore from "devextreme/data/custom_store";
 import {LoadOptions} from "devextreme/data";
 import {lastValueFrom} from "rxjs";
+import {NotificationService} from "../../shared/services/notification.service";
 
 @Component({
   selector: 'app-doctor-list',
@@ -22,6 +23,7 @@ export class DoctorListComponent implements OnInit {
   constructor(
     private doctorService: DoctorService,
     private authenticationService: AuthenticationService,
+    private notificationService: NotificationService,
   ) {
     this.customDataSource = new DataSource({
       store: new CustomStore({
@@ -79,6 +81,9 @@ export class DoctorListComponent implements OnInit {
       next: () => {
         this.createPopupVisible = false;
         this.customDataSource.reload();
+        this.notificationService.success("Successfully created new Doctor");
+      }, error: (error) => {
+        this.notificationService.error("Failed to create Doctor" + error.message);
       }
     });
   }
@@ -88,6 +93,9 @@ export class DoctorListComponent implements OnInit {
       next: () => {
         this.updatePopupVisible = false;
         this.customDataSource.reload();
+        this.notificationService.success("Successfully updated new Doctor");
+      }, error: (error) => {
+        this.notificationService.error("Error updating doctor " + error.message);
       }
     });
   }

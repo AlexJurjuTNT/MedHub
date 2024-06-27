@@ -3,8 +3,6 @@ import {RouterModule, Routes} from '@angular/router';
 import {ChangeFormComponent, ChangePasswordFormComponent, ForgotPasswordFormComponent, LoginFormComponent} from './shared/components';
 import {AuthGuardService} from './shared/services';
 import {HomeComponent} from './pages/home/home.component';
-import {ProfileComponent} from './pages/profile/profile.component';
-import {TasksComponent} from './pages/tasks/tasks.component';
 import {
   DxButtonModule,
   DxDataGridModule,
@@ -79,16 +77,6 @@ const routes: Routes = [
     component: ChangeDefaultPasswordComponent
   },
   {
-    path: 'tasks',
-    component: TasksComponent,
-    canActivate: [AuthGuardService]
-  },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    canActivate: [AuthGuardService]
-  },
-  {
     path: 'home',
     component: HomeComponent,
     canActivate: [AuthGuardService]
@@ -149,12 +137,11 @@ const routes: Routes = [
     LaboratoryCreatePopupComponent,
     LaboratoryUpdatePopupComponent,
     TestRequestCreatePopupComponent,
+    PatientTestsComponent,
     CreateClinicPopupComponent,
     UpdateClinicPopupComponent,
     DoctorCreatePopupComponent,
     DoctorUpdatePopupComponent,
-    ProfileComponent,
-    TasksComponent,
     PatientListComponent,
     TestTypeListComponent,
     ClinicListComponent,

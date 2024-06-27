@@ -4,34 +4,34 @@
     <!--    button & popup for creating a new clinic -->
     <dx-button (click)="this.createPopupVisible = true;" text="Add Clinic"></dx-button>
     <app-create-clinic-popup
-      [(visible)]="createPopupVisible"
-      (createClinic)="createClinic($event)">
+      (createClinic)="createClinic($event)"
+      [(visible)]="createPopupVisible">
     </app-create-clinic-popup>
 
 
     <!--    button & popup for update -->
     <dx-button (click)="this.updatePopupVisible = true;" text="Update Clinic" type="normal"></dx-button>
     <app-update-clinic-popup
+      (updateClinic)="updateClinic($event)"
       [(visible)]="updatePopupVisible"
-      [selectedClinic]="selectedRow"
-      (updateClinic)="updateClinic($event)">
+      [selectedClinic]="selectedRow">
     </app-update-clinic-popup>
 
 
-    <dx-data-grid [columnAutoWidth]="true"
+    <dx-data-grid (onSelectionChanged)="onSelectionChanged($event)"
+                  [(selectedRowKeys)]="selectedRowKeys"
+                  [columnAutoWidth]="true"
                   [columnHidingEnabled]="true"
                   [dataSource]="customDataSource"
                   [focusedRowEnabled]="false"
                   [showBorders]="true"
-                  (onSelectionChanged)="onSelectionChanged($event)"
-                  [(selectedRowKeys)]="selectedRowKeys"
                   class="dx-card wide-card">
 
       <dxo-selection mode="single"></dxo-selection>
       <dxo-paging [pageSize]="10"></dxo-paging>
       <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
       <dxo-filter-row [visible]="true"></dxo-filter-row>
-      <dxo-editing mode="row" [allowDeleting]="true" [confirmDelete]="true"></dxo-editing>
+      <dxo-editing [allowDeleting]="true" [confirmDelete]="true" mode="row"></dxo-editing>
 
       <dxi-column [width]="90" caption="Id" cellTemplate="rowNumberTemplate"></dxi-column>
       <dxi-column caption="Name" dataField="name"></dxi-column>
