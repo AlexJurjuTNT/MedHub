@@ -20,7 +20,6 @@ import {NgForOf, NgIf} from "@angular/common";
 import {PatientListComponent} from './pages/patient-list/patient-list.component';
 import {PatientTestsComponent} from "./pages/patient-tests/patient-tests.component";
 import {TestTypeListComponent} from './pages/test-type-list/test-type-list.component';
-import {TestRequestCreateComponent} from './pages/test-request-create/test-request-create.component';
 import {TestResultCreateComponent} from "./pages/test-result-create/test-result-create.component";
 import {TestResultView} from "./pages/test-result-view/test-result-view";
 import {ClinicListComponent} from './pages/clinic-list/clinic-list.component';
@@ -37,6 +36,7 @@ import {CreatePatientPopupComponent} from "./components/patient-list/create-pati
 import {LaboratoriesDatagridComponent} from "./components/laboratories/laboratories-datagrid/laboratories-datagrid.component";
 import {LaboratoryCreatePopupComponent} from "./components/laboratories/laboratory-create-popup/laboratory-create-popup.component";
 import {LaboratoryUpdatePopupComponent} from "./components/laboratories/laboratory-update-popup/laboratory-update-popup.component";
+import {TestRequestCreatePopupComponent} from "./components/patient-list/test-request-create-popup/test-request-create-popup.component";
 
 const routes: Routes = [
   {
@@ -47,11 +47,6 @@ const routes: Routes = [
   {
     path: 'pages/clinic-list',
     component: ClinicListComponent,
-    canActivate: [AuthGuardService]
-  },
-  {
-    path: 'pages/test-request-create',
-    component: TestRequestCreateComponent,
     canActivate: [AuthGuardService]
   },
   {
@@ -153,6 +148,7 @@ const routes: Routes = [
     LaboratoriesDatagridComponent,
     LaboratoryCreatePopupComponent,
     LaboratoryUpdatePopupComponent,
+    TestRequestCreatePopupComponent,
     CreateClinicPopupComponent,
     UpdateClinicPopupComponent,
     DoctorCreatePopupComponent,
@@ -161,7 +157,6 @@ const routes: Routes = [
     TasksComponent,
     PatientListComponent,
     TestTypeListComponent,
-    TestRequestCreateComponent,
     ClinicListComponent,
     DoctorListComponent
   ]

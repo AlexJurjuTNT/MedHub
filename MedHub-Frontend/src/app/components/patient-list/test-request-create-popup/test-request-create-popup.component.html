@@ -1,0 +1,81 @@
+<dx-popup
+  [(visible)]="visible"
+  [dragEnabled]="false"
+  [height]="600"
+  [showCloseButton]="true"
+  [showTitle]="true"
+  [width]="500"
+  title="Create Test"
+  (onHiding)="onHiding()">
+
+  <div *dxTemplate="let data of 'content'">
+    <form (submit)="submitTestRequest($event)">
+      <div class="dx-fieldset">
+        <div class="dx-field">
+          <div class="dx-field-label">Patient</div>
+          <div class="dx-field-value">
+            <dx-text-box
+              [value]="user.username"
+              [readOnly]="true"
+            ></dx-text-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Doctor</div>
+          <div class="dx-field-value">
+            <dx-text-box
+              [value]="doctor.username"
+              [readOnly]="true"
+            ></dx-text-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Laboratories</div>
+          <div class="dx-field-value">
+            <dx-select-box
+              (onValueChanged)="onLaboratoryChange($event)"
+              [dataSource]="laboratories"
+              [searchEnabled]="true"
+              [searchExpr]="['name']"
+              [searchMode]="'contains'"
+              [showClearButton]="true"
+              [value]="selectedLaboratoryId"
+              displayExpr="location"
+              valueExpr="id"
+              placeholder="Select a laboratory"
+            ></dx-select-box>
+          </div>
+        </div>
+
+        <div class="dx-field">
+          <div class="dx-field-label">Test Types</div>
+          <div class="dx-field-value">
+            <dx-tag-box
+              (onValueChanged)="selectedTestTypesIds = $event.value"
+              [applyValueMode]="'useButtons'"
+              [dataSource]="availableTestTypes"
+              [searchEnabled]="true"
+              [searchExpr]="['name']"
+              [searchMode]="'contains'"
+              [showClearButton]="true"
+              [value]="selectedTestTypesIds"
+              [disabled]="!selectedLaboratoryId"
+              displayExpr="name"
+              valueExpr="id"
+            ></dx-tag-box>
+          </div>
+        </div>
+      </div>
+
+      <div class="dx-fieldset">
+        <dx-button
+          [text]="'Create Test Request'"
+          [disabled]="!selectedLaboratoryId || selectedTestTypesIds.length === 0"
+          [useSubmitBehavior]="true"
+        ></dx-button>
+      </div>
+    </form>
+  </div>
+</dx-popup>

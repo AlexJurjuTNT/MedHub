@@ -34,7 +34,7 @@ import {PatientInfoComponent} from './pages/patient-info/patient-info.component'
     TestResultCreateComponent,
     TestResultView,
     ChangeDefaultPasswordComponent,
-    PatientInfoComponent
+    PatientInfoComponent,
   ],
   imports: [
     BrowserModule,

@@ -2,23 +2,35 @@
 <div class="content-block">
   <div class="dx-card responsive-paddings">
     <dx-button
-      (click)="navigateToPatientTests(selectedRow?.id)"
+      (click)="navigateToPatientTests(selectedPatient!.id)"
       [text]="'View Patient Tests'"
-      [disabled]="!selectedRow"></dx-button>
+      [disabled]="!selectedPatient"></dx-button>
 
     <dx-button
-      (click)="navigateToPatientInformation(selectedRow?.id)"
+      (click)="navigateToPatientInformation(selectedPatient!.id)"
       [text]="'View Patient Information'"
-      [disabled]="!selectedRow"></dx-button>
+      [disabled]="!selectedPatient"></dx-button>
 
     <dx-button
-      (onClick)="this.createPopupVisible=true;" text="Add New Patient"
+      (onClick)="this.createPatientPopupVisible=true;" text="Add New Patient"
       type="normal"></dx-button>
     <app-create-patient-popup
-      [(visible)]="createPopupVisible"
-      (createPatient)="createPatient($event)"
+      [(visible)]="createPatientPopupVisible"
+      (createPatient)="createPatient($event)"></app-create-patient-popup>
+
+    <dx-button
+      (onClick)="this.createTestRequestPopupVisible=true;"
+      text="Create Test Tequest"
+      [disabled]="!selectedPatient"
+      type="normal"></dx-button>
+    <app-test-request-create-popup
+      [(visible)]="createTestRequestPopupVisible"
+      [doctor]="this.doctor"
+      [user]="selectedPatient!"
+      [laboratories]="laboratories"
+      (createTestRequest)="createTestRequest($event)"
     >
-    </app-create-patient-popup>
+    </app-test-request-create-popup>
 
     <dx-data-grid
       [dataSource]="customDataSource"

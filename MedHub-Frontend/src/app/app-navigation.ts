@@ -15,11 +15,6 @@ export const doctorNavigation = [
     text: 'Test Type List',
     path: '/pages/test-type-list',
     icon: 'folder'
-  },
-  {
-    text: 'Test Request Create',
-    path: '/pages/test-request-create',
-    icon: 'folder'
   }
 ];
 
@@ -53,11 +48,6 @@ export const adminNavigation = [
   {
     text: 'Test Type List',
     path: '/pages/test-type-list',
-    icon: 'folder'
-  },
-  {
-    text: 'Test Request Create',
-    path: '/pages/test-request-create',
     icon: 'folder'
   },
   {
