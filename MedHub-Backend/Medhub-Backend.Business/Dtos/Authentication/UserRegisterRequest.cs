@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Medhub_Backend.Business.Dtos.User;
+namespace Medhub_Backend.Business.Dtos.Authentication;
 
-public class UserRegisterDto
+public class UserRegisterRequest
 {
     [Required]
     public string Username { get; set; }
@@ -16,4 +16,10 @@ public class UserRegisterDto
 
     [Required]
     public int ClinicId { get; set; }
+
+    [Required]
+    public string FirstName { get; set; } = null!;
+
+    [Required]
+    public string FamilyName { get; set; } = null!;
 }

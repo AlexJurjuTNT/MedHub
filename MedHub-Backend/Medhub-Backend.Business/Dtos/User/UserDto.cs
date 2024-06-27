@@ -16,4 +16,10 @@ public class UserDto
 
     [Required]
     public int ClinicId { get; set; }
+
+    [Required]
+    public string FirstName { get; set; } = null!;
+
+    [Required]
+    public string FamilyName { get; set; } = null!;
 }

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Medhub_Backend.Business.Dtos.Authentication;
 
-public class PatientRegisterDto
+public class PatientRegisterRequest
 {
     [EmailAddress]
     [Required]
@@ -10,4 +10,10 @@ public class PatientRegisterDto
 
     [Required]
     public int ClinicId { get; set; }
+
+    [Required]
+    public string FirstName { get; set; } = null!;
+
+    [Required]
+    public string FamilyName { get; set; } = null!;
 }

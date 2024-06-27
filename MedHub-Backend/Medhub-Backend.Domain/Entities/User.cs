@@ -13,6 +13,12 @@ public class User
     [Column("username")]
     public string Username { get; set; } = null!;
 
+    [Column("first_name")]
+    public string FirstName { get; set; } = null!;
+
+    [Column("family_name")]
+    public string FamilyName { get; set; } = null!;
+
     [Column("email")]
     public string Email { get; set; } = null!;
 
@@ -20,7 +26,7 @@ public class User
     public string? Password { get; set; }
 
     [Column("password_reset_code")]
-    public string? PasswordResetCode { get; set; } = null!;
+    public string? PasswordResetCode { get; set; }
 
     [Column("has_to_reset_password")]
     public bool HasToResetPassword { get; set; } = false;
@@ -35,7 +41,5 @@ public class User
 
     public virtual Role Role { get; set; } = null!;
     public virtual Clinic Clinic { get; set; } = null!;
-    
-    // used for bidirectional relationship between User and Patient
     public virtual Patient Patient { get; set; } = null!;
 }

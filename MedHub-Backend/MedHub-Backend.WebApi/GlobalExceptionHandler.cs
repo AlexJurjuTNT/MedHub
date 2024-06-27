@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Medhub_Backend.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using SendGrid.Helpers.Errors.Model;
 using IExceptionHandler = Microsoft.AspNetCore.Diagnostics.IExceptionHandler;
@@ -38,6 +39,11 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             NotFoundException => StatusCodes.Status404NotFound,
             ValidationException => StatusCodes.Status400BadRequest,
+            
+            UserNotFoundException => StatusCodes.Status404NotFound,
+            UserAlreadyExistsException => StatusCodes.Status409Conflict,
+            ClinicNotFoundException => StatusCodes.Status404NotFound,
+            PasswordMismatchException => StatusCodes.Status400BadRequest,
 
             ArgumentException => StatusCodes.Status400BadRequest,
             InvalidOperationException => StatusCodes.Status400BadRequest,

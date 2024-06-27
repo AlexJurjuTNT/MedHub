@@ -16,10 +16,12 @@ public class MappingProfiles : Profile
     public MappingProfiles()
     {
         CreateMap<User, UserDto>();
-
         CreateMap<UserDto, User>();
-        CreateMap<UserRegisterDto, User>();
-        CreateMap<PatientRegisterDto, User>();
+        
+        CreateMap<UpdateUserRequest, User>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<UserRegisterRequest, User>();
+        CreateMap<PatientRegisterRequest, User>();
 
         CreateMap<AddClinicDto, Clinic>();
         CreateMap<UpdateClinicDto, Clinic>();

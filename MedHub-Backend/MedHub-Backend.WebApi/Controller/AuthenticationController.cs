@@ -30,91 +30,43 @@ public class AuthenticationController : ControllerBase
     [ProducesResponseType(200, Type = typeof(AuthenticationResponse))]
     public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
-        try
-        {
-            var authenticationResponse = await _authenticationService.LoginUserAsync(loginRequest);
-            return Ok(authenticationResponse);
-        }
-        catch (UserNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (PasswordMismatchException ex)
-        {
-            return Unauthorized(ex.Message);
-        }
+        var authenticationResponse = await _authenticationService.LoginUserAsync(loginRequest);
+        return Ok(authenticationResponse);
     }
 
     [HttpPost("register-admin")]
-    public async Task<IActionResult> RegisterAdmin([FromBody] UserRegisterDto userRegisterDto)
+    public async Task<IActionResult> RegisterAdmin([FromBody] UserRegisterRequest userRegisterRequest)
     {
-        var clinic = await _clinicService.GetClinicByIdAsync(userRegisterDto.ClinicId);
+        var clinic = await _clinicService.GetClinicByIdAsync(userRegisterRequest.ClinicId);
         if (clinic is null) return NotFound();
 
-        try
-        {
-            var user = _mapper.Map<User>(userRegisterDto);
-            var admin = await _authenticationService.RegisterAdminAsync(user);
-            return Ok(_mapper.Map<UserDto>(admin));
-        }
-        catch (UserAlreadyExistsException ex)
-        {
-            return Conflict(ex.Message);
-        }
+        var user = _mapper.Map<User>(userRegisterRequest);
+        var admin = await _authenticationService.RegisterAdminAsync(user);
+        return Ok(_mapper.Map<UserDto>(admin));
     }
 
     [HttpPost("register-doctor")]
-    public async Task<IActionResult> RegisterDoctor([FromBody] UserRegisterDto userRegisterDto)
+    public async Task<IActionResult> RegisterDoctor([FromBody] UserRegisterRequest userRegisterRequest)
     {
-        try
-        {
-            var user = _mapper.Map<User>(userRegisterDto);
-            var doctor = await _authenticationService.RegisterDoctorAsync(user);
-            return Ok(_mapper.Map<UserDto>(doctor));
-        }
-        catch (UserAlreadyExistsException ex)
-        {
-            return Conflict(ex.Message);
-        }
-        catch (ClinicNotFoundException ex)
-        {
-            return Conflict(ex.Message);
-        }
+        var user = _mapper.Map<User>(userRegisterRequest);
+        var doctor = await _authenticationService.RegisterDoctorAsync(user);
+        return Ok(_mapper.Map<UserDto>(doctor));
     }
 
     [HttpPost("register-patient")]
     [ProducesResponseType(200, Type = typeof(UserDto))]
-    public async Task<IActionResult> RegisterPatient([FromBody] PatientRegisterDto patientRegisterDto)
+    public async Task<IActionResult> RegisterPatient([FromBody] PatientRegisterRequest patientRegisterRequest)
     {
-        try
-        {
-            var patient = _mapper.Map<User>(patientRegisterDto);
-            var patientResult = await _authenticationService.RegisterPatientAsync(patient);
-            return Ok(_mapper.Map<UserDto>(patientResult));
-        }
-        catch (UserAlreadyExistsException ex)
-        {
-            return Conflict(ex.Message);
-        }
-        catch (ClinicNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var patient = _mapper.Map<User>(patientRegisterRequest);
+        var patientResult = await _authenticationService.RegisterPatientAsync(patient);
+        return Ok(_mapper.Map<UserDto>(patientResult));
     }
 
 
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword([Required] string email)
     {
-        try
-        {
-            await _authenticationService.ForgotPassword(email);
-        }
-        catch (UserNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _authenticationService.ForgotPassword(email);
         return Ok();
     }
 

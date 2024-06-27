@@ -58,9 +58,7 @@ public class UserController : ControllerBase
         var existingUser = await _userService.GetUserByIdAsync(userId);
         if (existingUser == null) return NotFound($"User with id {userId} not found");
 
-        existingUser.Email = updateUserRequest.Email;
-        existingUser.Username = updateUserRequest.Username;
-        existingUser.ClinicId = updateUserRequest.ClinicId;
+        _mapper.Map(updateUserRequest, existingUser);
 
         var updatedUser = await _userService.UpdateUserAsync(existingUser);
         var updatedUserDto = _mapper.Map<UserDto>(updatedUser);

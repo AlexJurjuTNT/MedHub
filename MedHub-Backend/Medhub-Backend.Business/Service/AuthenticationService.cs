@@ -47,20 +47,6 @@ public class AuthenticationService : IAuthenticationService
         return createdUser;
     }
 
-    public async Task<AuthenticationResponse> LoginUserAsync(LoginRequest loginRequest)
-    {
-        var user = await _userService.GetUserByUsernameAsync(loginRequest.Username);
-        if (user == null) throw new UserNotFoundException($"User with username {loginRequest.Username} not found");
-
-        if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password)) throw new PasswordMismatchException();
-
-        return new AuthenticationResponse
-        {
-            Token = _jwtGenerator.GenerateToken(user),
-            UserId = user.Id,
-            HasToResetPassword = user.HasToResetPassword
-        };
-    }
 
     public async Task<User> RegisterDoctorAsync(User user)
     {
@@ -86,6 +72,22 @@ public class AuthenticationService : IAuthenticationService
 
         return await _userService.CreateUserAsync(user);
     }
+
+    public async Task<AuthenticationResponse> LoginUserAsync(LoginRequest loginRequest)
+    {
+        var user = await _userService.GetUserByUsernameAsync(loginRequest.Username);
+        if (user == null) throw new UserNotFoundException($"User with username {loginRequest.Username} not found");
+
+        if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password)) throw new PasswordMismatchException();
+
+        return new AuthenticationResponse
+        {
+            Token = _jwtGenerator.GenerateToken(user),
+            UserId = user.Id,
+            HasToResetPassword = user.HasToResetPassword
+        };
+    }
+
 
     public async Task ForgotPassword(string email)
     {
