@@ -14,13 +14,13 @@ public class TestResult
     public DateTime CompletionDate { get; set; }
 
     [Column("file_path")]
-    public string FilePath { get; set; }
+    public string FilePath { get; set; } = null!;
 
     [Column("test_request_id")]
     [ForeignKey("TestRequest")]
     public int TestRequestId { get; set; }
 
-    public virtual ICollection<TestType> TestTypes { get; set; }
+    public virtual ICollection<TestType> TestTypes { get; set; } = null!;
 
-    public virtual TestRequest TestRequest { get; set; }
+    public virtual TestRequest TestRequest { get; set; } = null!;
 }

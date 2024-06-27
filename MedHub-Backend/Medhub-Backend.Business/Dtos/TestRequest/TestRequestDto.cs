@@ -12,20 +12,20 @@ public class TestRequestDto
     public int Id { get; set; }
 
     [Required]
-    public string RequestDate { get; set; }
+    public string RequestDate { get; set; } = null!;
 
     [Required]
     public int PatientId { get; set; }
 
     [Required]
-    public UserDto Doctor { get; set; }
+    public UserDto Doctor { get; set; } = null!;
 
     [Required]
-    public LaboratoryDto Laboratory { get; set; }
+    public LaboratoryDto Laboratory { get; set; } = null!;
 
     [Required]
-    public List<TestTypeDto> TestTypes { get; set; }
+    public List<TestTypeDto> TestTypes { get; set; } = null!;
 
     [Required]
-    public List<TestResultDto> TestResults { get; set; }
+    public List<TestResultDto> TestResults { get; set; } = null!;
 }

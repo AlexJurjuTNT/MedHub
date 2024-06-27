@@ -12,7 +12,7 @@ public class Patient
     public int Id { get; set; }
 
     [Column("cnp")]
-    public string Cnp { get; set; }
+    public string Cnp { get; set; } = null!;
 
     [Column("date_of_birth")]
     public DateOnly DateOfBirth { get; set; }
@@ -25,11 +25,11 @@ public class Patient
 
     [Column("gender")]
     [EnumDataType(typeof(Gender))]
-    public string Gender { get; set; }
+    public string Gender { get; set; } = null!;
 
     [Column("user_id")]
     [ForeignKey("User")]
     public int UserId { get; set; }
 
-    public virtual User User { get; set; }
+    public virtual User User { get; set; } = null!;
 }

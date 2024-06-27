@@ -11,17 +11,17 @@ public class Clinic
     public int Id { get; set; }
 
     [Column("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [Column("location")]
-    public string Location { get; set; }
+    public string Location { get; set; } = null!;
 
     [Column("sendgrid_api_key")]
-    public string SendgridApiKey { get; set; }
+    public string SendgridApiKey { get; set; } = null!;
 
     [Column("email")]
-    public string Email { get; set; }
+    public string Email { get; set; } = null!;
 
-    public virtual ICollection<Laboratory> Laboratories { get; set; }
-    public virtual ICollection<User> Users { get; set; }
+    public virtual ICollection<Laboratory> Laboratories { get; set; } = null!;
+    public virtual ICollection<User> Users { get; set; } = null!;
 }

@@ -58,11 +58,9 @@ public class TestRequestService : ITestRequestService
         return await _appDbContext.TestRequests.Where(t => t.PatientId == userId).ToListAsync();
     }
 
-    public async Task<List<TestRequest>> GetAllTestRequestsOfUserInClinicAsync(int userId, int clinicId)
+    public IQueryable<TestRequest> GetAllTestRequestsOfUserInClinicAsync(int userId, int clinicId)
     {
-        return await _appDbContext.TestRequests.Where(
-                t => t.PatientId == userId && t.ClinicId == clinicId)
-            .ToListAsync();
+        return _appDbContext.TestRequests.Where(t => t.PatientId == userId && t.ClinicId == clinicId);
     }
 
     public async Task<List<TestType>> GetRemainingTestTypesAsync(int testRequestId)

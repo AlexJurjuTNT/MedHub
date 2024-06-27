@@ -1,5 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.ResponseModel;
+using DevExtreme.AspNet.Mvc;
 using Medhub_Backend.Business.Dtos.TestRequest;
 using Medhub_Backend.Business.Dtos.TestResult;
 using Medhub_Backend.Business.Dtos.TestType;
@@ -14,27 +17,26 @@ namespace MedHub_Backend.WebApi.Controller;
 [Route("api/v1/[controller]")]
 public class TestRequestController : ControllerBase
 {
-    private readonly IEmailService _emailService;
     private readonly ILaboratoryService _laboratoryService;
     private readonly IMapper _mapper;
     private readonly ITestRequestService _testRequestService;
     private readonly ITestTypeService _testTypeService;
     private readonly IUserService _userService;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public TestRequestController(
         ITestRequestService testRequestService,
         ITestTypeService testTypeService,
         IUserService userService,
-        IEmailService emailService,
         ILaboratoryService laboratoryService,
-        IMapper mapper)
+        IMapper mapper, IDateTimeProvider dateTimeProvider)
     {
         _testRequestService = testRequestService;
         _testTypeService = testTypeService;
         _userService = userService;
-        _emailService = emailService;
         _laboratoryService = laboratoryService;
         _mapper = mapper;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     [HttpGet]
@@ -55,8 +57,6 @@ public class TestRequestController : ControllerBase
         if (testRequest == null) return NotFound($"Test request with id {testRequestId} not found");
 
         var testRequestDto = _mapper.Map<TestRequestDto>(testRequest);
-        // todo: change this
-        testRequestDto.RequestDate = testRequest.RequestDate.ToString("yyyy-MM-dd HH:mm");
         return Ok(testRequestDto);
     }
 
@@ -74,7 +74,7 @@ public class TestRequestController : ControllerBase
             DoctorId = doctor.Id,
             LaboratoryId = laboratory.Id,
             TestTypes = testTypes,
-            RequestDate = DateTime.UtcNow,
+            RequestDate = _dateTimeProvider.UtcNow,
             ClinicId = doctor.ClinicId
         };
 
@@ -98,7 +98,8 @@ public class TestRequestController : ControllerBase
 
         var testRequest = _mapper.Map<TestRequest>(testRequestDto);
         var updatedTestRequest = await _testRequestService.UpdateTestRequestAsync(testRequest);
-        return Ok(_mapper.Map<TestRequestDto>(updatedTestRequest));
+        var requestDto = _mapper.Map<TestRequestDto>(updatedTestRequest);
+        return Ok(requestDto);
     }
 
     [HttpDelete("{testRequestId}")]
@@ -127,31 +128,36 @@ public class TestRequestController : ControllerBase
     public async Task<IActionResult> GetRemainingTestTypes(int testRequestId)
     {
         var remainingTestTypes = await _testRequestService.GetRemainingTestTypesAsync(testRequestId);
-        return Ok(remainingTestTypes);
+        var testTypeDtos = _mapper.Map<List<TestTypeDto>>(remainingTestTypes);
+        return Ok(testTypeDtos);
     }
 
-    [HttpGet("user/{userId}")]
-    [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> GetAllTestRequestsOfUser(int userId)
-    {
-        var patient = await ValidateUser(userId, "Patient");
-        var testRequests = await _testRequestService.GetAllTestRequestsOfUserAsync(patient.Id);
-        var testRequestDtos = _mapper.Map<List<TestRequestDto>>(testRequests);
-        return Ok(testRequestDtos);
-    }
+    // [HttpGet("user/{userId}")]
+    // [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
+    // [ProducesResponseType(400)]
+    // [ProducesResponseType(404)]
+    // public async Task<IActionResult> GetAllTestRequestsOfUser(int userId)
+    // {
+    //     var patient = await ValidateUser(userId, "Patient");
+    //     var testRequests = await _testRequestService.GetAllTestRequestsOfUserAsync(patient.Id);
+    //     var testRequestDtos = _mapper.Map<List<TestRequestDto>>(testRequests);
+    //     return Ok(testRequestDtos);
+    // }
 
-    [HttpGet("user/{userId}/clinic/{clinicId}")]
-    [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
+    [HttpGet("user/clinic/tests")]
+    [ProducesResponseType(200, Type = typeof(LoadResult))]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetAllTestRequestsOfUserInClinic(int userId, int clinicId)
+    public async Task<IActionResult> GetAllTestRequestsOfUserInClinic([FromQuery] int userId, [FromQuery] DataSourceLoadOptions loadOptions)
     {
         var patient = await ValidateUser(userId, "Patient");
-        var testRequests = await _testRequestService.GetAllTestRequestsOfUserInClinicAsync(userId, clinicId);
-        var testRequestDtos = _mapper.Map<List<TestRequestDto>>(testRequests);
-        return Ok(testRequestDtos);
+        var testRequestsQuery = _testRequestService.GetAllTestRequestsOfUserInClinicAsync(patient.Id, patient.ClinicId);
+
+        var loadedTestRequests = await DataSourceLoader.LoadAsync(testRequestsQuery, loadOptions);
+
+        loadedTestRequests.data = _mapper.Map<List<TestRequestDto>>(loadedTestRequests.data);
+
+        return Ok(loadedTestRequests);
     }
 
     private async Task<(User patient, User doctor, Laboratory laboratory, List<TestType> testTypes)> ValidateAndGetEntities(AddTestRequestDto testRequestDto)

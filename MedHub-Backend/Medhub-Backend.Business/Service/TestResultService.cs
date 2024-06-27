@@ -13,17 +13,19 @@ public class TestResultService : ITestResultService
     private readonly IEmailService _emailService;
     private readonly IFileService _fileService;
     private readonly ITestTypeService _testTypeService;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public TestResultService(
         AppDbContext appDbContext,
         IFileService fileService,
         IEmailService emailService,
-        ITestTypeService testTypeService)
+        ITestTypeService testTypeService, IDateTimeProvider dateTimeProvider)
     {
         _appDbContext = appDbContext;
         _fileService = fileService;
         _emailService = emailService;
         _testTypeService = testTypeService;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<List<TestResult>> GetAllTestResultsAsync()
@@ -70,7 +72,7 @@ public class TestResultService : ITestResultService
         var pdfPath = await UploadResultFile(formFile, patientUser, clinic);
 
         testResult.FilePath = pdfPath;
-        testResult.CompletionDate = DateTime.UtcNow;
+        testResult.CompletionDate = _dateTimeProvider.UtcNow;
         var createdTestResult = await CreateTestResultAsync(testResult);
 
         await _emailService.SendPatientResultsCompleteEmail(clinic, patientUser);

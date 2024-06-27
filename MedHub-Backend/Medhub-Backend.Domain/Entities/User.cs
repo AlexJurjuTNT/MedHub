@@ -11,16 +11,16 @@ public class User
     public int Id { get; set; }
 
     [Column("username")]
-    public string Username { get; set; }
+    public string Username { get; set; } = null!;
 
     [Column("email")]
-    public string Email { get; set; }
+    public string Email { get; set; } = null!;
 
     [Column("password_hash")]
     public string? Password { get; set; }
 
     [Column("password_reset_code")]
-    public string? PasswordResetCode { get; set; } = string.Empty;
+    public string? PasswordResetCode { get; set; } = null!;
 
     [Column("has_to_reset_password")]
     public bool HasToResetPassword { get; set; } = false;
@@ -29,15 +29,13 @@ public class User
     [ForeignKey("Clinic")]
     public int ClinicId { get; set; }
 
-    public virtual Clinic Clinic { get; set; }
-
     [Column("role_id")]
     [ForeignKey("Role")]
     public int RoleId { get; set; }
 
-    public virtual Role Role { get; set; }
-
-
+    public virtual Role Role { get; set; } = null!;
+    public virtual Clinic Clinic { get; set; } = null!;
+    
     // used for bidirectional relationship between User and Patient
-    public virtual Patient Patient { get; set; }
+    public virtual Patient Patient { get; set; } = null!;
 }
