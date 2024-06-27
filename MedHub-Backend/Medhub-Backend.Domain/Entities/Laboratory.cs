@@ -10,13 +10,13 @@ public class Laboratory
     public int Id { get; set; }
 
     [Column("location")]
-    public string Location { get; set; }
+    public string Location { get; set; } = null!;
 
     [Column("clinic_id")]
     [ForeignKey("Clinic")]
     public int ClinicId { get; set; }
 
-    public virtual Clinic Clinic { get; set; }
 
-    public virtual ICollection<TestType> TestTypes { get; set; }
+    public virtual Clinic Clinic { get; set; } = null!;
+    public virtual ICollection<TestType> TestTypes { get; set; } = null!;
 }

@@ -50,18 +50,12 @@ public class LaboratoryController : ControllerBase
     {
         var clinic = await _clinicService.GetClinicByIdAsync(createLaboratoryRequest.ClinicId);
         if (clinic is null) return NotFound();
-
-        try
-        {
-            var laboratory = _mapper.Map<Laboratory>(createLaboratoryRequest);
-            var testTypes = await _testTypeService.GetTestTypesFromIdList(createLaboratoryRequest.TestTypesId);
-            var createdLaboratory = await _laboratoryService.CreateLaboratoryAsync(laboratory, testTypes);
-            return CreatedAtAction(nameof(GetLaboratoryById), new { laboratoryId = createdLaboratory.Id }, _mapper.Map<LaboratoryDto>(createdLaboratory));
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        
+        var laboratory = _mapper.Map<Laboratory>(createLaboratoryRequest);
+        Console.WriteLine(laboratory);
+        var testTypes = await _testTypeService.GetTestTypesFromIdList(createLaboratoryRequest.TestTypesId);
+        var createdLaboratory = await _laboratoryService.CreateLaboratoryAsync(laboratory, testTypes);
+        return CreatedAtAction(nameof(GetLaboratoryById), new { laboratoryId = createdLaboratory.Id }, _mapper.Map<LaboratoryDto>(createdLaboratory));
     }
 
     [HttpDelete("{laboratoryId}")]

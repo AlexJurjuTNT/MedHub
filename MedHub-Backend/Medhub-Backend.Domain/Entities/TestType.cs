@@ -11,7 +11,9 @@ public class TestType
     public int Id { get; set; }
 
     [Column("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public virtual ICollection<TestRequest> TestRequests { get; set; }
+    public virtual ICollection<TestRequest> TestRequests { get; set; } = null!;
+
+    public virtual ICollection<Laboratory> Laboratories { get; set; } = null!;
 }
