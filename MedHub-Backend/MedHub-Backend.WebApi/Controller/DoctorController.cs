@@ -10,19 +10,25 @@ namespace MedHub_Backend.WebApi.Controller;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class DoctorController(
-    IDoctorService doctorService,
-    IMapper mapper
-) : ControllerBase
+public class DoctorController : ControllerBase
 {
+    private readonly IDoctorService _doctorService;
+    private readonly IMapper _mapper;
+
+    public DoctorController(IDoctorService doctorService, IMapper mapper)
+    {
+        _doctorService = doctorService;
+        _mapper = mapper;
+    }
+
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(LoadResult))]
     public async Task<IActionResult> GetAllDoctors([FromQuery] DataSourceLoadOptions loadOptions)
     {
-        var doctors = await doctorService.GetAllDoctorsAsync();
+        var doctors = await _doctorService.GetAllDoctorsAsync();
         var loadedDoctors = await DataSourceLoader.LoadAsync(doctors, loadOptions);
 
-        loadedDoctors.data = mapper.Map<List<UserDto>>(loadedDoctors.data);
+        loadedDoctors.data = _mapper.Map<List<UserDto>>(loadedDoctors.data);
 
         return Ok(loadedDoctors);
     }
@@ -32,10 +38,10 @@ public class DoctorController(
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetDoctorById([FromRoute] int doctorId)
     {
-        var doctor = await doctorService.GetDoctorById(doctorId);
+        var doctor = await _doctorService.GetDoctorById(doctorId);
         if (doctor == null) return NotFound($"Doctor with id {doctorId} not found");
 
-        return Ok(mapper.Map<UserDto>(doctor));
+        return Ok(_mapper.Map<UserDto>(doctor));
     }
 
     [HttpDelete("{doctorId}")]
@@ -43,7 +49,7 @@ public class DoctorController(
     [ProducesResponseType(404)]
     public async Task<IActionResult> DeleteDoctor([FromRoute] int doctorId)
     {
-        var result = await doctorService.DeleteDoctorAsync(doctorId);
+        var result = await _doctorService.DeleteDoctorAsync(doctorId);
         if (!result) return NotFound($"Doctor with id {doctorId} not found");
 
         return NoContent();
@@ -55,15 +61,15 @@ public class DoctorController(
     {
         if (doctorId != updateUserRequest.Id) return BadRequest();
 
-        var existingUser = await doctorService.GetDoctorById(doctorId);
+        var existingUser = await _doctorService.GetDoctorById(doctorId);
         if (existingUser == null) return NotFound($"User with id {doctorId} not found");
 
         existingUser.Email = updateUserRequest.Email;
         existingUser.Username = updateUserRequest.Username;
         existingUser.ClinicId = updateUserRequest.ClinicId;
 
-        var updatedUser = await doctorService.UpdateDoctorAsync(existingUser);
-        var updatedUserDto = mapper.Map<UserDto>(updatedUser);
+        var updatedUser = await _doctorService.UpdateDoctorAsync(existingUser);
+        var updatedUserDto = _mapper.Map<UserDto>(updatedUser);
 
         return Ok(updatedUserDto);
     }

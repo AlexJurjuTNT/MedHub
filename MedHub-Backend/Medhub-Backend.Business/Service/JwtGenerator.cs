@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Medhub_Backend.Business.Service.Interface;
 using Medhub_Backend.Business.Settings;
-using Medhub_Backend.Domain.Model;
+using Medhub_Backend.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;

@@ -3,43 +3,50 @@ using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
 using Medhub_Backend.Business.Dtos.Patient;
-using Medhub_Backend.Business.Dtos.TestRequest;
 using Medhub_Backend.Business.Dtos.User;
 using Medhub_Backend.Business.Service.Interface;
+using Medhub_Backend.Domain.Entities;
 using Medhub_Backend.Domain.Exceptions;
-using Medhub_Backend.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.WebApi.Controller;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class PatientController(
-    IPatientService patientService,
-    IUserService userService,
-    IClinicService clinicService,
-    IMapper mapper
-) : ControllerBase
+public class PatientController : ControllerBase
 {
+    private readonly IClinicService _clinicService;
+    private readonly IMapper _mapper;
+    private readonly IPatientService _patientService;
+    private readonly IUserService _userService;
+
+    public PatientController(IPatientService patientService, IUserService userService, IClinicService clinicService, IMapper mapper)
+    {
+        _patientService = patientService;
+        _userService = userService;
+        _clinicService = clinicService;
+        _mapper = mapper;
+    }
+
     [HttpPost]
     [ProducesResponseType(200, Type = typeof(PatientDto))]
     public async Task<IActionResult> AddPatientInformation(AddPatientDataDto addPatientDataDto)
     {
-        var userResult = await userService.GetUserByIdAsync(addPatientDataDto.UserId);
+        var userResult = await _userService.GetUserByIdAsync(addPatientDataDto.UserId);
         if (userResult == null) return NotFound($"User with id {addPatientDataDto.UserId} not found");
         if (userResult.Role.Name != "Patient") return BadRequest($"User with id {addPatientDataDto.UserId} is not a patient");
 
-        var patient = mapper.Map<Patient>(addPatientDataDto);
-        var createdPatient = await patientService.CreatePatientAsync(patient);
-        return Ok(mapper.Map<PatientDto>(createdPatient));
+        var patient = _mapper.Map<Patient>(addPatientDataDto);
+        var createdPatient = await _patientService.CreatePatientAsync(patient);
+        return Ok(_mapper.Map<PatientDto>(createdPatient));
     }
 
     [HttpGet("user-patients")]
     [ProducesResponseType(200, Type = typeof(List<UserDto>))]
     public async Task<IActionResult> GetAllUserPatients()
     {
-        var patients = await patientService.GetAllUserPatientsAsync();
-        return Ok(mapper.Map<List<UserDto>>(patients));
+        var patients = await _patientService.GetAllUserPatientsAsync();
+        return Ok(_mapper.Map<List<UserDto>>(patients));
     }
 
 
@@ -47,7 +54,7 @@ public class PatientController(
     [ProducesResponseType(200, Type = typeof(PatientDto))]
     public async Task<IActionResult> UpdatePatientInformation([FromRoute] int patientId, [FromBody] UpdatePatientDto patientDto)
     {
-        var existingPatient = await patientService.GetPatientAsync(patientId);
+        var existingPatient = await _patientService.GetPatientAsync(patientId);
         if (existingPatient == null) return NotFound($"Patient with id {patientId} not found");
 
         existingPatient.Cnp = patientDto.Cnp;
@@ -56,14 +63,14 @@ public class PatientController(
         existingPatient.Weight = patientDto.Weight;
         existingPatient.DateOfBirth = patientDto.DateOfBirth;
 
-        var updatedPatient = await patientService.UpdatePatientAsync(existingPatient);
-        return Ok(mapper.Map<PatientDto>(updatedPatient));
+        var updatedPatient = await _patientService.UpdatePatientAsync(existingPatient);
+        return Ok(_mapper.Map<PatientDto>(updatedPatient));
     }
 
     [HttpDelete("{patientId}")]
     public async Task<IActionResult> DeletePatientInformation([FromRoute] int patientId)
     {
-        var result = await patientService.DeletePatientAsync(patientId);
+        var result = await _patientService.DeletePatientAsync(patientId);
         if (!result) return NotFound($"Patient with id ${patientId} not found");
 
         return NoContent();
@@ -73,11 +80,11 @@ public class PatientController(
     [ProducesResponseType(200, Type = typeof(PatientDto))]
     public async Task<IActionResult> GetPatientInformationForUser([FromRoute] int userId)
     {
-        var user = await userService.GetUserByIdAsync(userId);
+        var user = await _userService.GetUserByIdAsync(userId);
         if (user == null) return NotFound($"User with id {userId} not found");
         if (user.Role.Name != "Patient") return BadRequest($"User with id {userId} is not a patient");
 
-        return Ok(mapper.Map<PatientDto>(user.Patient));
+        return Ok(_mapper.Map<PatientDto>(user.Patient));
     }
 
 
@@ -87,8 +94,8 @@ public class PatientController(
     {
         try
         {
-            var users = await clinicService.GetAllPatientsOfClinicAsync(clinicId);
-            var resultingUsers = DataSourceLoader.Load(mapper.Map<IEnumerable<UserDto>>(users), loadOptions);
+            var users = await _clinicService.GetAllPatientsOfClinicAsync(clinicId);
+            var resultingUsers = DataSourceLoader.Load(_mapper.Map<IEnumerable<UserDto>>(users), loadOptions);
             return Ok(resultingUsers);
         }
         catch (ClinicNotFoundException ex)

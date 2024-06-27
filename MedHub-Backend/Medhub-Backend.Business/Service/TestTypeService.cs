@@ -1,51 +1,57 @@
 using Medhub_Backend.Business.Service.Interface;
 using Medhub_Backend.DataAccess.Persistence;
-using Medhub_Backend.Domain.Model;
+using Medhub_Backend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Medhub_Backend.Business.Service;
 
-public class TestTypeService(
-    AppDbContext appDbContext
-) : ITestTypeService
+public class TestTypeService : ITestTypeService
 {
+    private readonly AppDbContext _appDbContext;
+
+    public TestTypeService(AppDbContext appDbContext)
+    {
+        _appDbContext = appDbContext;
+    }
+
+
     public IQueryable<TestType> GetAllTestTypes()
     {
-        return appDbContext.TestTypes;
+        return _appDbContext.TestTypes;
     }
 
     public async Task<TestType?> GetTestTypeByIdAsync(int testTypeId)
     {
-        return await appDbContext.TestTypes.FindAsync(testTypeId);
+        return await _appDbContext.TestTypes.FindAsync(testTypeId);
     }
 
     public async Task<TestType> CreateTestTypeAsync(TestType testType)
     {
-        await appDbContext.TestTypes.AddAsync(testType);
-        await appDbContext.SaveChangesAsync();
+        await _appDbContext.TestTypes.AddAsync(testType);
+        await _appDbContext.SaveChangesAsync();
         return testType;
     }
 
     public async Task<TestType> UpdateTestTypeAsync(TestType testType)
     {
-        appDbContext.TestTypes.Update(testType);
-        await appDbContext.SaveChangesAsync();
+        _appDbContext.TestTypes.Update(testType);
+        await _appDbContext.SaveChangesAsync();
         return testType;
     }
 
     public async Task<bool> DeleteClinicByIdAsync(int testTypeId)
     {
-        var testType = await appDbContext.TestTypes.FindAsync(testTypeId);
+        var testType = await _appDbContext.TestTypes.FindAsync(testTypeId);
         if (testType == null) return false;
 
-        appDbContext.TestTypes.Remove(testType);
-        await appDbContext.SaveChangesAsync();
+        _appDbContext.TestTypes.Remove(testType);
+        await _appDbContext.SaveChangesAsync();
         return true;
     }
 
     public async Task<List<TestType>> GetTestTypesFromIdList(List<int> testTypesIds)
     {
-        var testTypes = await appDbContext.TestTypes
+        var testTypes = await _appDbContext.TestTypes
             .Where(tt => testTypesIds.Contains(tt.Id))
             .ToListAsync();
 

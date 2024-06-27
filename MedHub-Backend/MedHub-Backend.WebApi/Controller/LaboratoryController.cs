@@ -1,27 +1,34 @@
 using AutoMapper;
 using Medhub_Backend.Business.Dtos.Laboratory;
 using Medhub_Backend.Business.Service.Interface;
-using Medhub_Backend.Domain.Model;
+using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.WebApi.Controller;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class LaboratoryController(
-    ILaboratoryService laboratoryService,
-    ITestTypeService testTypeService,
-    IClinicService clinicService,
-    IMapper mapper
-)
-    : ControllerBase
+public class LaboratoryController : ControllerBase
 {
+    private readonly IClinicService _clinicService;
+    private readonly ILaboratoryService _laboratoryService;
+    private readonly IMapper _mapper;
+    private readonly ITestTypeService _testTypeService;
+
+    public LaboratoryController(ILaboratoryService laboratoryService, ITestTypeService testTypeService, IClinicService clinicService, IMapper mapper)
+    {
+        _laboratoryService = laboratoryService;
+        _testTypeService = testTypeService;
+        _clinicService = clinicService;
+        _mapper = mapper;
+    }
+
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(List<LaboratoryDto>))]
     public async Task<IActionResult> GetAllLaboratories()
     {
-        var laboratories = await laboratoryService.GetAllLaboratoriesAsync();
-        var laboratoriesDtos = mapper.Map<List<LaboratoryDto>>(laboratories);
+        var laboratories = await _laboratoryService.GetAllLaboratoriesAsync();
+        var laboratoriesDtos = _mapper.Map<List<LaboratoryDto>>(laboratories);
         return Ok(laboratoriesDtos);
     }
 
@@ -30,10 +37,10 @@ public class LaboratoryController(
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetLaboratoryById([FromRoute] int laboratoryId)
     {
-        var laboratory = await laboratoryService.GetLaboratoryByIdAsync(laboratoryId);
+        var laboratory = await _laboratoryService.GetLaboratoryByIdAsync(laboratoryId);
         if (laboratory == null) return NotFound($"Laboratory with id {laboratoryId} not found");
 
-        var laboratoryDto = mapper.Map<LaboratoryDto>(laboratory);
+        var laboratoryDto = _mapper.Map<LaboratoryDto>(laboratory);
         return Ok(laboratoryDto);
     }
 
@@ -41,15 +48,15 @@ public class LaboratoryController(
     [ProducesResponseType(201, Type = typeof(LaboratoryDto))]
     public async Task<IActionResult> CreateLaboratory([FromBody] CreateLaboratoryRequest createLaboratoryRequest)
     {
-        var clinic = await clinicService.GetClinicByIdAsync(createLaboratoryRequest.ClinicId);
+        var clinic = await _clinicService.GetClinicByIdAsync(createLaboratoryRequest.ClinicId);
         if (clinic is null) return NotFound();
 
         try
         {
-            var laboratory = mapper.Map<Laboratory>(createLaboratoryRequest);
-            var testTypes = await testTypeService.GetTestTypesFromIdList(createLaboratoryRequest.TestTypesId);
-            var createdLaboratory = await laboratoryService.CreateLaboratoryAsync(laboratory, testTypes);
-            return CreatedAtAction(nameof(GetLaboratoryById), new { laboratoryId = createdLaboratory.Id }, mapper.Map<LaboratoryDto>(createdLaboratory));
+            var laboratory = _mapper.Map<Laboratory>(createLaboratoryRequest);
+            var testTypes = await _testTypeService.GetTestTypesFromIdList(createLaboratoryRequest.TestTypesId);
+            var createdLaboratory = await _laboratoryService.CreateLaboratoryAsync(laboratory, testTypes);
+            return CreatedAtAction(nameof(GetLaboratoryById), new { laboratoryId = createdLaboratory.Id }, _mapper.Map<LaboratoryDto>(createdLaboratory));
         }
         catch (ArgumentException ex)
         {
@@ -61,7 +68,7 @@ public class LaboratoryController(
     [ProducesResponseType(204)]
     public async Task<IActionResult> DeleteLaboratory([FromRoute] int laboratoryId)
     {
-        var result = await laboratoryService.DeleteLaboratoryAsync(laboratoryId);
+        var result = await _laboratoryService.DeleteLaboratoryAsync(laboratoryId);
         if (result == false) return NotFound($"Laboratory with id {laboratoryId} not found");
 
         return NoContent();
@@ -71,10 +78,10 @@ public class LaboratoryController(
     [ProducesResponseType(200, Type = typeof(LaboratoryDto))]
     public async Task<IActionResult> UpdateLaboratory([FromRoute] int laboratoryId, [FromBody] UpdateLaboratoryRequest updateLaboratoryRequest)
     {
-        var existingLaboratory = await laboratoryService.GetLaboratoryByIdAsync(laboratoryId);
+        var existingLaboratory = await _laboratoryService.GetLaboratoryByIdAsync(laboratoryId);
         if (existingLaboratory == null) return NotFound();
 
-        var testTypes = await testTypeService.GetTestTypesFromIdList(updateLaboratoryRequest.TestTypesId);
+        var testTypes = await _testTypeService.GetTestTypesFromIdList(updateLaboratoryRequest.TestTypesId);
 
         existingLaboratory.ClinicId = updateLaboratoryRequest.ClinicId;
         existingLaboratory.Location = updateLaboratoryRequest.Location;
@@ -82,7 +89,7 @@ public class LaboratoryController(
         existingLaboratory.TestTypes.Clear();
         existingLaboratory.TestTypes = testTypes;
 
-        var updatedLaboratory = await laboratoryService.UpdateLaboratoryAsync(existingLaboratory);
-        return Ok(mapper.Map<LaboratoryDto>(updatedLaboratory));
+        var updatedLaboratory = await _laboratoryService.UpdateLaboratoryAsync(existingLaboratory);
+        return Ok(_mapper.Map<LaboratoryDto>(updatedLaboratory));
     }
 }

@@ -4,7 +4,7 @@ using Medhub_Backend.Business.Dtos.TestRequest;
 using Medhub_Backend.Business.Dtos.TestResult;
 using Medhub_Backend.Business.Dtos.TestType;
 using Medhub_Backend.Business.Service.Interface;
-using Medhub_Backend.Domain.Model;
+using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using SendGrid.Helpers.Errors.Model;
 
@@ -14,18 +14,17 @@ namespace MedHub_Backend.WebApi.Controller;
 [Route("api/v1/[controller]")]
 public class TestRequestController : ControllerBase
 {
-    private readonly ITestRequestService _testRequestService;
-    private readonly ITestTypeService _testTypeService;
-    private readonly IUserService _userService;
     private readonly IEmailService _emailService;
     private readonly ILaboratoryService _laboratoryService;
     private readonly IMapper _mapper;
+    private readonly ITestRequestService _testRequestService;
+    private readonly ITestTypeService _testTypeService;
+    private readonly IUserService _userService;
 
     public TestRequestController(
         ITestRequestService testRequestService,
         ITestTypeService testTypeService,
         IUserService userService,
-        IClinicService clinicService,
         IEmailService emailService,
         ILaboratoryService laboratoryService,
         IMapper mapper)
@@ -164,10 +163,7 @@ public class TestRequestController : ControllerBase
                          ?? throw new NotFoundException($"Laboratory with id {testRequestDto.LaboratoryId} not found");
 
         var testTypes = await _testTypeService.GetTestTypesFromIdList(testRequestDto.TestTypesId);
-        if (testTypes.Count != testRequestDto.TestTypesId.Count)
-        {
-            throw new ValidationException("One or more test types were not found");
-        }
+        if (testTypes.Count != testRequestDto.TestTypesId.Count) throw new ValidationException("One or more test types were not found");
 
         return (patient, doctor, laboratory, testTypes);
     }

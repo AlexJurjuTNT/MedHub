@@ -3,28 +3,36 @@ using AutoMapper;
 using Medhub_Backend.Business.Dtos.Authentication;
 using Medhub_Backend.Business.Dtos.User;
 using Medhub_Backend.Business.Service.Interface;
+using Medhub_Backend.Domain.Entities;
 using Medhub_Backend.Domain.Exceptions;
-using Medhub_Backend.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.WebApi.Controller;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class AuthenticationController(
-    IAuthenticationService authenticationService,
-    IUserService userService,
-    IClinicService clinicService,
-    IMapper mapper
-) : ControllerBase
+public class AuthenticationController : ControllerBase
 {
+    private readonly IAuthenticationService _authenticationService;
+    private readonly IClinicService _clinicService;
+    private readonly IMapper _mapper;
+    private readonly IUserService _userService;
+
+    public AuthenticationController(IAuthenticationService authenticationService, IUserService userService, IClinicService clinicService, IMapper mapper)
+    {
+        _authenticationService = authenticationService;
+        _userService = userService;
+        _clinicService = clinicService;
+        _mapper = mapper;
+    }
+
     [HttpPost("login")]
     [ProducesResponseType(200, Type = typeof(AuthenticationResponse))]
     public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
         try
         {
-            var authenticationResponse = await authenticationService.LoginUserAsync(loginRequest);
+            var authenticationResponse = await _authenticationService.LoginUserAsync(loginRequest);
             return Ok(authenticationResponse);
         }
         catch (UserNotFoundException ex)
@@ -40,14 +48,14 @@ public class AuthenticationController(
     [HttpPost("register-admin")]
     public async Task<IActionResult> RegisterAdmin([FromBody] UserRegisterDto userRegisterDto)
     {
-        var clinic = await clinicService.GetClinicByIdAsync(userRegisterDto.ClinicId);
+        var clinic = await _clinicService.GetClinicByIdAsync(userRegisterDto.ClinicId);
         if (clinic is null) return NotFound();
 
         try
         {
-            var user = mapper.Map<User>(userRegisterDto);
-            var admin = await authenticationService.RegisterAdminAsync(user);
-            return Ok(mapper.Map<UserDto>(admin));
+            var user = _mapper.Map<User>(userRegisterDto);
+            var admin = await _authenticationService.RegisterAdminAsync(user);
+            return Ok(_mapper.Map<UserDto>(admin));
         }
         catch (UserAlreadyExistsException ex)
         {
@@ -60,9 +68,9 @@ public class AuthenticationController(
     {
         try
         {
-            var user = mapper.Map<User>(userRegisterDto);
-            var doctor = await authenticationService.RegisterDoctorAsync(user);
-            return Ok(mapper.Map<UserDto>(doctor));
+            var user = _mapper.Map<User>(userRegisterDto);
+            var doctor = await _authenticationService.RegisterDoctorAsync(user);
+            return Ok(_mapper.Map<UserDto>(doctor));
         }
         catch (UserAlreadyExistsException ex)
         {
@@ -80,9 +88,9 @@ public class AuthenticationController(
     {
         try
         {
-            var patient = mapper.Map<User>(patientRegisterDto);
-            var patientResult = await authenticationService.RegisterPatientAsync(patient);
-            return Ok(mapper.Map<UserDto>(patientResult));
+            var patient = _mapper.Map<User>(patientRegisterDto);
+            var patientResult = await _authenticationService.RegisterPatientAsync(patient);
+            return Ok(_mapper.Map<UserDto>(patientResult));
         }
         catch (UserAlreadyExistsException ex)
         {
@@ -100,7 +108,7 @@ public class AuthenticationController(
     {
         try
         {
-            await authenticationService.ForgotPassword(email);
+            await _authenticationService.ForgotPassword(email);
         }
         catch (UserNotFoundException ex)
         {
@@ -113,12 +121,12 @@ public class AuthenticationController(
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDto resetPasswordRequestDto)
     {
-        var existingUser = await userService.GetUserByEmail(resetPasswordRequestDto.Email);
+        var existingUser = await _userService.GetUserByEmail(resetPasswordRequestDto.Email);
         if (existingUser == null) return NotFound($"User with email {resetPasswordRequestDto.Email} not found");
 
         if (existingUser.PasswordResetCode != resetPasswordRequestDto.PasswordResetCode) return BadRequest("Reset codes don't match");
 
-        await authenticationService.ResetPassword(existingUser, resetPasswordRequestDto.Password);
+        await _authenticationService.ResetPassword(existingUser, resetPasswordRequestDto.Password);
         return Ok();
     }
 
@@ -126,11 +134,11 @@ public class AuthenticationController(
     [HttpPost("change-default-password")]
     public async Task<IActionResult> ChangeDefaultPassword([FromBody] ChangeDefaultPasswordDto changeDefaultPasswordDto)
     {
-        var user = await userService.GetUserByIdAsync(changeDefaultPasswordDto.UserId);
+        var user = await _userService.GetUserByIdAsync(changeDefaultPasswordDto.UserId);
         if (user == null) return NotFound();
 
         if (changeDefaultPasswordDto.Password != changeDefaultPasswordDto.ConfirmPassword) return BadRequest();
-        await authenticationService.ResetPassword(user, changeDefaultPasswordDto.Password);
+        await _authenticationService.ResetPassword(user, changeDefaultPasswordDto.Password);
 
         return Ok();
     }

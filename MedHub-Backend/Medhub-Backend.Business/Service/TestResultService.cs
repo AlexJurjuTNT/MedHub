@@ -1,7 +1,7 @@
 using Medhub_Backend.Business.Helper;
 using Medhub_Backend.Business.Service.Interface;
 using Medhub_Backend.DataAccess.Persistence;
-using Medhub_Backend.Domain.Model;
+using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,8 +10,8 @@ namespace Medhub_Backend.Business.Service;
 public class TestResultService : ITestResultService
 {
     private readonly AppDbContext _appDbContext;
-    private readonly IFileService _fileService;
     private readonly IEmailService _emailService;
+    private readonly IFileService _fileService;
     private readonly ITestTypeService _testTypeService;
 
     public TestResultService(

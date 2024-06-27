@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Medhub_Backend.Domain.Enum;
 
-namespace Medhub_Backend.Domain.Model;
+namespace Medhub_Backend.Domain.Entities;
 
 [Table("patient")]
 public class Patient

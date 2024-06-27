@@ -2,7 +2,7 @@ using System.Security.Claims;
 using AutoMapper;
 using Medhub_Backend.Business.Dtos.TestResult;
 using Medhub_Backend.Business.Service.Interface;
-using Medhub_Backend.Domain.Model;
+using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +12,10 @@ namespace MedHub_Backend.WebApi.Controller;
 [Route("api/v1/[controller]")]
 public class TestResultController : ControllerBase
 {
+    private readonly IMapper _mapper;
+    private readonly ITestRequestService _testRequestService;
     private readonly ITestResultService _testResultService;
     private readonly IUserService _userService;
-    private readonly ITestRequestService _testRequestService;
-    private readonly IMapper _mapper;
 
     public TestResultController(
         ITestResultService testResultService,
@@ -39,15 +39,9 @@ public class TestResultController : ControllerBase
         try
         {
             var testRequest = await _testRequestService.GetTestRequestByIdAsync(testResultDto.TestRequestId);
-            if (testRequest == null)
-            {
-                return NotFound($"Test request with id {testResultDto.TestRequestId} not found");
-            }
+            if (testRequest == null) return NotFound($"Test request with id {testResultDto.TestRequestId} not found");
 
-            if (!ValidateTestTypeIds(testRequest, testResultDto.TestTypesIds))
-            {
-                return BadRequest("Invalid test type IDs for this test request");
-            }
+            if (!ValidateTestTypeIds(testRequest, testResultDto.TestTypesIds)) return BadRequest("Invalid test type IDs for this test request");
 
             var testResult = _mapper.Map<TestResult>(testResultDto);
             var createdTestResult = await _testResultService.CreateTestResultWithFile(testResult, testResultDto.TestTypesIds, testRequest, formFile);

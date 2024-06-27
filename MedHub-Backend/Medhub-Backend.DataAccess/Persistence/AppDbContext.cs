@@ -1,4 +1,4 @@
-﻿using Medhub_Backend.Domain.Model;
+﻿using Medhub_Backend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Medhub_Backend.DataAccess.Persistence;

@@ -7,7 +7,7 @@ using Medhub_Backend.Business.Dtos.TestRequest;
 using Medhub_Backend.Business.Dtos.TestResult;
 using Medhub_Backend.Business.Dtos.TestType;
 using Medhub_Backend.Business.Dtos.User;
-using Medhub_Backend.Domain.Model;
+using Medhub_Backend.Domain.Entities;
 
 namespace MedHub_Backend.WebApi;
 

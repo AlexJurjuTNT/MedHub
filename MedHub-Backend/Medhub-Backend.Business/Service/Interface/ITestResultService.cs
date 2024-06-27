@@ -1,4 +1,4 @@
-using Medhub_Backend.Domain.Model;
+using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace Medhub_Backend.Business.Service.Interface;

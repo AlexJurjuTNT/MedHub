@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Medhub_Backend.Domain.Model;
+namespace Medhub_Backend.Domain.Entities;
 
 [Table("test_request")]
 public class TestRequest

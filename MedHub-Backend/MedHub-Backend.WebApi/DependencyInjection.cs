@@ -66,7 +66,7 @@ public static class DependencyInjection
 
         return services;
     }
-    
+
     private static IServiceCollection AddGlobalExceptionHandling(this IServiceCollection services)
     {
         services.AddExceptionHandler<GlobalExceptionHandler>();

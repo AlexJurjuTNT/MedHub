@@ -1,4 +1,4 @@
-using Medhub_Backend.Domain.Model;
+using Medhub_Backend.Domain.Entities;
 
 namespace Medhub_Backend.Business.Service.Interface;
 

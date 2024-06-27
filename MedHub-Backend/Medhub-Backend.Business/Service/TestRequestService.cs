@@ -1,6 +1,6 @@
 using Medhub_Backend.Business.Service.Interface;
 using Medhub_Backend.DataAccess.Persistence;
-using Medhub_Backend.Domain.Model;
+using Medhub_Backend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Medhub_Backend.Business.Service;
