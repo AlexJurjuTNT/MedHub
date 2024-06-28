@@ -182,10 +182,15 @@ export class PatientTestsComponent implements OnInit {
 
   // todo: if admin does this then make it so the admin can chose a doctor in the popup
   private getCurrentUser() {
-    this.authService.getUser().then((e) => {
-      if (e.data) {
-        this.doctor = e.data;
-        console.log(this.doctor)
+    this.authService.getUser().subscribe({
+      next: (result) => {
+        if (result.isOk && result.data) {
+          this.doctor = result.data;
+          console.log(this.doctor);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching current user:', error);
       }
     });
   }

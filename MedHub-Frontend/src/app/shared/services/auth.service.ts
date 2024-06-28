@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
-import {UserDto, UserService} from "./swagger";
+import {AuthenticationService, LoginRequest, UserDto, UserService} from "./swagger";
 import {TokenService} from "./token.service";
+import {catchError, map, Observable, of, switchMap, tap} from "rxjs";
 
 const defaultPath = '/home';
 
@@ -12,6 +13,7 @@ export class AuthService {
   constructor(
     private router: Router,
     private userService: UserService,
+    private authenticationService: AuthenticationService,
     private tokenService: TokenService
   ) {
   }
@@ -20,7 +22,6 @@ export class AuthService {
     return !!this._user;
   }
 
-  // todo: change default path when logging in, patient->Tests
   private _lastAuthenticatedPath: string = defaultPath;
 
   set lastAuthenticatedPath(value: string) {
@@ -32,44 +33,42 @@ export class AuthService {
       this.userService.getUserById(this.tokenService.getUserId()).subscribe({
         next: (result) => {
           this._user = result;
+          this.router.navigate([this._lastAuthenticatedPath]);
         }
       })
     }
   }
 
-
   setUser(userDto: UserDto) {
     this._user = userDto;
   }
 
-  async getUser() {
-    try {
-      // Send request
 
-      return {
-        isOk: true,
-        data: this._user
-      };
-    } catch {
-      return {
-        isOk: false,
-        data: null
-      };
-    }
+  logIn(username: string, password: string): Observable<{ isOk: boolean; data?: UserDto; message?: string }> {
+    const loginRequest: LoginRequest = {username, password};
+
+    return this.authenticationService.login(loginRequest).pipe(
+      switchMap(authResponse => {
+        this.tokenService.token = authResponse.token;
+        return this.userService.getUserById(authResponse.userId);
+      }),
+      tap(user => {
+        this._user = user;
+        this.router.navigate([this._lastAuthenticatedPath]);
+      }),
+      map(user => ({isOk: true, data: user})),
+      catchError(error => {
+        console.error('Authentication failed', error);
+        return of({isOk: false, message: "Authentication failed"});
+      })
+    );
   }
 
-  getUserSync() {
-    try {
-      return {
-        isOk: true,
-        data: this._user
-      }
-    } catch {
-      return {
-        isOk: false,
-        data: null
-      }
-    }
+  getUser(): Observable<{ isOk: boolean; data: UserDto | null }> {
+    return of({
+      isOk: !!this._user,
+      data: this._user
+    });
   }
 
   async createAccount(email: string, password: string) {
@@ -127,7 +126,10 @@ export class AuthService {
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {
   }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
@@ -136,6 +138,7 @@ export class AuthGuardService implements CanActivate {
       'login-form',
       'reset-password',
       'change-password',
+      'change-default-password'
     ].includes(route.routeConfig?.path || defaultPath);
 
     if (isLoggedIn && isAuthForm) {

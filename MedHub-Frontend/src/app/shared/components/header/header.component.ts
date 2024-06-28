@@ -47,8 +47,19 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.getUser().then((e) => this.user = e.data);
-  }
+    this.authService.getUser().subscribe({
+      next: (result) => {
+        if (result.isOk) {
+          this.user = result.data;
+        } else {
+          console.log('No user data available');
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching user data:', error);
+      }
+    });
+  };
 
   toggleMenu = () => {
     this.menuToggle.emit();
