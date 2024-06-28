@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Medhub_Backend.Application.Service.Interface;
+namespace Medhub_Backend.Application.Abstractions.Service;
 
 public interface IFileService
 {

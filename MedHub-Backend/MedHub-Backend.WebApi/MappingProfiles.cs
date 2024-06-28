@@ -8,6 +8,7 @@ using Medhub_Backend.Application.Dtos.TestResult;
 using Medhub_Backend.Application.Dtos.TestType;
 using Medhub_Backend.Application.Dtos.User;
 using Medhub_Backend.Domain.Entities;
+using CreateTestRequestRequest = Medhub_Backend.Application.Dtos.TestRequest.CreateTestRequestRequest;
 
 namespace MedHub_Backend.WebApi;
 
@@ -16,35 +17,38 @@ public class MappingProfiles : Profile
     public MappingProfiles()
     {
         CreateMap<User, UserDto>();
-        CreateMap<UserDto, User>();
-
         CreateMap<UpdateUserRequest, User>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<UserRegisterRequest, User>();
         CreateMap<PatientRegisterRequest, User>();
 
-        CreateMap<AddClinicDto, Clinic>();
-        CreateMap<UpdateClinicDto, Clinic>();
         CreateMap<Clinic, ClinicDto>();
+        CreateMap<AddClinicRequest, Clinic>();
+        CreateMap<UpdateClinicRequest, Clinic>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-        CreateMap<AddPatientDataDto, Patient>();
-        CreateMap<UpdatePatientDto, Patient>();
         CreateMap<Patient, PatientDto>();
+        CreateMap<UpdatePatientRequest, Patient>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<AddPatientInformationRequest, Patient>();
 
         CreateMap<TestRequest, TestRequestDto>();
-        CreateMap<UpdateTestRequestDto, TestRequest>();
-        CreateMap<AddTestRequestDto, TestRequest>();
+        CreateMap<UpdateTestRequestDto, TestRequest>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<CreateTestRequestRequest, TestRequest>();
 
-        CreateMap<AddTestResultDto, TestResult>();
-        CreateMap<TestResult, AddTestResultDto>();
         CreateMap<TestResult, TestResultDto>();
+        CreateMap<CreateTestResultRequest, TestResult>();
 
-        CreateMap<AddTestTypeDto, TestType>();
-        CreateMap<TestTypeDto, TestType>();
         CreateMap<TestType, TestTypeDto>();
+        CreateMap<UpdateTestTypeRequest, TestType>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<CreateTestTypeRequest, TestType>();
 
-        CreateMap<LaboratoryDto, Laboratory>();
-        CreateMap<CreateLaboratoryRequest, Laboratory>();
+
         CreateMap<Laboratory, LaboratoryDto>();
+        CreateMap<UpdateLaboratoryRequest, Laboratory>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        CreateMap<CreateLaboratoryRequest, Laboratory>();
     }
 }

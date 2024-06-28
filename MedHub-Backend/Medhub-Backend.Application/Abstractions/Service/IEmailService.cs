@@ -1,6 +1,6 @@
 using Medhub_Backend.Domain.Entities;
 
-namespace Medhub_Backend.Application.Service.Interface;
+namespace Medhub_Backend.Application.Abstractions.Service;
 
 public interface IEmailService
 {

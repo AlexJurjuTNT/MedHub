@@ -1,6 +1,6 @@
 using Medhub_Backend.Application.Abstractions.Persistence;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Application.Helper;
-using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
@@ -28,17 +28,17 @@ public class TestResultService : ITestResultService
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public IQueryable<TestResult> GetAllTestResultsAsync()
+    public IQueryable<TestResult> GetAllAsync()
     {
         return _testResultRepository.GetAll();
     }
 
-    public async Task<TestResult?> GetTestResultByIdAsync(int testResultId)
+    public async Task<TestResult?> GetByIdAsync(int testResultId)
     {
         return await _testResultRepository.GetByIdAsync(testResultId);
     }
 
-    public async Task<bool> DeleteTestResultAsync(int testResultId)
+    public async Task<bool> DeleteByIdAsync(int testResultId)
     {
         var testResult = await _testResultRepository.GetByIdAsync(testResultId);
         if (testResult == null) return false;
@@ -59,7 +59,7 @@ public class TestResultService : ITestResultService
 
     public async Task<(byte[], string, string)?> DownloadTestResultPdf(int resultId)
     {
-        var testResult = await GetTestResultByIdAsync(resultId);
+        var testResult = await GetByIdAsync(resultId);
         if (testResult == null) return null;
         return await _fileService.DownloadFile(testResult.FilePath);
     }

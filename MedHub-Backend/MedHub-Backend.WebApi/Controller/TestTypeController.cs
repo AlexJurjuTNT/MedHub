@@ -2,8 +2,8 @@ using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Application.Dtos.TestType;
-using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +28,7 @@ public class TestTypeController : ControllerBase
     [ProducesResponseType(200, Type = typeof(LoadResult))]
     public async Task<IActionResult> GetAllTestTypes([FromQuery] DataSourceLoadOptions loadOptions)
     {
-        var testTypes = _testTypeService.GetAllTestTypesAsync();
+        var testTypes = _testTypeService.GetAllAsync();
         var loadedTestTypes = await DataSourceLoader.LoadAsync(testTypes, loadOptions);
         loadedTestTypes.data = _mapper.Map<List<TestTypeDto>>(loadedTestTypes.data);
         return Ok(loadedTestTypes);
@@ -39,29 +39,37 @@ public class TestTypeController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetTestTypeById([FromRoute] int testTypeId)
     {
-        var testType = await _testTypeService.GetTestTypeByIdAsync(testTypeId);
+        var testType = await _testTypeService.GetByIdAsync(testTypeId);
         if (testType == null) return NotFound($"TestType with id {testTypeId} not found");
 
-        return Ok(_mapper.Map<TestTypeDto>(testType));
+        var testTypeDto = _mapper.Map<TestTypeDto>(testType);
+        return Ok(testTypeDto);
     }
 
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(TestTypeDto))]
-    public async Task<IActionResult> CreateTestType([FromBody] AddTestTypeDto testTypeDto)
+    public async Task<IActionResult> CreateTestType([FromBody] CreateTestTypeRequest testTypeRequest)
     {
-        var testType = _mapper.Map<TestType>(testTypeDto);
-        var createdTestType = await _testTypeService.CreateTestTypeAsync(testType);
+        var testType = _mapper.Map<TestType>(testTypeRequest);
+        var createdTestType = await _testTypeService.CreateAsync(testType);
         return CreatedAtAction(nameof(GetTestTypeById), new { testTypeId = createdTestType.Id }, _mapper.Map<TestTypeDto>(createdTestType));
     }
 
     [HttpPut("{testTypeId}")]
     [ProducesResponseType(200, Type = typeof(TestTypeDto))]
-    public async Task<IActionResult> UpdateTestType([FromRoute] int testTypeId, [FromBody] TestTypeDto testTypeDto)
+    public async Task<IActionResult> UpdateTestType([FromRoute] int testTypeId, [FromBody] UpdateTestTypeRequest request)
     {
-        if (testTypeId != testTypeDto.Id) return BadRequest();
-        var testType = _mapper.Map<TestType>(testTypeDto);
-        var updatedTestType = await _testTypeService.UpdateTestTypeAsync(testType);
-        return Ok(_mapper.Map<TestTypeDto>(updatedTestType));
+        if (testTypeId != request.Id) return BadRequest();
+
+        var existingTestType = await _testTypeService.GetByIdAsync(testTypeId);
+        if (existingTestType == null) return NotFound();
+
+        _mapper.Map(request, existingTestType);
+
+        var updatedTestType = await _testTypeService.UpdateAsync(existingTestType);
+        var updatedTestTypeDto = _mapper.Map<TestTypeDto>(updatedTestType);
+
+        return Ok(updatedTestTypeDto);
     }
 
 
@@ -70,9 +78,8 @@ public class TestTypeController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> DeleteTestType([FromRoute] int testTypeId)
     {
-        var result = await _testTypeService.DeleteTestTypeByIdAsync(testTypeId);
+        var result = await _testTypeService.DeleteByIdAsync(testTypeId);
         if (!result) return NotFound($"TestType with id {testTypeId} not found");
-
         return NoContent();
     }
 }

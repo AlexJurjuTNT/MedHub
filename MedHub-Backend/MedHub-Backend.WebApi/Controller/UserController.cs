@@ -2,8 +2,8 @@ using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Application.Dtos.User;
-using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +26,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(200, Type = typeof(LoadResult))]
     public async Task<IActionResult> GetAllUsers([FromQuery] DataSourceLoadOptions loadOptions)
     {
-        var users = _userService.GetAllUsers();
+        var users = _userService.GetAll();
         var loadedUsers = await DataSourceLoader.LoadAsync(users, loadOptions);
         loadedUsers.data = _mapper.Map<List<UserDto>>(loadedUsers.data);
         return Ok(loadedUsers);
@@ -37,10 +37,11 @@ public class UserController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetUserById([FromRoute] int userId)
     {
-        var user = await _userService.GetUserByIdAsync(userId);
+        var user = await _userService.GetByIdAsync(userId);
         if (user == null) return NotFound($"User with id {userId} not found");
 
-        return Ok(_mapper.Map<UserDto>(user));
+        var userDto = _mapper.Map<UserDto>(user);
+        return Ok(userDto);
     }
 
     [HttpPost]
@@ -48,7 +49,7 @@ public class UserController : ControllerBase
     public async Task<IActionResult> CreateUser([FromBody] UserDto userDto)
     {
         var user = _mapper.Map<User>(userDto);
-        var createdUser = await _userService.CreateUserAsync(user);
+        var createdUser = await _userService.CreateAsync(user);
         return CreatedAtAction(nameof(GetUserById), new { userId = createdUser.Id }, _mapper.Map<UserDto>(createdUser));
     }
 
@@ -57,12 +58,12 @@ public class UserController : ControllerBase
     [ProducesResponseType(200, Type = typeof(UserDto))]
     public async Task<IActionResult> UpdateUser([FromRoute] int userId, [FromBody] UpdateUserRequest updateUserRequest)
     {
-        var existingUser = await _userService.GetUserByIdAsync(userId);
+        var existingUser = await _userService.GetByIdAsync(userId);
         if (existingUser == null) return NotFound($"User with id {userId} not found");
 
         _mapper.Map(updateUserRequest, existingUser);
 
-        var updatedUser = await _userService.UpdateUserAsync(existingUser);
+        var updatedUser = await _userService.UpdateAsync(existingUser);
         var updatedUserDto = _mapper.Map<UserDto>(updatedUser);
 
         return Ok(updatedUserDto);
@@ -73,7 +74,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> DeleteUser([FromRoute] int userId)
     {
-        var result = await _userService.DeleteUserAsync(userId);
+        var result = await _userService.DeleteByIdAsync(userId);
         if (!result) return NotFound($"User with id {userId} not found");
 
         return NoContent();

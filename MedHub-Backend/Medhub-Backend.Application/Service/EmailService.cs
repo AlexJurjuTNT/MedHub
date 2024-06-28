@@ -1,4 +1,4 @@
-using Medhub_Backend.Application.Service.Interface;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Domain.Entities;
 using SendGrid;
 using SendGrid.Helpers.Mail;

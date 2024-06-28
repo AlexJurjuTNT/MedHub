@@ -1,5 +1,5 @@
 using Medhub_Backend.Application.Abstractions.Persistence;
-using Medhub_Backend.Application.Service.Interface;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Domain.Entities;
 
 namespace Medhub_Backend.Application.Service;
@@ -15,7 +15,7 @@ public class PatientService : IPatientService
         _patientRepository = patientRepository;
     }
 
-    public async Task<Patient> CreatePatientAsync(Patient patient)
+    public async Task<Patient> CreateAsync(Patient patient)
     {
         await _patientRepository.AddAsync(patient);
         return patient;
@@ -27,18 +27,18 @@ public class PatientService : IPatientService
         return users.Where(u => u.Role.Name == "Patient");
     }
 
-    public async Task<Patient?> GetPatientAsync(int patientId)
+    public async Task<Patient?> GetByIdAsync(int patientId)
     {
         return await _patientRepository.GetByIdAsync(patientId);
     }
 
-    public async Task<Patient> UpdatePatientAsync(Patient patient)
+    public async Task<Patient> UpdateAsync(Patient patient)
     {
         await _patientRepository.UpdateAsync(patient);
         return patient;
     }
 
-    public async Task<bool> DeletePatientAsync(int patientId)
+    public async Task<bool> DeleteAsync(int patientId)
     {
         var patient = await _patientRepository.GetByIdAsync(patientId);
         if (patient == null) return false;

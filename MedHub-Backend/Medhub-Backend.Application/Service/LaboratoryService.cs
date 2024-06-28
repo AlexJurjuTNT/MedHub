@@ -1,5 +1,5 @@
 using Medhub_Backend.Application.Abstractions.Persistence;
-using Medhub_Backend.Application.Service.Interface;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Domain.Entities;
 
 namespace Medhub_Backend.Application.Service;
@@ -13,24 +13,24 @@ public class LaboratoryService : ILaboratoryService
         _laboratoryRepository = laboratoryRepository;
     }
 
-    public IQueryable<Laboratory> GetAllLaboratoriesAsync()
+    public IQueryable<Laboratory> GetAllAsync()
     {
         return _laboratoryRepository.GetAll();
     }
 
-    public async Task<Laboratory?> GetLaboratoryByIdAsync(int laboratoryId)
+    public async Task<Laboratory?> GetByIdAsync(int laboratoryId)
     {
         return await _laboratoryRepository.GetByIdAsync(laboratoryId);
     }
 
-    public async Task<Laboratory> CreateLaboratoryAsync(Laboratory laboratory, List<TestType> testTypes)
+    public async Task<Laboratory> CreateAsync(Laboratory laboratory, List<TestType> testTypes)
     {
         laboratory.TestTypes = testTypes;
         await _laboratoryRepository.AddAsync(laboratory);
         return laboratory;
     }
 
-    public async Task<bool> DeleteLaboratoryAsync(int laboratoryId)
+    public async Task<bool> DeleteAsync(int laboratoryId)
     {
         var laboratory = await _laboratoryRepository.GetByIdAsync(laboratoryId);
         if (laboratory == null) return false;
@@ -39,7 +39,7 @@ public class LaboratoryService : ILaboratoryService
         return true;
     }
 
-    public async Task<Laboratory> UpdateLaboratoryAsync(Laboratory laboratory)
+    public async Task<Laboratory> UpdateAsync(Laboratory laboratory)
     {
         await _laboratoryRepository.UpdateAsync(laboratory);
         return laboratory;

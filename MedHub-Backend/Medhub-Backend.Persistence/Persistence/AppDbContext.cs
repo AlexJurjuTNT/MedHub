@@ -28,7 +28,7 @@ public class AppDbContext : DbContext
     {
         var encryptionKey = _configuration["ColumnEncryptionKey"];
         modelBuilder.UseEncryption(new GenerateEncryptionProvider(encryptionKey));
-        
+
         modelBuilder.Entity<TestRequest>()
             .HasMany(tr => tr.TestTypes)
             .WithMany(tt => tt.TestRequests);

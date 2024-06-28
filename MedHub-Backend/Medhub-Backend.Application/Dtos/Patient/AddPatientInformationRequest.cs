@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Medhub_Backend.Application.Dtos.Patient;
 
-public class AddPatientDataDto
+public class AddPatientInformationRequest
 {
     [Required]
     public string Cnp { get; set; } = null!;

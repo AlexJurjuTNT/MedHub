@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using AutoMapper;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Application.Dtos.TestResult;
-using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,19 +32,19 @@ public class TestResultController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(200, Type = typeof(TestResultDto))]
-    public async Task<IActionResult> AddTestResult([FromForm] AddTestResultDto testResultDto, IFormFile formFile)
+    public async Task<IActionResult> AddTestResult([FromForm] CreateTestResultRequest testResultRequest, IFormFile formFile)
     {
         if (!ModelState.IsValid || formFile == null) return BadRequest(ModelState);
 
         try
         {
-            var testRequest = await _testRequestService.GetTestRequestByIdAsync(testResultDto.TestRequestId);
-            if (testRequest == null) return NotFound($"Test request with id {testResultDto.TestRequestId} not found");
+            var testRequest = await _testRequestService.GetByIdAsync(testResultRequest.TestRequestId);
+            if (testRequest == null) return NotFound($"Test request with id {testResultRequest.TestRequestId} not found");
 
-            if (!ValidateTestTypeIds(testRequest, testResultDto.TestTypesIds)) return BadRequest("Invalid test type IDs for this test request");
+            if (!ValidateTestTypeIds(testRequest, testResultRequest.TestTypesIds)) return BadRequest("Invalid test type IDs for this test request");
 
-            var testResult = _mapper.Map<TestResult>(testResultDto);
-            var createdTestResult = await _testResultService.CreateTestResultWithFile(testResult, testResultDto.TestTypesIds, testRequest, formFile);
+            var testResult = _mapper.Map<TestResult>(testResultRequest);
+            var createdTestResult = await _testResultService.CreateTestResultWithFile(testResult, testResultRequest.TestTypesIds, testRequest, formFile);
             return Ok(_mapper.Map<TestResultDto>(createdTestResult));
         }
         catch (ArgumentException ex)
@@ -62,7 +62,7 @@ public class TestResultController : ControllerBase
         if (user == null)
             return Unauthorized("Invalid user");
 
-        var testResult = await _testResultService.GetTestResultByIdAsync(resultId);
+        var testResult = await _testResultService.GetByIdAsync(resultId);
         if (testResult == null) return NotFound();
 
         if (!IsUserAuthorizedForTestResult(user, testResult))
@@ -78,7 +78,7 @@ public class TestResultController : ControllerBase
     [HttpDelete("{testResultId}")]
     public async Task<IActionResult> DeleteTestResult([FromRoute] int testResultId)
     {
-        var result = await _testResultService.DeleteTestResultAsync(testResultId);
+        var result = await _testResultService.DeleteByIdAsync(testResultId);
         if (!result) return NotFound($"Test result with id {testResultId} not found");
 
         return Ok();
@@ -88,7 +88,7 @@ public class TestResultController : ControllerBase
     [ProducesResponseType(200, Type = typeof(List<TestResultDto>))]
     public IActionResult GetAllTestResults()
     {
-        var testResults = _testResultService.GetAllTestResultsAsync();
+        var testResults = _testResultService.GetAllAsync();
         var testResultsDto = _mapper.Map<List<TestResultDto>>(testResults);
         return Ok(testResultsDto);
     }
@@ -99,7 +99,7 @@ public class TestResultController : ControllerBase
         if (string.IsNullOrEmpty(username))
             return null;
 
-        return _userService.GetUserByUsername(username);
+        return _userService.GetByUsername(username);
     }
 
     private bool IsUserAuthorizedForTestResult(User user, TestResult testResult)

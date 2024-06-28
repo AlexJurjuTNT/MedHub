@@ -1,6 +1,6 @@
 using System.Text;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Application.Service;
-using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Application.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -46,7 +46,7 @@ public static class DependencyInjection
         configuration.Bind(JwtSettings.SectionName, jwtSettings);
 
         services.AddSingleton(Options.Create(jwtSettings));
-        services.AddSingleton<IJwtGenerator, JwtGenerator>();
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
         services.AddAuthentication(x =>
         {

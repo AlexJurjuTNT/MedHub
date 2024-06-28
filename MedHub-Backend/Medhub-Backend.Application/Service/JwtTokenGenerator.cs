@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Medhub_Backend.Application.Service.Interface;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Application.Settings;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.Extensions.Options;
@@ -10,12 +10,12 @@ using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegiste
 
 namespace Medhub_Backend.Application.Service;
 
-public class JwtGenerator : IJwtGenerator
+public class JwtTokenGenerator : IJwtTokenGenerator
 {
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly JwtSettings _jwtSettings;
 
-    public JwtGenerator(IDateTimeProvider dateTimeProvider, IOptions<JwtSettings> jwtSettings)
+    public JwtTokenGenerator(IDateTimeProvider dateTimeProvider, IOptions<JwtSettings> jwtSettings)
     {
         _dateTimeProvider = dateTimeProvider;
         _jwtSettings = jwtSettings.Value;

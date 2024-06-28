@@ -1,5 +1,5 @@
 using Medhub_Backend.Application.Abstractions.Persistence;
-using Medhub_Backend.Application.Service.Interface;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Domain.Entities;
 
 namespace Medhub_Backend.Application.Service;
@@ -13,29 +13,29 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
-    public async Task<User> CreateUserAsync(User user)
+    public async Task<User> CreateAsync(User user)
     {
         await _userRepository.AddAsync(user);
         return user;
     }
 
-    public async Task<User?> GetUserByIdAsync(int userId)
+    public async Task<User?> GetByIdAsync(int userId)
     {
         return await _userRepository.GetByIdAsync(userId);
     }
 
-    public IQueryable<User> GetAllUsers()
+    public IQueryable<User> GetAll()
     {
         return _userRepository.GetAll();
     }
 
-    public async Task<User> UpdateUserAsync(User user)
+    public async Task<User> UpdateAsync(User user)
     {
         await _userRepository.UpdateAsync(user);
         return user;
     }
 
-    public async Task<bool> DeleteUserAsync(int userId)
+    public async Task<bool> DeleteByIdAsync(int userId)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null) return false;
@@ -44,13 +44,13 @@ public class UserService : IUserService
         return true;
     }
 
-    public User? GetUserByEmail(string email)
+    public User? GetByEmail(string email)
     {
         var users = _userRepository.GetAll();
         return users.FirstOrDefault(u => u.Email == email);
     }
 
-    public User? GetUserByUsername(string username)
+    public User? GetByUsername(string username)
     {
         var users = _userRepository.GetAll();
         return users.FirstOrDefault(u => u.Username == username);

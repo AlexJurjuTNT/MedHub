@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Medhub_Backend.Application.Dtos.TestRequest;
 
-public class AddTestRequestDto
+public class CreateTestRequestRequest
 {
     [Required]
     public int PatientId { get; set; }

@@ -1,5 +1,5 @@
 using Medhub_Backend.Application.Abstractions.Persistence;
-using Medhub_Backend.Application.Service.Interface;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,30 +16,30 @@ public class TestRequestService : ITestRequestService
         _emailService = emailService;
     }
 
-    public IQueryable<TestRequest> GetAllTestRequestsAsync()
+    public IQueryable<TestRequest> GetAllAsync()
     {
         return _testRequestRepository.GetAllAsync();
     }
 
-    public async Task<TestRequest?> GetTestRequestByIdAsync(int testRequestId)
+    public async Task<TestRequest?> GetByIdAsync(int testRequestId)
     {
         return await _testRequestRepository.GetByIdAsync(testRequestId);
     }
 
-    public async Task<TestRequest> CreateNewTestRequestAsync(TestRequest testRequest, Clinic clinic)
+    public async Task<TestRequest> CreateAsync(TestRequest testRequest, Clinic clinic)
     {
         await _testRequestRepository.AddAsync(testRequest);
         await _emailService.SendCreatedTestRequestEmail(clinic, testRequest);
         return testRequest;
     }
 
-    public async Task<TestRequest> UpdateTestRequestAsync(TestRequest testRequest)
+    public async Task<TestRequest> UpdateAsync(TestRequest testRequest)
     {
         await _testRequestRepository.UpdateAsync(testRequest);
         return testRequest;
     }
 
-    public async Task<bool> DeleteTestRequestAsync(int testRequestId)
+    public async Task<bool> DeleteAsync(int testRequestId)
     {
         var testRequest = await _testRequestRepository.GetByIdAsync(testRequestId);
         if (testRequest == null) return false;

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Medhub_Backend.Application.Dtos.Clinic;
 
-public class UpdateClinicDto
+public class UpdateClinicRequest
 {
     [Required]
     public int Id { get; set; }

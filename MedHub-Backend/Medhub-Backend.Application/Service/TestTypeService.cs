@@ -1,5 +1,5 @@
 using Medhub_Backend.Application.Abstractions.Persistence;
-using Medhub_Backend.Application.Service.Interface;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,29 +14,29 @@ public class TestTypeService : ITestTypeService
         _testTypeRepository = testTypeRepository;
     }
 
-    public IQueryable<TestType> GetAllTestTypesAsync()
+    public IQueryable<TestType> GetAllAsync()
     {
         return _testTypeRepository.GetAllAsync();
     }
 
-    public async Task<TestType?> GetTestTypeByIdAsync(int testTypeId)
+    public async Task<TestType?> GetByIdAsync(int testTypeId)
     {
         return await _testTypeRepository.GetByIdAsync(testTypeId);
     }
 
-    public async Task<TestType> CreateTestTypeAsync(TestType testType)
+    public async Task<TestType> CreateAsync(TestType testType)
     {
         await _testTypeRepository.AddAsync(testType);
         return testType;
     }
 
-    public async Task<TestType> UpdateTestTypeAsync(TestType testType)
+    public async Task<TestType> UpdateAsync(TestType testType)
     {
         await _testTypeRepository.UpdateAsync(testType);
         return testType;
     }
 
-    public async Task<bool> DeleteTestTypeByIdAsync(int testTypeId)
+    public async Task<bool> DeleteByIdAsync(int testTypeId)
     {
         var testType = await _testTypeRepository.GetByIdAsync(testTypeId);
         if (testType == null) return false;

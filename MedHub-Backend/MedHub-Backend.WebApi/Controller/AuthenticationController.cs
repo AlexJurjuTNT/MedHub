@@ -1,7 +1,7 @@
 using AutoMapper;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Application.Dtos.Authentication;
 using Medhub_Backend.Application.Dtos.User;
-using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +37,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("register-admin")]
     public async Task<IActionResult> RegisterAdmin([FromBody] UserRegisterRequest userRegisterRequest)
     {
-        var clinic = await _clinicService.GetClinicByIdAsync(userRegisterRequest.ClinicId);
+        var clinic = await _clinicService.GetByIdAsync(userRegisterRequest.ClinicId);
         if (clinic is null) return NotFound();
 
         var user = _mapper.Map<User>(userRegisterRequest);
@@ -75,7 +75,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDto resetPasswordRequestDto)
     {
-        var existingUser = _userService.GetUserByEmail(resetPasswordRequestDto.Email);
+        var existingUser = _userService.GetByEmail(resetPasswordRequestDto.Email);
         if (existingUser == null) return NotFound($"User with email {resetPasswordRequestDto.Email} not found");
 
         if (existingUser.PasswordResetCode != resetPasswordRequestDto.PasswordResetCode) return BadRequest("Reset codes don't match");
@@ -88,7 +88,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("change-default-password")]
     public async Task<IActionResult> ChangeDefaultPassword([FromBody] ChangeDefaultPasswordDto changeDefaultPasswordDto)
     {
-        var user = await _userService.GetUserByIdAsync(changeDefaultPasswordDto.UserId);
+        var user = await _userService.GetByIdAsync(changeDefaultPasswordDto.UserId);
         if (user == null) return NotFound();
 
         if (changeDefaultPasswordDto.Password != changeDefaultPasswordDto.ConfirmPassword) return BadRequest();

@@ -1,5 +1,5 @@
 using Medhub_Backend.Application.Abstractions.Persistence;
-using Medhub_Backend.Application.Service.Interface;
+using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Domain.Entities;
 
 namespace Medhub_Backend.Application.Service;
@@ -13,20 +13,20 @@ public class DoctorService : IDoctorService
         _userRepository = userRepository;
     }
 
-    public IQueryable<User> GetAllDoctorsAsync()
+    public IQueryable<User> GetAllAsync()
     {
         var users = _userRepository.GetAll();
         return users.Where(u => u.Role.Name == "Doctor");
     }
 
-    public async Task<User?> GetDoctorById(int id)
+    public async Task<User?> GetByIdAsync(int id)
     {
         var doctor = await _userRepository.GetByIdAsync(id);
         if (doctor == null || doctor.Role.Name != "Doctor") return null;
         return doctor;
     }
 
-    public async Task<bool> DeleteDoctorAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
         var doctor = await _userRepository.GetByIdAsync(id);
         if (doctor == null || doctor.Role.Name != "Doctor") return false;
@@ -35,7 +35,7 @@ public class DoctorService : IDoctorService
         return true;
     }
 
-    public async Task<User> UpdateDoctorAsync(User doctor)
+    public async Task<User> UpdateAsync(User doctor)
     {
         await _userRepository.UpdateAsync(doctor);
         return doctor;
