@@ -11,12 +11,17 @@
  *//* tslint:disable:no-unused-variable member-ordering */
 
 import {Inject, Injectable, Optional} from '@angular/core';
-import {HttpClient, HttpEvent, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
+import {CustomHttpUrlEncodingCodec} from '../encoder';
 
 import {Observable} from 'rxjs';
 
 import {CreateLaboratoryRequest} from '../model/createLaboratoryRequest';
+import {GroupingInfo} from '../model/groupingInfo';
 import {LaboratoryDto} from '../model/laboratoryDto';
+import {LoadResult} from '../model/loadResult';
+import {SortingInfo} from '../model/sortingInfo';
+import {SummaryInfo} from '../model/summaryInfo';
 import {UpdateLaboratoryRequest} from '../model/updateLaboratoryRequest';
 
 import {BASE_PATH} from '../variables';
@@ -149,16 +154,123 @@ export class LaboratoryService {
   /**
    *
    *
+   * @param requireTotalCount
+   * @param requireGroupCount
+   * @param isCountQuery
+   * @param isSummaryQuery
+   * @param skip
+   * @param take
+   * @param sort
+   * @param group
+   * @param filter
+   * @param totalSummary
+   * @param groupSummary
+   * @param select
+   * @param preSelect
+   * @param remoteSelect
+   * @param remoteGrouping
+   * @param expandLinqSumType
+   * @param primaryKey
+   * @param defaultSort
+   * @param stringToLower
+   * @param paginateViaPrimaryKey
+   * @param sortByPrimaryKey
+   * @param allowAsyncOverSync
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getAllLaboratories(observe?: 'body', reportProgress?: boolean): Observable<Array<LaboratoryDto>>;
+  public getAllLaboratories(requireTotalCount?: boolean, requireGroupCount?: boolean, isCountQuery?: boolean, isSummaryQuery?: boolean, skip?: number, take?: number, sort?: Array<SortingInfo>, group?: Array<GroupingInfo>, filter?: Array<any>, totalSummary?: Array<SummaryInfo>, groupSummary?: Array<SummaryInfo>, select?: Array<string>, preSelect?: Array<string>, remoteSelect?: boolean, remoteGrouping?: boolean, expandLinqSumType?: boolean, primaryKey?: Array<string>, defaultSort?: string, stringToLower?: boolean, paginateViaPrimaryKey?: boolean, sortByPrimaryKey?: boolean, allowAsyncOverSync?: boolean, observe?: 'body', reportProgress?: boolean): Observable<LoadResult>;
 
-  public getAllLaboratories(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LaboratoryDto>>>;
+  public getAllLaboratories(requireTotalCount?: boolean, requireGroupCount?: boolean, isCountQuery?: boolean, isSummaryQuery?: boolean, skip?: number, take?: number, sort?: Array<SortingInfo>, group?: Array<GroupingInfo>, filter?: Array<any>, totalSummary?: Array<SummaryInfo>, groupSummary?: Array<SummaryInfo>, select?: Array<string>, preSelect?: Array<string>, remoteSelect?: boolean, remoteGrouping?: boolean, expandLinqSumType?: boolean, primaryKey?: Array<string>, defaultSort?: string, stringToLower?: boolean, paginateViaPrimaryKey?: boolean, sortByPrimaryKey?: boolean, allowAsyncOverSync?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoadResult>>;
 
-  public getAllLaboratories(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LaboratoryDto>>>;
+  public getAllLaboratories(requireTotalCount?: boolean, requireGroupCount?: boolean, isCountQuery?: boolean, isSummaryQuery?: boolean, skip?: number, take?: number, sort?: Array<SortingInfo>, group?: Array<GroupingInfo>, filter?: Array<any>, totalSummary?: Array<SummaryInfo>, groupSummary?: Array<SummaryInfo>, select?: Array<string>, preSelect?: Array<string>, remoteSelect?: boolean, remoteGrouping?: boolean, expandLinqSumType?: boolean, primaryKey?: Array<string>, defaultSort?: string, stringToLower?: boolean, paginateViaPrimaryKey?: boolean, sortByPrimaryKey?: boolean, allowAsyncOverSync?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoadResult>>;
 
-  public getAllLaboratories(observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public getAllLaboratories(requireTotalCount?: boolean, requireGroupCount?: boolean, isCountQuery?: boolean, isSummaryQuery?: boolean, skip?: number, take?: number, sort?: Array<SortingInfo>, group?: Array<GroupingInfo>, filter?: Array<any>, totalSummary?: Array<SummaryInfo>, groupSummary?: Array<SummaryInfo>, select?: Array<string>, preSelect?: Array<string>, remoteSelect?: boolean, remoteGrouping?: boolean, expandLinqSumType?: boolean, primaryKey?: Array<string>, defaultSort?: string, stringToLower?: boolean, paginateViaPrimaryKey?: boolean, sortByPrimaryKey?: boolean, allowAsyncOverSync?: boolean, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+
+
+    let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+    if (requireTotalCount !== undefined && requireTotalCount !== null) {
+      queryParameters = queryParameters.set('RequireTotalCount', <any>requireTotalCount);
+    }
+    if (requireGroupCount !== undefined && requireGroupCount !== null) {
+      queryParameters = queryParameters.set('RequireGroupCount', <any>requireGroupCount);
+    }
+    if (isCountQuery !== undefined && isCountQuery !== null) {
+      queryParameters = queryParameters.set('IsCountQuery', <any>isCountQuery);
+    }
+    if (isSummaryQuery !== undefined && isSummaryQuery !== null) {
+      queryParameters = queryParameters.set('IsSummaryQuery', <any>isSummaryQuery);
+    }
+    if (skip !== undefined && skip !== null) {
+      queryParameters = queryParameters.set('Skip', <any>skip);
+    }
+    if (take !== undefined && take !== null) {
+      queryParameters = queryParameters.set('Take', <any>take);
+    }
+    if (sort) {
+      sort.forEach((element) => {
+        queryParameters = queryParameters.append('Sort', <any>element);
+      })
+    }
+    if (group) {
+      group.forEach((element) => {
+        queryParameters = queryParameters.append('Group', <any>element);
+      })
+    }
+    if (filter) {
+      filter.forEach((element) => {
+        queryParameters = queryParameters.append('Filter', <any>element);
+      })
+    }
+    if (totalSummary) {
+      totalSummary.forEach((element) => {
+        queryParameters = queryParameters.append('TotalSummary', <any>element);
+      })
+    }
+    if (groupSummary) {
+      groupSummary.forEach((element) => {
+        queryParameters = queryParameters.append('GroupSummary', <any>element);
+      })
+    }
+    if (select) {
+      select.forEach((element) => {
+        queryParameters = queryParameters.append('Select', <any>element);
+      })
+    }
+    if (preSelect) {
+      preSelect.forEach((element) => {
+        queryParameters = queryParameters.append('PreSelect', <any>element);
+      })
+    }
+    if (remoteSelect !== undefined && remoteSelect !== null) {
+      queryParameters = queryParameters.set('RemoteSelect', <any>remoteSelect);
+    }
+    if (remoteGrouping !== undefined && remoteGrouping !== null) {
+      queryParameters = queryParameters.set('RemoteGrouping', <any>remoteGrouping);
+    }
+    if (expandLinqSumType !== undefined && expandLinqSumType !== null) {
+      queryParameters = queryParameters.set('ExpandLinqSumType', <any>expandLinqSumType);
+    }
+    if (primaryKey) {
+      primaryKey.forEach((element) => {
+        queryParameters = queryParameters.append('PrimaryKey', <any>element);
+      })
+    }
+    if (defaultSort !== undefined && defaultSort !== null) {
+      queryParameters = queryParameters.set('DefaultSort', <any>defaultSort);
+    }
+    if (stringToLower !== undefined && stringToLower !== null) {
+      queryParameters = queryParameters.set('StringToLower', <any>stringToLower);
+    }
+    if (paginateViaPrimaryKey !== undefined && paginateViaPrimaryKey !== null) {
+      queryParameters = queryParameters.set('PaginateViaPrimaryKey', <any>paginateViaPrimaryKey);
+    }
+    if (sortByPrimaryKey !== undefined && sortByPrimaryKey !== null) {
+      queryParameters = queryParameters.set('SortByPrimaryKey', <any>sortByPrimaryKey);
+    }
+    if (allowAsyncOverSync !== undefined && allowAsyncOverSync !== null) {
+      queryParameters = queryParameters.set('AllowAsyncOverSync', <any>allowAsyncOverSync);
+    }
 
     let headers = this.defaultHeaders;
 
@@ -183,8 +295,9 @@ export class LaboratoryService {
     // to determine the Content-Type header
     const consumes: string[] = [];
 
-    return this.httpClient.request<Array<LaboratoryDto>>('get', `${this.basePath}/api/v1/Laboratory`,
+    return this.httpClient.request<LoadResult>('get', `${this.basePath}/api/v1/Laboratory`,
       {
+        params: queryParameters,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
