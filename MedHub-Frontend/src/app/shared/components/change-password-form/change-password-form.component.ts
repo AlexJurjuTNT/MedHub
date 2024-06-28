@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {Component, NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import {ValidationCallbackData} from 'devextreme-angular/common';
 import {DxFormModule} from 'devextreme-angular/ui/form';
 import {DxLoadIndicatorModule} from 'devextreme-angular/ui/load-indicator';
@@ -20,6 +20,7 @@ export class ChangePasswordFormComponent {
   constructor(
     private authenticationService: AuthenticationService,
     private notificationService: NotificationService,
+    private router: Router,
   ) {
   }
 
@@ -38,6 +39,7 @@ export class ChangePasswordFormComponent {
     this.authenticationService.resetPassword(resetRequest).subscribe({
       next: (response) => {
         this.loading = false;
+        this.router.navigate(["/login-form"])
         this.notificationService.success("Password changed successfully.");
       },
       error: err => {
