@@ -56,9 +56,8 @@ public class UserService : IUserService
         return users.FirstOrDefault(u => u.Email == email);
     }
 
-    public User? GetByUsername(string username)
+    public async Task<User?> GetByUsernameAsync(string username)
     {
-        var users = _userRepository.GetAll();
-        return users.FirstOrDefault(u => u.Username == username);
+        return await _userRepository.GetByUsername(username);
     }
 }

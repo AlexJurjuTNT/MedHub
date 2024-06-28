@@ -41,7 +41,9 @@ public class TestResultController : ControllerBase
             var testRequest = await _testRequestService.GetByIdAsync(testResultRequest.TestRequestId);
             if (testRequest == null) return NotFound($"Test request with id {testResultRequest.TestRequestId} not found");
 
-            if (!ValidateTestTypeIds(testRequest, testResultRequest.TestTypesIds)) return BadRequest("Invalid test type IDs for this test request");
+            var validTestTypeIds = testRequest.TestTypes.Select(tt => tt.Id).ToList();
+            var invalidTestTypeIds = testResultRequest.TestTypesIds.Except(validTestTypeIds).ToList();
+            if (invalidTestTypeIds.Any()) return BadRequest("Invalid test type IDs for this test request");
 
             var testResult = _mapper.Map<TestResult>(testResultRequest);
             var createdTestResult = await _testResultService.CreateTestResultWithFile(testResult, testResultRequest.TestTypesIds, testRequest, formFile);
@@ -58,15 +60,23 @@ public class TestResultController : ControllerBase
     [ProducesResponseType(200, Type = typeof(FileResult))]
     public async Task<IActionResult> DownloadPdf([FromRoute] int resultId)
     {
-        var user = GetCurrentUser();
+        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(username))
+            return Unauthorized("Invalid user");
+
+        var user = await _userService.GetByUsernameAsync(username);
         if (user == null)
             return Unauthorized("Invalid user");
 
         var testResult = await _testResultService.GetByIdAsync(resultId);
         if (testResult == null) return NotFound();
 
-        if (!IsUserAuthorizedForTestResult(user, testResult))
+        if ((user.Role.Name == "Patient" && testResult.TestRequest.PatientId != user.Id) ||
+            (user.Role.Name == "Doctor" && testResult.TestRequest.DoctorId != user.Id) ||
+            (user.Role.Name != "Patient" && user.Role.Name != "Doctor"))
+        {
             return Unauthorized("User not authorized to access this result");
+        }
 
         var result = await _testResultService.DownloadTestResultPdf(resultId);
         if (result == null) return NotFound();
@@ -91,32 +101,5 @@ public class TestResultController : ControllerBase
         var testResults = _testResultService.GetAllAsync();
         var testResultsDto = _mapper.Map<List<TestResultDto>>(testResults);
         return Ok(testResultsDto);
-    }
-
-    private User? GetCurrentUser()
-    {
-        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(username))
-            return null;
-
-        return _userService.GetByUsername(username);
-    }
-
-    private bool IsUserAuthorizedForTestResult(User user, TestResult testResult)
-    {
-        if (user.Role.Name == "Patient")
-            return testResult.TestRequest.PatientId == user.Id;
-
-        if (user.Role.Name == "Doctor")
-            return testResult.TestRequest.DoctorId == user.Id;
-
-        return false;
-    }
-
-    private bool ValidateTestTypeIds(TestRequest testRequest, List<int> testTypeIds)
-    {
-        var validTestTypeIds = testRequest.TestTypes.Select(tt => tt.Id).ToList();
-        var invalidTestTypeIds = testTypeIds.Except(validTestTypeIds).ToList();
-        return !invalidTestTypeIds.Any();
     }
 }

@@ -19,6 +19,12 @@ public class RoleService : IRoleService
         return roles.FirstOrDefault(r => r.Name == name);
     }
 
+    public async Task<Role?> GetByIdAsync(int roleId)
+    {
+        var role = await _roleRepository.GetByIdAsync(roleId);
+        return role;
+    }
+
     public async Task<Role> CreateAsync(Role role)
     {
         if (role == null) throw new ArgumentNullException(nameof(role));

@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.WebApi.Controller;
 
-[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class ClinicController : ControllerBase

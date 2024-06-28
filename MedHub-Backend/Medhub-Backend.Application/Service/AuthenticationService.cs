@@ -27,7 +27,7 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<User> RegisterPatientAsync(User user)
     {
-        var userByUsername = _userService.GetByUsername(user.Username);
+        User? userByUsername = await _userService.GetByUsernameAsync(user.Username);
         if (userByUsername != null) throw new UserAlreadyExistsException(user.Username);
 
         var clinic = await _clinicService.GetByIdAsync(user.ClinicId);
@@ -50,7 +50,7 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<User> RegisterDoctorAsync(User user)
     {
-        var userByUsername = _userService.GetByUsername(user.Username);
+        User? userByUsername = await _userService.GetByUsernameAsync(user.Username);
         if (userByUsername != null) throw new UserAlreadyExistsException(user.Username);
 
         var clinic = await _clinicService.GetByIdAsync(user.ClinicId);
@@ -64,7 +64,7 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<User> RegisterAdminAsync(User user)
     {
-        var userByUsername = _userService.GetByUsername(user.Username);
+        User? userByUsername = await _userService.GetByUsernameAsync(user.Username);
         if (userByUsername != null) throw new UserAlreadyExistsException(user.Username);
 
         user.Role = _roleService.GetByName("Admin")!;
@@ -73,25 +73,27 @@ public class AuthenticationService : IAuthenticationService
         return await _userService.CreateAsync(user);
     }
 
-    public AuthenticationResponse LoginUserAsync(LoginRequest loginRequest)
+    public async Task<AuthenticationResponse> LoginUserAsync(LoginRequest loginRequest)
     {
-        var user = _userService.GetByUsername(loginRequest.Username);
+        var user = await _userService.GetByUsernameAsync(loginRequest.Username);
         if (user == null) throw new UserNotFoundException(loginRequest.Username);
 
         if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password)) throw new PasswordMismatchException();
 
-        return new AuthenticationResponse
+        AuthenticationResponse response = new AuthenticationResponse
         {
             Token = _jwtTokenGenerator.GenerateToken(user),
             UserId = user.Id,
             HasToResetPassword = user.HasToResetPassword
         };
+
+        return response;
     }
 
 
     public async Task ForgotPassword(ForgotPasswordRequest forgotPasswordRequest)
     {
-        var user = _userService.GetByUsername(forgotPasswordRequest.Username);
+        User? user = await _userService.GetByUsernameAsync(forgotPasswordRequest.Username);
         if (user == null) throw new UserNotFoundException(forgotPasswordRequest.Username);
 
         user.PasswordResetCode = _passwordService.GenerateRandomPassword(8);

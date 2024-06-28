@@ -5,7 +5,7 @@ namespace Medhub_Backend.Application.Dtos.Authentication;
 public class AuthenticationResponse
 {
     [Required]
-    public string Token { get; set; } = null!;
+    public string Token { get; set; }
 
     [Required]
     public int UserId { get; set; }

@@ -6,7 +6,7 @@ namespace Medhub_Backend.Application.Abstractions.Service;
 public interface IAuthenticationService
 {
     Task<User> RegisterPatientAsync(User user);
-    AuthenticationResponse LoginUserAsync(LoginRequest loginRequest);
+    Task<AuthenticationResponse> LoginUserAsync(LoginRequest loginRequest);
     Task<User> RegisterDoctorAsync(User user);
     Task<User> RegisterAdminAsync(User user);
     Task ForgotPassword(ForgotPasswordRequest forgotPasswordRequest);

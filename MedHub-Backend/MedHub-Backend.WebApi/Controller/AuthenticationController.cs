@@ -28,9 +28,9 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost("login")]
     [ProducesResponseType(200, Type = typeof(AuthenticationResponse))]
-    public IActionResult Login([FromBody] LoginRequest loginRequest)
+    public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
-        var authenticationResponse = _authenticationService.LoginUserAsync(loginRequest);
+        AuthenticationResponse authenticationResponse = await _authenticationService.LoginUserAsync(loginRequest);
         return Ok(authenticationResponse);
     }
 

@@ -11,5 +11,5 @@ public interface IUserService
     Task<User> UpdateAsync(User user);
     Task<bool> DeleteByIdAsync(int userId);
     User? GetByEmail(string email);
-    User? GetByUsername(string username);
+    Task<User?> GetByUsernameAsync(string username);
 }

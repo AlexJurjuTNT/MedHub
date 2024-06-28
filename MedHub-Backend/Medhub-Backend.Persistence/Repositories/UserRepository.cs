@@ -1,6 +1,7 @@
 using Medhub_Backend.Application.Abstractions.Persistence;
 using Medhub_Backend.Domain.Entities;
 using Medhub_Backend.Persistence.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Medhub_Backend.Persistence.Repositories;
 
@@ -39,5 +40,10 @@ public class UserRepository : IUserRepository
     {
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<User?> GetByUsername(string username)
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
     }
 }

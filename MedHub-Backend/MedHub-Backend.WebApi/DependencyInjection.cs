@@ -35,9 +35,9 @@ public static class DependencyInjection
             options.CustomOperationIds(e => $"{e.ActionDescriptor.RouteValues["action"]}");
 
             // add options for xml documentation for methods in controllers
-            var xmlFile = $"{Assembly.GetEntryAssembly()!.GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            options.IncludeXmlComments(xmlPath);
+            // var xmlFile = $"{Assembly.GetEntryAssembly()!.GetName().Name}.xml";
+            // var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            // options.IncludeXmlComments(xmlPath);
 
             // configure jwt token bearer authentication documentation for swagger ui
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
