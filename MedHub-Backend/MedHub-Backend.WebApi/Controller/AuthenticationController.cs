@@ -1,10 +1,8 @@
-using System.ComponentModel.DataAnnotations;
 using AutoMapper;
-using Medhub_Backend.Business.Dtos.Authentication;
-using Medhub_Backend.Business.Dtos.User;
-using Medhub_Backend.Business.Service.Interface;
+using Medhub_Backend.Application.Dtos.Authentication;
+using Medhub_Backend.Application.Dtos.User;
+using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
-using Medhub_Backend.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,9 +28,9 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost("login")]
     [ProducesResponseType(200, Type = typeof(AuthenticationResponse))]
-    public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
+    public IActionResult Login([FromBody] LoginRequest loginRequest)
     {
-        var authenticationResponse = await _authenticationService.LoginUserAsync(loginRequest);
+        var authenticationResponse = _authenticationService.LoginUserAsync(loginRequest);
         return Ok(authenticationResponse);
     }
 
@@ -77,7 +75,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDto resetPasswordRequestDto)
     {
-        var existingUser = await _userService.GetUserByEmail(resetPasswordRequestDto.Email);
+        var existingUser = _userService.GetUserByEmail(resetPasswordRequestDto.Email);
         if (existingUser == null) return NotFound($"User with email {resetPasswordRequestDto.Email} not found");
 
         if (existingUser.PasswordResetCode != resetPasswordRequestDto.PasswordResetCode) return BadRequest("Reset codes don't match");

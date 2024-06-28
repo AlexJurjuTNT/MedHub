@@ -2,8 +2,8 @@ using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
-using Medhub_Backend.Business.Dtos.User;
-using Medhub_Backend.Business.Service.Interface;
+using Medhub_Backend.Application.Dtos.User;
+using Medhub_Backend.Application.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +27,7 @@ public class DoctorController : ControllerBase
     [ProducesResponseType(200, Type = typeof(LoadResult))]
     public async Task<IActionResult> GetAllDoctors([FromQuery] DataSourceLoadOptions loadOptions)
     {
-        var doctors = await _doctorService.GetAllDoctorsAsync();
+        var doctors = _doctorService.GetAllDoctorsAsync();
         var loadedDoctors = await DataSourceLoader.LoadAsync(doctors, loadOptions);
 
         loadedDoctors.data = _mapper.Map<List<UserDto>>(loadedDoctors.data);

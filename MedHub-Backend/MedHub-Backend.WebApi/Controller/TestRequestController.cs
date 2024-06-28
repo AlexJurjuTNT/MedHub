@@ -3,10 +3,10 @@ using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
-using Medhub_Backend.Business.Dtos.TestRequest;
-using Medhub_Backend.Business.Dtos.TestResult;
-using Medhub_Backend.Business.Dtos.TestType;
-using Medhub_Backend.Business.Service.Interface;
+using Medhub_Backend.Application.Dtos.TestRequest;
+using Medhub_Backend.Application.Dtos.TestResult;
+using Medhub_Backend.Application.Dtos.TestType;
+using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +19,12 @@ namespace MedHub_Backend.WebApi.Controller;
 [Route("api/v1/[controller]")]
 public class TestRequestController : ControllerBase
 {
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly ILaboratoryService _laboratoryService;
     private readonly IMapper _mapper;
     private readonly ITestRequestService _testRequestService;
     private readonly ITestTypeService _testTypeService;
     private readonly IUserService _userService;
-    private readonly IDateTimeProvider _dateTimeProvider;
 
     public TestRequestController(
         ITestRequestService testRequestService,
@@ -43,9 +43,9 @@ public class TestRequestController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(List<TestRequestDto>))]
-    public async Task<IActionResult> GetAllTestRequests()
+    public IActionResult GetAllTestRequests()
     {
-        var testRequests = await _testRequestService.GetAllTestRequestsAsync();
+        var testRequests = _testRequestService.GetAllTestRequestsAsync();
         var testRequestsDtos = _mapper.Map<List<TestRequestDto>>(testRequests);
         return Ok(testRequestsDtos);
     }
@@ -154,11 +154,8 @@ public class TestRequestController : ControllerBase
     {
         var patient = await ValidateUser(userId, "Patient");
         var testRequestsQuery = _testRequestService.GetAllTestRequestsOfUserInClinicAsync(patient.Id, patient.ClinicId);
-
         var loadedTestRequests = await DataSourceLoader.LoadAsync(testRequestsQuery, loadOptions);
-
         loadedTestRequests.data = _mapper.Map<List<TestRequestDto>>(loadedTestRequests.data);
-
         return Ok(loadedTestRequests);
     }
 
@@ -167,8 +164,8 @@ public class TestRequestController : ControllerBase
         var patient = await ValidateUser(testRequestDto.PatientId, "Patient");
         var doctor = await ValidateUser(testRequestDto.DoctorId, "Doctor");
 
-        var laboratory = await _laboratoryService.GetLaboratoryByIdAsync(testRequestDto.LaboratoryId)
-                         ?? throw new NotFoundException($"Laboratory with id {testRequestDto.LaboratoryId} not found");
+        var laboratory = await _laboratoryService.GetLaboratoryByIdAsync(testRequestDto.LaboratoryId) ??
+                         throw new NotFoundException($"Laboratory with id {testRequestDto.LaboratoryId} not found");
 
         var testTypes = await _testTypeService.GetTestTypesFromIdList(testRequestDto.TestTypesId);
         if (testTypes.Count != testRequestDto.TestTypesId.Count) throw new ValidationException("One or more test types were not found");

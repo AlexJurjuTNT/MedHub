@@ -1,0 +1,14 @@
+using Medhub_Backend.Application.Service.Interface;
+
+namespace Medhub_Backend.Application.Service;
+
+public class PasswordService : IPasswordService
+{
+    public string GenerateRandomPassword(int length)
+    {
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var random = new Random();
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+}

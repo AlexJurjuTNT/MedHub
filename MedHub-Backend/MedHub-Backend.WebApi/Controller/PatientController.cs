@@ -2,9 +2,9 @@ using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
-using Medhub_Backend.Business.Dtos.Patient;
-using Medhub_Backend.Business.Dtos.User;
-using Medhub_Backend.Business.Service.Interface;
+using Medhub_Backend.Application.Dtos.Patient;
+using Medhub_Backend.Application.Dtos.User;
+using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Medhub_Backend.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
@@ -44,11 +44,13 @@ public class PatientController : ControllerBase
     }
 
     [HttpGet("user-patients")]
-    [ProducesResponseType(200, Type = typeof(List<UserDto>))]
-    public async Task<IActionResult> GetAllUserPatients()
+    [ProducesResponseType(200, Type = typeof(LoadResult))]
+    public async Task<IActionResult> GetAllUserPatients([FromQuery] DataSourceLoadOptions loadOptions)
     {
-        var patients = await _patientService.GetAllUserPatientsAsync();
-        return Ok(_mapper.Map<List<UserDto>>(patients));
+        var userPatients = _patientService.GetAllUserPatientsAsync();
+        var loadedUserPatients = await DataSourceLoader.LoadAsync(userPatients, loadOptions);
+        loadedUserPatients.data = _mapper.Map<List<UserDto>>(loadedUserPatients.data);
+        return Ok(_mapper.Map<List<UserDto>>(userPatients));
     }
 
 

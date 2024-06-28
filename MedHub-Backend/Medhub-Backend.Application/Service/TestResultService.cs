@@ -1,0 +1,100 @@
+using Medhub_Backend.Application.Abstractions.Persistence;
+using Medhub_Backend.Application.Helper;
+using Medhub_Backend.Application.Service.Interface;
+using Medhub_Backend.Domain.Entities;
+using Microsoft.AspNetCore.Http;
+
+namespace Medhub_Backend.Application.Service;
+
+public class TestResultService : ITestResultService
+{
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IEmailService _emailService;
+    private readonly IFileService _fileService;
+    private readonly ITestResultRepository _testResultRepository;
+    private readonly ITestTypeService _testTypeService;
+
+    public TestResultService(
+        ITestResultRepository testResultRepository,
+        IFileService fileService,
+        IEmailService emailService,
+        ITestTypeService testTypeService,
+        IDateTimeProvider dateTimeProvider)
+    {
+        _testResultRepository = testResultRepository;
+        _fileService = fileService;
+        _emailService = emailService;
+        _testTypeService = testTypeService;
+        _dateTimeProvider = dateTimeProvider;
+    }
+
+    public IQueryable<TestResult> GetAllTestResultsAsync()
+    {
+        return _testResultRepository.GetAll();
+    }
+
+    public async Task<TestResult?> GetTestResultByIdAsync(int testResultId)
+    {
+        return await _testResultRepository.GetByIdAsync(testResultId);
+    }
+
+    public async Task<bool> DeleteTestResultAsync(int testResultId)
+    {
+        var testResult = await _testResultRepository.GetByIdAsync(testResultId);
+        if (testResult == null) return false;
+
+        _testResultRepository.Remove(testResult);
+        return true;
+    }
+
+    public async Task<TestResult> CreateTestResultWithFile(TestResult testResult, List<int> testTypeIds, TestRequest testRequest, IFormFile formFile)
+    {
+        var createdTestResult = await UploadResult(testResult, testRequest, formFile);
+
+        var testTypes = await _testTypeService.GetTestTypesFromIdList(testTypeIds);
+        createdTestResult = await AddTestTypesAsync(createdTestResult, testTypes);
+
+        return createdTestResult;
+    }
+
+    public async Task<(byte[], string, string)?> DownloadTestResultPdf(int resultId)
+    {
+        var testResult = await GetTestResultByIdAsync(resultId);
+        if (testResult == null) return null;
+        return await _fileService.DownloadFile(testResult.FilePath);
+    }
+
+    private async Task<TestResult> UploadResult(TestResult testResult, TestRequest testRequest, IFormFile formFile)
+    {
+        var patientUser = testRequest.Patient;
+        var clinic = patientUser.Clinic;
+        var pdfPath = await UploadResultFile(formFile, patientUser, clinic);
+
+        testResult.FilePath = pdfPath;
+        testResult.CompletionDate = _dateTimeProvider.UtcNow;
+        var createdTestResult = await CreateTestResultAsync(testResult);
+
+        await _emailService.SendPatientResultsCompleteEmail(clinic, patientUser);
+
+        return createdTestResult;
+    }
+
+    private async Task<TestResult> CreateTestResultAsync(TestResult testResult)
+    {
+        await _testResultRepository.AddAsync(testResult);
+        return testResult;
+    }
+
+    private async Task<TestResult> AddTestTypesAsync(TestResult testResult, List<TestType> testTypes)
+    {
+        testResult.TestTypes = testTypes;
+        await _testResultRepository.UpdateAsync(testResult);
+        return testResult;
+    }
+
+    private async Task<string> UploadResultFile(IFormFile formFile, User patient, Clinic clinic)
+    {
+        var uploadPath = LocalStorageHelper.GetClinicUserPath(clinic.Name, patient.Username);
+        return await _fileService.UploadFile(formFile, uploadPath);
+    }
+}

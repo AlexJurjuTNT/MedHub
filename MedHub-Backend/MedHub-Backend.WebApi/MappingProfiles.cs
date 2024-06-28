@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using Medhub_Backend.Business.Dtos.Authentication;
-using Medhub_Backend.Business.Dtos.Clinic;
-using Medhub_Backend.Business.Dtos.Laboratory;
-using Medhub_Backend.Business.Dtos.Patient;
-using Medhub_Backend.Business.Dtos.TestRequest;
-using Medhub_Backend.Business.Dtos.TestResult;
-using Medhub_Backend.Business.Dtos.TestType;
-using Medhub_Backend.Business.Dtos.User;
+using Medhub_Backend.Application.Dtos.Authentication;
+using Medhub_Backend.Application.Dtos.Clinic;
+using Medhub_Backend.Application.Dtos.Laboratory;
+using Medhub_Backend.Application.Dtos.Patient;
+using Medhub_Backend.Application.Dtos.TestRequest;
+using Medhub_Backend.Application.Dtos.TestResult;
+using Medhub_Backend.Application.Dtos.TestType;
+using Medhub_Backend.Application.Dtos.User;
 using Medhub_Backend.Domain.Entities;
 
 namespace MedHub_Backend.WebApi;
@@ -17,7 +17,7 @@ public class MappingProfiles : Profile
     {
         CreateMap<User, UserDto>();
         CreateMap<UserDto, User>();
-        
+
         CreateMap<UpdateUserRequest, User>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<UserRegisterRequest, User>();

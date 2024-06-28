@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using AutoMapper;
-using Medhub_Backend.Business.Dtos.TestResult;
-using Medhub_Backend.Business.Service.Interface;
+using Medhub_Backend.Application.Dtos.TestResult;
+using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,7 +58,7 @@ public class TestResultController : ControllerBase
     [ProducesResponseType(200, Type = typeof(FileResult))]
     public async Task<IActionResult> DownloadPdf([FromRoute] int resultId)
     {
-        var user = await GetCurrentUser();
+        var user = GetCurrentUser();
         if (user == null)
             return Unauthorized("Invalid user");
 
@@ -86,20 +86,20 @@ public class TestResultController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(List<TestResultDto>))]
-    public async Task<IActionResult> GetAllTestResults()
+    public IActionResult GetAllTestResults()
     {
-        var testResults = await _testResultService.GetAllTestResultsAsync();
+        var testResults = _testResultService.GetAllTestResultsAsync();
         var testResultsDto = _mapper.Map<List<TestResultDto>>(testResults);
         return Ok(testResultsDto);
     }
 
-    private async Task<User?> GetCurrentUser()
+    private User? GetCurrentUser()
     {
         var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(username))
             return null;
 
-        return await _userService.GetUserByUsernameAsync(username);
+        return _userService.GetUserByUsername(username);
     }
 
     private bool IsUserAuthorizedForTestResult(User user, TestResult testResult)

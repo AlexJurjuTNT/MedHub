@@ -1,14 +1,14 @@
 using AutoMapper;
-using Medhub_Backend.Business.Dtos.User;
-using Medhub_Backend.Business.Service.Interface;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.ResponseModel;
+using DevExtreme.AspNet.Mvc;
+using Medhub_Backend.Application.Dtos.User;
+using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace MedHub_Backend.WebApi.Controller;
 
-[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class UserController : ControllerBase
@@ -23,13 +23,13 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(List<UserDto>))]
-    public async Task<IActionResult> GetAllUsers()
+    [ProducesResponseType(200, Type = typeof(LoadResult))]
+    public async Task<IActionResult> GetAllUsers([FromQuery] DataSourceLoadOptions loadOptions)
     {
-        var usersQuery = await _userService.GetAllUsersAsync();
-        var users = await usersQuery.ToListAsync();
-        var usersDto = _mapper.Map<List<UserDto>>(users);
-        return Ok(usersDto);
+        var users = _userService.GetAllUsers();
+        var loadedUsers = await DataSourceLoader.LoadAsync(users, loadOptions);
+        loadedUsers.data = _mapper.Map<List<UserDto>>(loadedUsers.data);
+        return Ok(loadedUsers);
     }
 
     [HttpGet("{userId}")]

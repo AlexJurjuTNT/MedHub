@@ -1,6 +1,9 @@
 using AutoMapper;
-using Medhub_Backend.Business.Dtos.Laboratory;
-using Medhub_Backend.Business.Service.Interface;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.ResponseModel;
+using DevExtreme.AspNet.Mvc;
+using Medhub_Backend.Application.Dtos.Laboratory;
+using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +29,13 @@ public class LaboratoryController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(List<LaboratoryDto>))]
-    public async Task<IActionResult> GetAllLaboratories()
+    [ProducesResponseType(200, Type = typeof(LoadResult))]
+    public async Task<IActionResult> GetAllLaboratories([FromQuery] DataSourceLoadOptions loadOptions)
     {
-        var laboratories = await _laboratoryService.GetAllLaboratoriesAsync();
-        var laboratoriesDtos = _mapper.Map<List<LaboratoryDto>>(laboratories);
-        return Ok(laboratoriesDtos);
+        var laboratories = _laboratoryService.GetAllLaboratoriesAsync();
+        var loadedLaboratories = await DataSourceLoader.LoadAsync(laboratories, loadOptions);
+        loadedLaboratories.data = _mapper.Map<List<LaboratoryDto>>(loadedLaboratories.data);
+        return Ok(loadedLaboratories);
     }
 
     [HttpGet("{laboratoryId}")]
@@ -52,7 +56,7 @@ public class LaboratoryController : ControllerBase
     {
         var clinic = await _clinicService.GetClinicByIdAsync(createLaboratoryRequest.ClinicId);
         if (clinic is null) return NotFound();
-        
+
         var laboratory = _mapper.Map<Laboratory>(createLaboratoryRequest);
         Console.WriteLine(laboratory);
         var testTypes = await _testTypeService.GetTestTypesFromIdList(createLaboratoryRequest.TestTypesId);

@@ -2,8 +2,8 @@ using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
-using Medhub_Backend.Business.Dtos.TestType;
-using Medhub_Backend.Business.Service.Interface;
+using Medhub_Backend.Application.Dtos.TestType;
+using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,11 +28,10 @@ public class TestTypeController : ControllerBase
     [ProducesResponseType(200, Type = typeof(LoadResult))]
     public async Task<IActionResult> GetAllTestTypes([FromQuery] DataSourceLoadOptions loadOptions)
     {
-        var testTypes = _testTypeService.GetAllTestTypes();
-        var resultingTestTypes = await DataSourceLoader.LoadAsync(testTypes, loadOptions);
-
-        resultingTestTypes.data = _mapper.Map<List<TestTypeDto>>(resultingTestTypes.data);
-        return Ok(resultingTestTypes);
+        var testTypes = _testTypeService.GetAllTestTypesAsync();
+        var loadedTestTypes = await DataSourceLoader.LoadAsync(testTypes, loadOptions);
+        loadedTestTypes.data = _mapper.Map<List<TestTypeDto>>(loadedTestTypes.data);
+        return Ok(loadedTestTypes);
     }
 
     [HttpGet("{testTypeId}")]
@@ -71,7 +70,7 @@ public class TestTypeController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> DeleteTestType([FromRoute] int testTypeId)
     {
-        var result = await _testTypeService.DeleteClinicByIdAsync(testTypeId);
+        var result = await _testTypeService.DeleteTestTypeByIdAsync(testTypeId);
         if (!result) return NotFound($"TestType with id {testTypeId} not found");
 
         return NoContent();

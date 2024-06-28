@@ -2,10 +2,10 @@ using AutoMapper;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
-using Medhub_Backend.Business.Dtos.Clinic;
-using Medhub_Backend.Business.Dtos.Laboratory;
-using Medhub_Backend.Business.Dtos.User;
-using Medhub_Backend.Business.Service.Interface;
+using Medhub_Backend.Application.Dtos.Clinic;
+using Medhub_Backend.Application.Dtos.Laboratory;
+using Medhub_Backend.Application.Dtos.User;
+using Medhub_Backend.Application.Service.Interface;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,11 +31,9 @@ public class ClinicController : ControllerBase
     public async Task<IActionResult> GetAllClinics([FromQuery] DataSourceLoadOptions loadOptions)
     {
         var clinics = _clinicService.GetAllClinics();
-        var resultingClinics = await DataSourceLoader.LoadAsync(clinics, loadOptions);
-
-        resultingClinics.data = _mapper.Map<List<ClinicDto>>(resultingClinics.data);
-
-        return Ok(resultingClinics);
+        var loadedClinics = await DataSourceLoader.LoadAsync(clinics, loadOptions);
+        loadedClinics.data = _mapper.Map<List<ClinicDto>>(loadedClinics.data);
+        return Ok(loadedClinics);
     }
 
     [HttpGet("{clinicId}")]

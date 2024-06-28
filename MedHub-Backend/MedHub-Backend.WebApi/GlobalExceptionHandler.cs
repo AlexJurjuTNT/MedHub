@@ -39,7 +39,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             NotFoundException => StatusCodes.Status404NotFound,
             ValidationException => StatusCodes.Status400BadRequest,
-            
+
             UserNotFoundException => StatusCodes.Status404NotFound,
             UserAlreadyExistsException => StatusCodes.Status409Conflict,
             ClinicNotFoundException => StatusCodes.Status404NotFound,

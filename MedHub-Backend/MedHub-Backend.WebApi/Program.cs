@@ -1,6 +1,6 @@
-using Medhub_Backend.Business;
-using Medhub_Backend.DataAccess;
-using Medhub_Backend.DataAccess.Persistence;
+using Medhub_Backend.Application;
+using Medhub_Backend.Persistence;
+using Medhub_Backend.Persistence.Persistence;
 using MedHub_Backend.WebApi;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddAuthorization();
     builder.Services.AddControllers();
 
-    builder.Services.AddDataAccess(builder.Configuration);
+    builder.Services.AddPersistence(builder.Configuration);
     builder.Services.AddBusiness(builder.Configuration);
     builder.Services.AddConfiguration();
 }
