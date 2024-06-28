@@ -13,6 +13,12 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
+    public IQueryable<User> GetAllUserPatientsAsync()
+    {
+        var users = _userRepository.GetAll();
+        return users.Where(u => u.Role.Name == "Patient");
+    }
+
     public async Task<User> CreateAsync(User user)
     {
         await _userRepository.AddAsync(user);

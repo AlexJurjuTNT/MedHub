@@ -6,7 +6,7 @@ using Medhub_Backend.Domain.Enum;
 namespace Medhub_Backend.Domain.Entities;
 
 [Table("patient")]
-public class Patient
+public class PatientInformation
 {
     [Key]
     [Column("id")]

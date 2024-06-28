@@ -4,6 +4,7 @@ namespace Medhub_Backend.Application.Abstractions.Service;
 
 public interface IUserService
 {
+    IQueryable<User> GetAllUserPatientsAsync();
     Task<User> CreateAsync(User user);
     Task<User?> GetByIdAsync(int userId);
     IQueryable<User> GetAll();

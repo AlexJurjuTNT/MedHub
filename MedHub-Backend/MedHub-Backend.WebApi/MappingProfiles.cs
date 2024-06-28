@@ -27,10 +27,10 @@ public class MappingProfiles : Profile
         CreateMap<UpdateClinicRequest, Clinic>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-        CreateMap<Patient, PatientDto>();
-        CreateMap<UpdatePatientRequest, Patient>()
+        CreateMap<PatientInformation, PatientInformationDto>();
+        CreateMap<UpdatePatientInformationRequest, PatientInformation>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-        CreateMap<AddPatientInformationRequest, Patient>();
+        CreateMap<CreatePatientInformationRequest, PatientInformation>();
 
         CreateMap<TestRequest, TestRequestDto>();
         CreateMap<UpdateTestRequestDto, TestRequest>()

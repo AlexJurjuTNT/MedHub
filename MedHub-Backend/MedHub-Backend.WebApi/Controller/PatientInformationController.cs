@@ -14,14 +14,14 @@ namespace MedHub_Backend.WebApi.Controller;
 [Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
-public class PatientController : ControllerBase
+public class PatientInformationController : ControllerBase
 {
     private readonly IClinicService _clinicService;
     private readonly IMapper _mapper;
     private readonly IPatientService _patientService;
     private readonly IUserService _userService;
 
-    public PatientController(IPatientService patientService, IUserService userService, IClinicService clinicService, IMapper mapper)
+    public PatientInformationController(IPatientService patientService, IUserService userService, IClinicService clinicService, IMapper mapper)
     {
         _patientService = patientService;
         _userService = userService;
@@ -30,40 +30,29 @@ public class PatientController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(200, Type = typeof(PatientDto))]
-    public async Task<IActionResult> AddPatientInformation(AddPatientInformationRequest addPatientInformationRequest)
+    [ProducesResponseType(200, Type = typeof(PatientInformationDto))]
+    public async Task<IActionResult> AddPatientInformation(CreatePatientInformationRequest createPatientInformationRequest)
     {
-        var userResult = await _userService.GetByIdAsync(addPatientInformationRequest.UserId);
-        if (userResult == null) return NotFound($"User with id {addPatientInformationRequest.UserId} not found");
-        if (userResult.Role.Name != "Patient") return BadRequest($"User with id {addPatientInformationRequest.UserId} is not a patient");
+        var userResult = await _userService.GetByIdAsync(createPatientInformationRequest.UserId);
+        if (userResult == null) return NotFound($"User with id {createPatientInformationRequest.UserId} not found");
+        if (userResult.Role.Name != "Patient") return BadRequest($"User with id {createPatientInformationRequest.UserId} is not a patient");
 
-        var patient = _mapper.Map<Patient>(addPatientInformationRequest);
+        var patient = _mapper.Map<PatientInformation>(createPatientInformationRequest);
         var createdPatient = await _patientService.CreateAsync(patient);
-        return Ok(_mapper.Map<PatientDto>(createdPatient));
+        return Ok(_mapper.Map<PatientInformationDto>(createdPatient));
     }
-
-    [HttpGet("user-patients")]
-    [ProducesResponseType(200, Type = typeof(LoadResult))]
-    public async Task<IActionResult> GetAllUserPatients([FromQuery] DataSourceLoadOptions loadOptions)
-    {
-        var userPatients = _patientService.GetAllUserPatientsAsync();
-        var loadedUserPatients = await DataSourceLoader.LoadAsync(userPatients, loadOptions);
-        loadedUserPatients.data = _mapper.Map<List<UserDto>>(loadedUserPatients.data);
-        return Ok(_mapper.Map<List<UserDto>>(userPatients));
-    }
-
 
     [HttpPut("{patientId}")]
-    [ProducesResponseType(200, Type = typeof(PatientDto))]
-    public async Task<IActionResult> UpdatePatientInformation([FromRoute] int patientId, [FromBody] UpdatePatientRequest request)
+    [ProducesResponseType(200, Type = typeof(PatientInformationDto))]
+    public async Task<IActionResult> UpdatePatientInformation([FromRoute] int patientId, [FromBody] UpdatePatientInformationRequest informationRequest)
     {
         var existingPatient = await _patientService.GetByIdAsync(patientId);
         if (existingPatient == null) return NotFound();
 
-        _mapper.Map(request, existingPatient);
+        _mapper.Map(informationRequest, existingPatient);
 
         var updatedPatient = await _patientService.UpdateAsync(existingPatient);
-        var updatedPatientDto = _mapper.Map<PatientDto>(updatedPatient);
+        var updatedPatientDto = _mapper.Map<PatientInformationDto>(updatedPatient);
 
         return Ok(updatedPatientDto);
     }
@@ -78,14 +67,14 @@ public class PatientController : ControllerBase
     }
 
     [HttpGet("{userId}")]
-    [ProducesResponseType(200, Type = typeof(PatientDto))]
+    [ProducesResponseType(200, Type = typeof(PatientInformationDto))]
     public async Task<IActionResult> GetPatientInformationForUser([FromRoute] int userId)
     {
         var user = await _userService.GetByIdAsync(userId);
         if (user == null) return NotFound($"User with id {userId} not found");
         if (user.Role.Name != "Patient") return BadRequest($"User with id {userId} is not a patient");
 
-        var patientDto = _mapper.Map<PatientDto>(user.Patient);
+        var patientDto = _mapper.Map<PatientInformationDto>(user.PatientInformation);
         return Ok(patientDto);
     }
 

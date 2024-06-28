@@ -2,11 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Medhub_Backend.Application.Dtos.Patient;
 
-public class PatientDto
+public class UpdatePatientInformationRequest
 {
-    [Required]
-    public int Id { get; set; }
-
     [Required]
     public string Cnp { get; set; } = null!;
 
@@ -21,7 +18,4 @@ public class PatientDto
 
     [Required]
     public string Gender { get; set; } = null!;
-
-    [Required]
-    public int UserId { get; set; }
 }

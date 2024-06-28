@@ -69,6 +69,17 @@ public class UserController : ControllerBase
         return Ok(updatedUserDto);
     }
 
+    [HttpGet("patients")]
+    [ProducesResponseType(200, Type = typeof(LoadResult))]
+    public async Task<IActionResult> GetAllUserPatients([FromQuery] DataSourceLoadOptions loadOptions)
+    {
+        var userPatients = _userService.GetAllUserPatientsAsync();
+        var loadedUserPatients = await DataSourceLoader.LoadAsync(userPatients, loadOptions);
+        loadedUserPatients.data = _mapper.Map<List<UserDto>>(loadedUserPatients.data);
+        var userDtos = _mapper.Map<List<UserDto>>(userPatients);
+        return Ok(userDtos);
+    }
+
     [HttpDelete("{userId}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]

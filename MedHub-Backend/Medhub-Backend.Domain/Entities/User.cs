@@ -41,5 +41,5 @@ public class User
 
     public virtual Role Role { get; set; } = null!;
     public virtual Clinic Clinic { get; set; } = null!;
-    public virtual Patient Patient { get; set; } = null!;
+    public virtual PatientInformation PatientInformation { get; set; } = null!;
 }
