@@ -16,12 +16,13 @@ import {CustomHttpUrlEncodingCodec} from '../encoder';
 
 import {Observable} from 'rxjs';
 
-import {AddTestTypeDto} from '../model/addTestTypeDto';
+import {CreateTestTypeRequest} from '../model/createTestTypeRequest';
 import {GroupingInfo} from '../model/groupingInfo';
 import {LoadResult} from '../model/loadResult';
 import {SortingInfo} from '../model/sortingInfo';
 import {SummaryInfo} from '../model/summaryInfo';
 import {TestTypeDto} from '../model/testTypeDto';
+import {UpdateTestTypeRequest} from '../model/updateTestTypeRequest';
 
 import {BASE_PATH} from '../variables';
 import {Configuration} from '../configuration';
@@ -51,13 +52,13 @@ export class TestTypeService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public createTestType(body?: AddTestTypeDto, observe?: 'body', reportProgress?: boolean): Observable<TestTypeDto>;
+  public createTestType(body?: CreateTestTypeRequest, observe?: 'body', reportProgress?: boolean): Observable<TestTypeDto>;
 
-  public createTestType(body?: AddTestTypeDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestTypeDto>>;
+  public createTestType(body?: CreateTestTypeRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestTypeDto>>;
 
-  public createTestType(body?: AddTestTypeDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestTypeDto>>;
+  public createTestType(body?: CreateTestTypeRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestTypeDto>>;
 
-  public createTestType(body?: AddTestTypeDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public createTestType(body?: CreateTestTypeRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
 
     let headers = this.defaultHeaders;
@@ -369,13 +370,13 @@ export class TestTypeService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public updateTestType(testTypeId: number, body?: TestTypeDto, observe?: 'body', reportProgress?: boolean): Observable<TestTypeDto>;
+  public updateTestType(testTypeId: number, body?: UpdateTestTypeRequest, observe?: 'body', reportProgress?: boolean): Observable<TestTypeDto>;
 
-  public updateTestType(testTypeId: number, body?: TestTypeDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestTypeDto>>;
+  public updateTestType(testTypeId: number, body?: UpdateTestTypeRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestTypeDto>>;
 
-  public updateTestType(testTypeId: number, body?: TestTypeDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestTypeDto>>;
+  public updateTestType(testTypeId: number, body?: UpdateTestTypeRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestTypeDto>>;
 
-  public updateTestType(testTypeId: number, body?: TestTypeDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public updateTestType(testTypeId: number, body?: UpdateTestTypeRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
     if (testTypeId === null || testTypeId === undefined) {
       throw new Error('Required parameter testTypeId was null or undefined when calling updateTestType.');

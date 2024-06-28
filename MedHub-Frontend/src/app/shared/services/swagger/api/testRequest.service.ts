@@ -16,7 +16,7 @@ import {CustomHttpUrlEncodingCodec} from '../encoder';
 
 import {Observable} from 'rxjs';
 
-import {AddTestRequestDto} from '../model/addTestRequestDto';
+import {CreateTestRequestRequest} from '../model/createTestRequestRequest';
 import {GroupingInfo} from '../model/groupingInfo';
 import {LoadResult} from '../model/loadResult';
 import {SortingInfo} from '../model/sortingInfo';
@@ -54,13 +54,13 @@ export class TestRequestService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public createTestRequest(body?: AddTestRequestDto, observe?: 'body', reportProgress?: boolean): Observable<TestRequestDto>;
+  public createTestRequest(body?: CreateTestRequestRequest, observe?: 'body', reportProgress?: boolean): Observable<TestRequestDto>;
 
-  public createTestRequest(body?: AddTestRequestDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestRequestDto>>;
+  public createTestRequest(body?: CreateTestRequestRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestRequestDto>>;
 
-  public createTestRequest(body?: AddTestRequestDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestRequestDto>>;
+  public createTestRequest(body?: CreateTestRequestRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestRequestDto>>;
 
-  public createTestRequest(body?: AddTestRequestDto, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+  public createTestRequest(body?: CreateTestRequestRequest, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
 
 
     let headers = this.defaultHeaders;

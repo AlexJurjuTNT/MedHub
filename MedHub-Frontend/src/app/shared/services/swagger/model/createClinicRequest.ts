@@ -10,3 +10,9 @@
  * Do not edit the class manually.
  */
 
+export interface CreateClinicRequest {
+  name: string;
+  location: string;
+  sendgridApiKey: string;
+  email: string;
+}

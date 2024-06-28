@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AddTestTypeDto, GroupingInfo, SortingInfo, SummaryInfo, TestTypeDto, TestTypeService} from "../../shared/services/swagger";
+import {CreateTestTypeRequest, GroupingInfo, SortingInfo, SummaryInfo, TestTypeDto, TestTypeService} from "../../shared/services/swagger";
 import DataSource from "devextreme/data/data_source";
 import CustomStore from "devextreme/data/custom_store";
 import {LoadOptions} from "devextreme/data";
@@ -79,8 +79,8 @@ export class TestTypeListComponent {
     });
   }
 
-  createTestType(addTestTypeDto: AddTestTypeDto) {
-    this.testTypeService.createTestType(addTestTypeDto).subscribe({
+  createTestType(createTestTypeRequest: CreateTestTypeRequest) {
+    this.testTypeService.createTestType(createTestTypeRequest).subscribe({
       next: () => {
         this.createPopupVisible = false;
         this.customDataSource.reload();

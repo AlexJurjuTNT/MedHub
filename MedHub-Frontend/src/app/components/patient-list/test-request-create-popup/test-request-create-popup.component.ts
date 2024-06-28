@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {AddTestRequestDto, LaboratoryDto, TestTypeDto, UserDto} from "../../../shared/services/swagger";
+import {CreateTestRequestRequest, LaboratoryDto, TestTypeDto, UserDto} from "../../../shared/services/swagger";
 
 @Component({
   selector: 'app-test-request-create-popup',
@@ -13,7 +13,7 @@ export class TestRequestCreatePopupComponent {
   @Input() laboratories: LaboratoryDto[] = [];
 
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() createTestRequest = new EventEmitter<AddTestRequestDto>();
+  @Output() createTestRequest = new EventEmitter<CreateTestRequestRequest>();
 
   selectedTestTypesIds: number[] = [];
   selectedLaboratoryId: number = 0;
@@ -37,7 +37,7 @@ export class TestRequestCreatePopupComponent {
   submitTestRequest($event: Event) {
     $event.preventDefault();
 
-    const createTestRequest: AddTestRequestDto = {
+    const createTestRequest: CreateTestRequestRequest = {
       testTypesId: this.selectedTestTypesIds,
       laboratoryId: this.selectedLaboratoryId,
       patientId: this.user.id,

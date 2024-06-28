@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-export interface AddTestRequestDto {
+export interface CreateTestRequestRequest {
   patientId: number;
   doctorId: number;
   testTypesId: Array<number>;

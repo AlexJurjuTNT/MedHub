@@ -10,7 +10,8 @@
  * Do not edit the class manually.
  */
 
-export interface AddClinicDto {
+export interface UpdateClinicRequest {
+  id: number;
   name: string;
   location: string;
   sendgridApiKey: string;

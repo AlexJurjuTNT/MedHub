@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AddPatientDataDto, PatientDto, PatientService, UpdatePatientDto} from "../../shared/services/swagger";
+import {CreatePatientInformationRequest, PatientInformationDto, PatientInformationService, UpdatePatientInformationRequest} from "../../shared/services/swagger";
 import {ActivatedRoute} from "@angular/router";
 import {format} from 'date-fns';
 
@@ -10,15 +10,15 @@ import {format} from 'date-fns';
 })
 export class PatientInfoComponent implements OnInit {
 
-  patient: PatientDto | null = null;
+  patient: PatientInformationDto | null = null;
   userId: number = 0;
   colCountByScreen: object;
 
   updatePopupVisible: boolean = false;
-  patientCopy: PatientDto | AddPatientDataDto = {} as PatientDto;
+  patientCopy: PatientInformationDto | CreatePatientInformationRequest = {} as PatientInformationDto;
 
   constructor(
-    private patientService: PatientService,
+    private patientService: PatientInformationService,
     private route: ActivatedRoute,
   ) {
     this.colCountByScreen = {
@@ -35,7 +35,7 @@ export class PatientInfoComponent implements OnInit {
 
   showUpdatePopup() {
     this.updatePopupVisible = true;
-    this.patientCopy = this.patient ? {...this.patient} : {userId: this.userId} as AddPatientDataDto;
+    this.patientCopy = this.patient ? {...this.patient} : {userId: this.userId} as CreatePatientInformationRequest;
   }
 
   hideUpdatePopup() {
@@ -47,7 +47,7 @@ export class PatientInfoComponent implements OnInit {
     $event.preventDefault();
 
     if (this.patient) {
-      const updatePatientInfo: UpdatePatientDto = {
+      const updatePatientInformationRequest: UpdatePatientInformationRequest = {
         cnp: this.patientCopy.cnp,
         dateOfBirth: this.patientCopy.dateOfBirth,
         weight: this.patientCopy.weight,
@@ -55,15 +55,15 @@ export class PatientInfoComponent implements OnInit {
         gender: this.patientCopy.gender,
       };
 
-      console.log(updatePatientInfo)
+      console.log(updatePatientInformationRequest)
 
-      this.patientService.updatePatientInformation(this.patient.id, updatePatientInfo).subscribe({
+      this.patientService.updatePatientInformation(this.patient.id, updatePatientInformationRequest).subscribe({
         next: () => {
           this.hideUpdatePopup();
         }
       });
     } else {
-      const addPatientInfo: AddPatientDataDto = {
+      const createPatientInformationRequest: CreatePatientInformationRequest = {
         userId: this.userId,
         cnp: this.patientCopy.cnp,
         dateOfBirth: format(new Date(this.patientCopy.dateOfBirth), 'yyyy-MM-dd'),
@@ -72,10 +72,10 @@ export class PatientInfoComponent implements OnInit {
         gender: this.patientCopy.gender,
       };
 
-      console.log(addPatientInfo)
+      console.log(createPatientInformationRequest)
 
 
-      this.patientService.addPatientInformation(addPatientInfo).subscribe({
+      this.patientService.addPatientInformation(createPatientInformationRequest).subscribe({
         next: () => {
           this.hideUpdatePopup();
         }

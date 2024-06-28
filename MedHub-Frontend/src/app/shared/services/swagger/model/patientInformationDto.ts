@@ -10,6 +10,12 @@
  * Do not edit the class manually.
  */
 
-export interface AddTestTypeDto {
-  name: string;
+export interface PatientInformationDto {
+  id: number;
+  cnp: string;
+  dateOfBirth: string;
+  weight: number;
+  height: number;
+  gender: string;
+  userId: number;
 }

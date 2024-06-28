@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import {AddTestTypeDto} from "../../../shared/services/swagger";
+import {CreateTestTypeRequest} from "../../../shared/services/swagger";
 
 @Component({
   selector: 'app-create-test-type-popup',
@@ -9,7 +9,7 @@ import {AddTestTypeDto} from "../../../shared/services/swagger";
 export class CreateTestTypePopupComponent {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() createTestType = new EventEmitter<AddTestTypeDto>();
+  @Output() createTestType = new EventEmitter<CreateTestTypeRequest>();
 
   createTestTypeFormData: any = {};
 
@@ -19,9 +19,9 @@ export class CreateTestTypePopupComponent {
 
   onSubmit($event: SubmitEvent) {
     $event.preventDefault();
-    const addTestTypeDto: AddTestTypeDto = {
+    const createTestTypeRequest: CreateTestTypeRequest = {
       name: this.createTestTypeFormData.name
     };
-    this.createTestType.emit(addTestTypeDto);
+    this.createTestType.emit(createTestTypeRequest);
   }
 }

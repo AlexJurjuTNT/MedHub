@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {AddClinicDto} from "../../../shared/services/swagger";
+import {CreateClinicRequest} from "../../../shared/services/swagger";
 
 @Component({
   selector: 'app-create-clinic-popup',
@@ -8,7 +8,7 @@ import {AddClinicDto} from "../../../shared/services/swagger";
 export class CreateClinicPopupComponent {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() createClinic = new EventEmitter<AddClinicDto>();
+  @Output() createClinic = new EventEmitter<CreateClinicRequest>();
 
   createClinicFormData: any = {};
 
@@ -18,12 +18,12 @@ export class CreateClinicPopupComponent {
 
   onSubmit($event: Event) {
     $event.preventDefault();
-    const addClinicDto: AddClinicDto = {
+    const createClinicRequest: CreateClinicRequest = {
       name: this.createClinicFormData.name,
       location: this.createClinicFormData.location,
       sendgridApiKey: this.createClinicFormData.sendgridApiKey,
       email: this.createClinicFormData.email
     };
-    this.createClinic.emit(addClinicDto);
+    this.createClinic.emit(createClinicRequest);
   }
 }

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService, GroupingInfo, PatientRegisterRequest, PatientService, SortingInfo, SummaryInfo, UserDto, UserService} from "../../shared/services/swagger";
+import {AuthenticationService, ClinicService, GroupingInfo, PatientRegisterRequest, SortingInfo, SummaryInfo, UserDto, UserService} from "../../shared/services/swagger";
 import {Router} from "@angular/router";
 import {lastValueFrom} from "rxjs";
 import DataSource from 'devextreme/data/data_source';
@@ -22,8 +22,8 @@ export class PatientListComponent implements OnInit {
   createPatientPopupVisible: boolean = false;
 
   constructor(
-    private patientService: PatientService,
     private userService: UserService,
+    private clinicService: ClinicService,
     private tokenService: TokenService,
     private authenticationService: AuthenticationService,
     private notificationService: NotificationService,
@@ -35,7 +35,7 @@ export class PatientListComponent implements OnInit {
         load: async (loadOptions: LoadOptions) => {
           try {
             let response = await lastValueFrom(
-              this.patientService.getAllPatientsOfClinic(
+              this.clinicService.getAllPatientsOfClinic(
                 this.tokenService.getClinicId(), // clinicId
                 loadOptions.requireTotalCount,
                 loadOptions.requireGroupCount,

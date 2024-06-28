@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-export interface AddPatientDataDto {
+export interface CreatePatientInformationRequest {
   cnp: string;
   dateOfBirth: string;
   weight: number;

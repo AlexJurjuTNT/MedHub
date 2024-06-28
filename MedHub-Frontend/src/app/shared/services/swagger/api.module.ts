@@ -7,7 +7,7 @@ import {AuthenticationService} from './api/authentication.service';
 import {ClinicService} from './api/clinic.service';
 import {DoctorService} from './api/doctor.service';
 import {LaboratoryService} from './api/laboratory.service';
-import {PatientService} from './api/patient.service';
+import {PatientInformationService} from './api/patientInformation.service';
 import {TestRequestService} from './api/testRequest.service';
 import {TestResultService} from './api/testResult.service';
 import {TestTypeService} from './api/testType.service';
@@ -22,7 +22,7 @@ import {UserService} from './api/user.service';
     ClinicService,
     DoctorService,
     LaboratoryService,
-    PatientService,
+    PatientInformationService,
     TestRequestService,
     TestResultService,
     TestTypeService,

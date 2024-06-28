@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AddClinicDto, ClinicDto, ClinicService, GroupingInfo, SortingInfo, SummaryInfo, UpdateClinicDto} from "../../shared/services/swagger";
+import {ClinicDto, ClinicService, CreateClinicRequest, GroupingInfo, SortingInfo, SummaryInfo, UpdateClinicRequest} from "../../shared/services/swagger";
 import DataSource from "devextreme/data/data_source";
 import CustomStore from "devextreme/data/custom_store";
 import {LoadOptions} from "devextreme/data";
@@ -62,8 +62,8 @@ export class ClinicListComponent {
     }
   }
 
-  createClinic(addClinicDto: AddClinicDto) {
-    this.clinicService.createClinic(addClinicDto).subscribe({
+  createClinic(createClinicRequest: CreateClinicRequest) {
+    this.clinicService.createClinic(createClinicRequest).subscribe({
       next: () => {
         this.createPopupVisible = false;
         this.customDataSource.reload();
@@ -74,11 +74,12 @@ export class ClinicListComponent {
     });
   }
 
-  updateClinic(updateClinicDto: UpdateClinicDto) {
-    this.clinicService.updateClinic(updateClinicDto.id, updateClinicDto).subscribe({
+  updateClinic(updateClinicRequest: UpdateClinicRequest) {
+    this.clinicService.updateClinic(updateClinicRequest.id, updateClinicRequest).subscribe({
       next: () => {
         this.updatePopupVisible = false;
         this.notificationService.success("Successfully updated clinic");
+        this.customDataSource.reload();
       }, error: (error) => {
         this.notificationService.error("Error updating clinic " + error.message);
       }

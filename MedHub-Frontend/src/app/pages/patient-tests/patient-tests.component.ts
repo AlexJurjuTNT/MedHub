@@ -5,8 +5,7 @@ import CustomStore from "devextreme/data/custom_store";
 import {LoadOptions} from "devextreme/data";
 import {lastValueFrom} from "rxjs";
 import {
-  AddTestRequestDto,
-  ClinicService,
+  ClinicService, CreateTestRequestRequest,
   GroupingInfo,
   LaboratoryDto,
   SortingInfo,
@@ -151,10 +150,10 @@ export class PatientTestsComponent implements OnInit {
     return testRequestDto.laboratory ? testRequestDto.laboratory.location : 'N/A';
   }
 
-  createTestRequest(addTestRequestDto: AddTestRequestDto) {
-    console.log(addTestRequestDto);
+  createTestRequest(createTestRequestRequest: CreateTestRequestRequest) {
+    console.log(createTestRequestRequest);
 
-    this.testRequestService.createTestRequest(addTestRequestDto).subscribe({
+    this.testRequestService.createTestRequest(createTestRequestRequest).subscribe({
       next: value => {
         this.customDataSource.reload();
         this.createTestRequestPopupVisible = false;
