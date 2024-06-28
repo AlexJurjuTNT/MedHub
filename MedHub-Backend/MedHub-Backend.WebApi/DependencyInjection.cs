@@ -5,8 +5,13 @@ namespace MedHub_Backend.WebApi;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddWebApi(this IServiceCollection services)
     {
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
+        services.AddAuthorization();
+        services.AddControllers();
+
         services.AddSwaggerDoc();
         services.AddAutomapper();
         services.AddGlobalExceptionHandling();

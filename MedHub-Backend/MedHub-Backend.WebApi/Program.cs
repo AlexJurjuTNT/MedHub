@@ -6,14 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
-    builder.Services.AddAuthorization();
-    builder.Services.AddControllers();
-
     builder.Services.AddPersistence(builder.Configuration);
-    builder.Services.AddBusiness(builder.Configuration);
-    builder.Services.AddConfiguration();
+    builder.Services.AddApplication(builder.Configuration);
+    builder.Services.AddWebApi();
 }
 
 var app = builder.Build();

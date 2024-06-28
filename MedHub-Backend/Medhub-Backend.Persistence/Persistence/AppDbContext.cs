@@ -1,12 +1,18 @@
-﻿using Medhub_Backend.Domain.Entities;
+﻿using EntityFrameworkCore.EncryptColumn.Extension;
+using EntityFrameworkCore.EncryptColumn.Util;
+using Medhub_Backend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Medhub_Backend.Persistence.Persistence;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions options) : base(options)
+    private readonly IConfiguration _configuration;
+
+    public AppDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
     {
+        _configuration = configuration;
     }
 
     public DbSet<User> Users { get; set; }
@@ -20,11 +26,9 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // modelBuilder.Entity<Patient>()
-        //     .Property(p => p.Gender)
-        //     .HasConversion(new EnumToStringConverter<Gender>());
-
-        // create the many-to-many link between testType and testRequest
+        var encryptionKey = _configuration["ColumnEncryptionKey"];
+        modelBuilder.UseEncryption(new GenerateEncryptionProvider(encryptionKey));
+        
         modelBuilder.Entity<TestRequest>()
             .HasMany(tr => tr.TestTypes)
             .WithMany(tt => tt.TestRequests);

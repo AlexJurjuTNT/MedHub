@@ -12,7 +12,7 @@ namespace Medhub_Backend.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddBusiness(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddServices();
         services.AddJwt(configuration);
