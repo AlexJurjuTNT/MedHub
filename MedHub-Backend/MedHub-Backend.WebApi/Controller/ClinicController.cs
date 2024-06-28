@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.WebApi.Controller;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class ClinicController : ControllerBase
@@ -48,6 +49,7 @@ public class ClinicController : ControllerBase
     }
 
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(ClinicDto))]
     public async Task<IActionResult> CreateClinic([FromBody] CreateClinicRequest clinicRequest)
@@ -57,6 +59,7 @@ public class ClinicController : ControllerBase
         return CreatedAtAction(nameof(GetClinicById), new { clinicId = createdClinic.Id }, _mapper.Map<ClinicDto>(createdClinic));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{clinicId}")]
     [ProducesResponseType(200, Type = typeof(ClinicDto))]
     public async Task<IActionResult> UpdateClinic([FromRoute] int clinicId, [FromBody] UpdateClinicRequest request)
@@ -74,6 +77,7 @@ public class ClinicController : ControllerBase
         return Ok(updatedClinicDto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{clinicId}")]
     [ProducesResponseType(204)]
     public async Task<IActionResult> DeleteClinic([FromRoute] int clinicId)

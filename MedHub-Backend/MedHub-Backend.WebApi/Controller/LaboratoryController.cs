@@ -50,6 +50,7 @@ public class LaboratoryController : ControllerBase
         return Ok(laboratoryDto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(LaboratoryDto))]
     public async Task<IActionResult> CreateLaboratory([FromBody] CreateLaboratoryRequest createLaboratoryRequest)
@@ -64,6 +65,7 @@ public class LaboratoryController : ControllerBase
         return CreatedAtAction(nameof(GetLaboratoryById), new { laboratoryId = createdLaboratory.Id }, _mapper.Map<LaboratoryDto>(createdLaboratory));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{laboratoryId}")]
     [ProducesResponseType(204)]
     public async Task<IActionResult> DeleteLaboratory([FromRoute] int laboratoryId)
@@ -74,6 +76,7 @@ public class LaboratoryController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{laboratoryId}")]
     [ProducesResponseType(200, Type = typeof(LaboratoryDto))]
     public async Task<IActionResult> UpdateLaboratory([FromRoute] int laboratoryId, [FromBody] UpdateLaboratoryRequest updateLaboratoryRequest)

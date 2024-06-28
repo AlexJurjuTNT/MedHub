@@ -30,6 +30,7 @@ public class TestResultController : ControllerBase
         _mapper = mapper;
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpPost]
     [ProducesResponseType(200, Type = typeof(TestResultDto))]
     public async Task<IActionResult> AddTestResult([FromForm] CreateTestResultRequest testResultRequest, IFormFile formFile)
@@ -85,6 +86,7 @@ public class TestResultController : ControllerBase
         return File(fileBytes, contentType, fileName);
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpDelete("{testResultId}")]
     public async Task<IActionResult> DeleteTestResult([FromRoute] int testResultId)
     {
@@ -94,6 +96,7 @@ public class TestResultController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(List<TestResultDto>))]
     public IActionResult GetAllTestResults()

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.WebApi.Controller;
 
-[Authorize]
+[Authorize(Roles = "Admin, Doctor")]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class TestTypeController : ControllerBase
@@ -46,6 +46,7 @@ public class TestTypeController : ControllerBase
         return Ok(testTypeDto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(TestTypeDto))]
     public async Task<IActionResult> CreateTestType([FromBody] CreateTestTypeRequest testTypeRequest)
@@ -55,6 +56,7 @@ public class TestTypeController : ControllerBase
         return CreatedAtAction(nameof(GetTestTypeById), new { testTypeId = createdTestType.Id }, _mapper.Map<TestTypeDto>(createdTestType));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{testTypeId}")]
     [ProducesResponseType(200, Type = typeof(TestTypeDto))]
     public async Task<IActionResult> UpdateTestType([FromRoute] int testTypeId, [FromBody] UpdateTestTypeRequest request)
@@ -73,6 +75,7 @@ public class TestTypeController : ControllerBase
     }
 
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{testTypeId}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]

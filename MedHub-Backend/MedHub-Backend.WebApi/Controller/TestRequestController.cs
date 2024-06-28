@@ -61,6 +61,7 @@ public class TestRequestController : ControllerBase
         return Ok(testRequestDto);
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(TestRequestDto))]
     [ProducesResponseType(400)]
@@ -97,6 +98,7 @@ public class TestRequestController : ControllerBase
         return CreatedAtAction(nameof(GetTestRequestById), new { testRequestId = createdTestRequest.Id }, _mapper.Map<TestRequestDto>(createdTestRequest));
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpPut("{testRequestId}")]
     [ProducesResponseType(200, Type = typeof(TestRequestDto))]
     [ProducesResponseType(400)]
@@ -125,6 +127,7 @@ public class TestRequestController : ControllerBase
         return Ok(updatedUserDto);
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpDelete("{testRequestId}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]

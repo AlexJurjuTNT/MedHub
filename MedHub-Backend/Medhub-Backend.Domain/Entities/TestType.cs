@@ -13,7 +13,7 @@ public class TestType
     [Column("name")]
     public string Name { get; set; } = null!;
 
+    public virtual ICollection<TestResult> TestResults { get; set; } = null!;
     public virtual ICollection<TestRequest> TestRequests { get; set; } = null!;
-
     public virtual ICollection<Laboratory> Laboratories { get; set; } = null!;
 }

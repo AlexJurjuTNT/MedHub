@@ -47,6 +47,7 @@ public class DoctorController : ControllerBase
         return Ok(userDto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{doctorId}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
@@ -58,6 +59,7 @@ public class DoctorController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{doctorId}")]
     [ProducesResponseType(200, Type = typeof(UserDto))]
     public async Task<IActionResult> UpdateDoctor([FromRoute] int doctorId, [FromBody] UpdateUserRequest request)

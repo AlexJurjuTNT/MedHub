@@ -31,7 +31,13 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<TestRequest>()
             .HasMany(tr => tr.TestTypes)
-            .WithMany(tt => tt.TestRequests);
+            .WithMany(tt => tt.TestRequests)
+            .UsingEntity(j => j.ToTable("test_request_test_type"));
+
+        modelBuilder.Entity<TestResult>()
+            .HasMany(tr => tr.TestTypes)
+            .WithMany(tt => tt.TestResults)
+            .UsingEntity(j => j.ToTable("test_result_test_type"));
     }
 
     public async Task SeedRolesAsync()

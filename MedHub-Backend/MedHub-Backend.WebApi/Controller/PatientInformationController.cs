@@ -1,10 +1,6 @@
 using AutoMapper;
-using DevExtreme.AspNet.Data;
-using DevExtreme.AspNet.Data.ResponseModel;
-using DevExtreme.AspNet.Mvc;
 using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Application.Dtos.Patient;
-using Medhub_Backend.Application.Dtos.User;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +12,6 @@ namespace MedHub_Backend.WebApi.Controller;
 [Route("api/v1/[controller]")]
 public class PatientInformationController : ControllerBase
 {
-    private readonly IClinicService _clinicService;
     private readonly IMapper _mapper;
     private readonly IPatientService _patientService;
     private readonly IUserService _userService;
@@ -25,10 +20,10 @@ public class PatientInformationController : ControllerBase
     {
         _patientService = patientService;
         _userService = userService;
-        _clinicService = clinicService;
         _mapper = mapper;
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpPost]
     [ProducesResponseType(200, Type = typeof(PatientInformationDto))]
     public async Task<IActionResult> AddPatientInformation(CreatePatientInformationRequest createPatientInformationRequest)
@@ -42,6 +37,7 @@ public class PatientInformationController : ControllerBase
         return Ok(_mapper.Map<PatientInformationDto>(createdPatient));
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpPut("{patientId}")]
     [ProducesResponseType(200, Type = typeof(PatientInformationDto))]
     public async Task<IActionResult> UpdatePatientInformation([FromRoute] int patientId, [FromBody] UpdatePatientInformationRequest informationRequest)
@@ -57,6 +53,7 @@ public class PatientInformationController : ControllerBase
         return Ok(updatedPatientDto);
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpDelete("{patientId}")]
     public async Task<IActionResult> DeletePatientInformation([FromRoute] int patientId)
     {
@@ -65,7 +62,7 @@ public class PatientInformationController : ControllerBase
 
         return NoContent();
     }
-
+    
     [HttpGet("{userId}")]
     [ProducesResponseType(200, Type = typeof(PatientInformationDto))]
     public async Task<IActionResult> GetPatientInformationForUser([FromRoute] int userId)
