@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, NgModule, OnDestroy, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, NgModule, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {DxTreeViewComponent, DxTreeViewModule, DxTreeViewTypes} from 'devextreme-angular/ui/tree-view';
-import {adminNavigation, doctorNavigation, patientNavigation} from '../../../app-navigation';
+import {getNavigation} from '../../../app-navigation';
 
 import * as events from 'devextreme/events';
-import {UserDto} from "../../services/swagger";
 import {TokenService} from "../../services/token.service";
 
 @Component({
@@ -11,7 +10,7 @@ import {TokenService} from "../../services/token.service";
   templateUrl: './side-navigation-menu.component.html',
   styleUrls: ['./side-navigation-menu.component.scss']
 })
-export class SideNavigationMenuComponent implements AfterViewInit, OnDestroy {
+export class SideNavigationMenuComponent implements OnInit, OnDestroy {
   @ViewChild(DxTreeViewComponent, {static: true})
   menu!: DxTreeViewComponent;
 
@@ -21,64 +20,45 @@ export class SideNavigationMenuComponent implements AfterViewInit, OnDestroy {
   @Output()
   openMenu = new EventEmitter<any>();
 
+  private _selectedItem!: String;
+  private _items: Record<string, unknown>[] = [];
+  private _compactMode = false;
+
   constructor(
     private elementRef: ElementRef,
     private tokenService: TokenService,
   ) {
   }
 
-  private _selectedItem!: String;
-  private user: UserDto = {} as UserDto;
+  ngOnInit() {
+    this.updateNavigation();
+  }
+
+  updateNavigation() {
+    const navItems = getNavigation(this.tokenService);
+    this._items = navItems.map((item) => {
+      if (item.path && !(/^\//.test(item.path))) {
+        item.path = `/${item.path}`;
+      }
+      return {...item, expanded: !this._compactMode};
+    });
+
+    if (this.menu && this.menu.instance) {
+      this.menu.instance.option('items', this._items);
+    }
+  }
 
   @Input()
   set selectedItem(value: String) {
     this._selectedItem = value;
-    if (!this.menu.instance) {
-      return;
+    if (this.menu && this.menu.instance) {
+      this.menu.instance.selectItem(value);
     }
-
-    this.menu.instance.selectItem(value);
   }
-
-  private _items!: Record<string, unknown>[];
 
   get items() {
-    if (!this._items) {
-
-      let navItems;
-
-      if (this.tokenService.isTokenValid()) {
-        switch (this.tokenService.getUserRole()) {
-          case "Admin":
-            navItems = adminNavigation;
-            break;
-
-          case "Doctor":
-            navItems = doctorNavigation;
-            break;
-
-          case "Patient":
-            navItems = patientNavigation;
-            break;
-
-          default:
-            throw new Error("Unknown user role " + this.tokenService.getUserRole());
-        }
-      }
-
-
-      this._items = navItems!.map((item) => {
-        if (item.path && !(/^\//.test(item.path))) {
-          item.path = `/${item.path}`;
-        }
-        return {...item, expanded: !this._compactMode}
-      });
-
-    }
     return this._items;
   }
-
-  private _compactMode = false;
 
   @Input()
   get compactMode() {
@@ -88,14 +68,12 @@ export class SideNavigationMenuComponent implements AfterViewInit, OnDestroy {
   set compactMode(val) {
     this._compactMode = val;
 
-    if (!this.menu.instance) {
-      return;
-    }
-
-    if (val) {
-      this.menu.instance.collapseAll();
-    } else {
-      this.menu.instance.expandItem(this._selectedItem);
+    if (this.menu && this.menu.instance) {
+      if (val) {
+        this.menu.instance.collapseAll();
+      } else {
+        this.menu.instance.expandItem(this._selectedItem);
+      }
     }
   }
 
