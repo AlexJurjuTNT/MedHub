@@ -51,7 +51,7 @@ public class ClinicController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(ClinicDto))]
-    public async Task<IActionResult> CreateClinic([FromBody] AddClinicRequest clinicRequest)
+    public async Task<IActionResult> CreateClinic([FromBody] CreateClinicRequest clinicRequest)
     {
         var clinic = _mapper.Map<Clinic>(clinicRequest);
         var createdClinic = await _clinicService.CreateAsync(clinic);
@@ -110,5 +110,14 @@ public class ClinicController : ControllerBase
         var laboratories = clinic.Laboratories;
         var laboratoriesDto = _mapper.Map<List<LaboratoryDto>>(laboratories);
         return Ok(laboratoriesDto);
+    }
+
+    [HttpGet("paged")]
+    [ProducesResponseType(200, Type = typeof(LoadResult))]
+    public async Task<IActionResult> GetAllPatientsOfClinic([FromQuery] int clinicId, [FromQuery] DataSourceLoadOptions loadOptions)
+    {
+        var users = await _clinicService.GetAllPatientsOfClinicAsync(clinicId);
+        var resultingUsers = DataSourceLoader.Load(_mapper.Map<IEnumerable<UserDto>>(users), loadOptions);
+        return Ok(resultingUsers);
     }
 }

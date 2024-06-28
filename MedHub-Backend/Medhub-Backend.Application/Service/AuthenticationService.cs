@@ -28,7 +28,7 @@ public class AuthenticationService : IAuthenticationService
     public async Task<User> RegisterPatientAsync(User user)
     {
         var userByUsername = _userService.GetByUsername(user.Username);
-        if (userByUsername != null) throw new UserAlreadyExistsException($"User with username {user.Username} already exists");
+        if (userByUsername != null) throw new UserAlreadyExistsException(user.Username);
 
         var clinic = await _clinicService.GetByIdAsync(user.ClinicId);
         if (clinic == null) throw new ClinicNotFoundException(user.ClinicId);
@@ -76,7 +76,7 @@ public class AuthenticationService : IAuthenticationService
     public AuthenticationResponse LoginUserAsync(LoginRequest loginRequest)
     {
         var user = _userService.GetByUsername(loginRequest.Username);
-        if (user == null) throw new UserNotFoundException($"User with username {loginRequest.Username} not found");
+        if (user == null) throw new UserNotFoundException(loginRequest.Username);
 
         if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password)) throw new PasswordMismatchException();
 

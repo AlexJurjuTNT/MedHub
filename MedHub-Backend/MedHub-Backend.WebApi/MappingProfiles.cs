@@ -23,7 +23,7 @@ public class MappingProfiles : Profile
         CreateMap<PatientRegisterRequest, User>();
 
         CreateMap<Clinic, ClinicDto>();
-        CreateMap<AddClinicRequest, Clinic>();
+        CreateMap<CreateClinicRequest, Clinic>();
         CreateMap<UpdateClinicRequest, Clinic>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 

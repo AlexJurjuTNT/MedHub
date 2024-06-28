@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Medhub_Backend.Application.Dtos.Clinic;
 
-public class AddClinicRequest
+public class CreateClinicRequest
 {
     [Required]
     public string Name { get; set; } = null!;

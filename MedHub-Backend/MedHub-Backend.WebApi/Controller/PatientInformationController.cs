@@ -77,14 +77,4 @@ public class PatientInformationController : ControllerBase
         var patientDto = _mapper.Map<PatientInformationDto>(user.PatientInformation);
         return Ok(patientDto);
     }
-
-
-    [HttpGet("paged")]
-    [ProducesResponseType(200, Type = typeof(LoadResult))]
-    public async Task<IActionResult> GetAllPatientsOfClinic([FromQuery] int clinicId, [FromQuery] DataSourceLoadOptions loadOptions)
-    {
-        var users = await _clinicService.GetAllPatientsOfClinicAsync(clinicId);
-        var resultingUsers = DataSourceLoader.Load(_mapper.Map<IEnumerable<UserDto>>(users), loadOptions);
-        return Ok(resultingUsers);
-    }
 }
