@@ -17,7 +17,7 @@ export class TestTypeListComponent {
   customDataSource: DataSource;
 
   selectedRowKeys: any[] = [];
-  selectedRow: TestTypeDto = {} as TestTypeDto;
+  selectedRow: TestTypeDto | null = null;
 
   updatePopupVisible: boolean = false;
   createPopupVisible: boolean = false;

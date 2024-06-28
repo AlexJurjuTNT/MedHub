@@ -9,10 +9,12 @@
   (createLaboratory)="createLaboratory($event)">
 </app-laboratory-create-popup>
 
-<dx-button (click)="this.updatePopupVisible = true;" text="Update Laboratory"></dx-button>
+<dx-button (click)="this.updatePopupVisible = true;"
+           [disabled]="!this.selectedRow"
+           text="Update Laboratory"></dx-button>
 <app-laboratory-update-popup
   [(visible)]="updatePopupVisible"
-  [selectedLaboratory]="selectedRow"
+  [selectedLaboratory]="selectedRow!"
   (updatedLaboratory)="updateLaboratory($event)">
 </app-laboratory-update-popup>
 

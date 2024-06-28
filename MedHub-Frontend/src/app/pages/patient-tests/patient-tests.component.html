@@ -2,18 +2,19 @@
 <div class="content-block">
   <div class="dx-card responsive-paddings">
 
-    <dx-button
-      (onClick)="this.createTestRequestPopupVisible=true;"
-      text="Create Test Tequest"
-      type="normal"></dx-button>
-    <app-test-request-create-popup
-      (createTestRequest)="createTestRequest($event)"
-      [(visible)]="createTestRequestPopupVisible"
-      [doctor]="this.doctor"
-      [laboratories]="laboratories"
-      [user]="user"
-    >
-    </app-test-request-create-popup>
+    <ng-container *ngIf="role != Role.Patient">
+      <dx-button
+        (onClick)="this.createTestRequestPopupVisible=true;"
+        text="Create Test Tequest"
+        type="normal"></dx-button>
+      <app-test-request-create-popup
+        (createTestRequest)="createTestRequest($event)"
+        [(visible)]="createTestRequestPopupVisible"
+        [doctor]="this.doctor"
+        [laboratories]="laboratories"
+        [user]="user"
+      ></app-test-request-create-popup>
+    </ng-container>
 
     <dx-data-grid [columnAutoWidth]="true"
                   [columnHidingEnabled]="true"
@@ -26,7 +27,7 @@
       <dxo-paging [pageSize]="10"></dxo-paging>
       <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
       <dxo-filter-row [visible]="true"></dxo-filter-row>
-      <dxo-editing [allowDeleting]="true" [confirmDelete]="true" mode="row"></dxo-editing>
+      <dxo-editing [allowDeleting]="role !== Role.Patient" [confirmDelete]="true" mode="row"></dxo-editing>
 
       <!-- Define the columns for TestRequestDto data -->
       <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>

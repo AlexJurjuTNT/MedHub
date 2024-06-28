@@ -2,17 +2,21 @@
 <div class="content-block">
   <div class="dx-card responsive-paddings">
     <ng-container *ngIf="isAdmin">
-      <dx-button (click)="this.createPopupVisible=true;" text="Add Test Type"></dx-button>
+
+      <dx-button (click)="this.createPopupVisible=true;"
+                 text="Add Test Type"></dx-button>
       <app-create-test-type-popup
         (createTestType)="createTestType($event)"
         [(visible)]="createPopupVisible">
       </app-create-test-type-popup>
 
-      <dx-button (click)="this.updatePopupVisible = true" text="Update Test Type"></dx-button>
+      <dx-button (click)="this.updatePopupVisible = true"
+                 [disabled]="!this.selectedRow"
+                 text="Update Test Type"></dx-button>
       <app-update-test-type-popup
         (updateTestType)="updateTestType($event)"
         [(visible)]="updatePopupVisible"
-        [selectedTestType]="selectedRow">
+        [selectedTestType]="selectedRow!">
       </app-update-test-type-popup>
     </ng-container>
 

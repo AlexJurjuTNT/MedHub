@@ -13,7 +13,7 @@ export class LaboratoriesDatagridComponent {
   createPopupVisible = false;
   updatePopupVisible = false;
   selectedRowKeys = [];
-  selectedRow: LaboratoryDto = {} as LaboratoryDto;
+  selectedRow: LaboratoryDto | null = null;
 
   constructor(
     private laboratoryService: LaboratoryService,
@@ -21,7 +21,7 @@ export class LaboratoriesDatagridComponent {
   ) {
   }
 
-  private refreshLaboratories(){
+  private refreshLaboratories() {
   }
 
   createLaboratory(createLaboratoryRequest: CreateLaboratoryRequest) {
@@ -39,7 +39,7 @@ export class LaboratoriesDatagridComponent {
 
   // alternative would be use laboratory service to get laboratories again
   updateLaboratory(updateLaboratoryRequest: UpdateLaboratoryRequest) {
-    this.laboratoryService.updateLaboratory(this.selectedRow.id, updateLaboratoryRequest).subscribe({
+    this.laboratoryService.updateLaboratory(this.selectedRow!.id, updateLaboratoryRequest).subscribe({
       next: (updatedLaboratory) => {
         this.updatePopupVisible = false;
         const index = this.clinic.laboratories.findIndex(lab => lab.id === updatedLaboratory.id);

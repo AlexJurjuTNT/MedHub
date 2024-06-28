@@ -18,7 +18,7 @@ export class ClinicListComponent {
   updatePopupVisible: boolean = false;
 
   selectedRowKeys: any[] = [];
-  selectedRow: ClinicDto = {} as ClinicDto;
+  selectedRow: ClinicDto | null = null;
 
   constructor(
     private clinicService: ClinicService,
