@@ -3,6 +3,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
 import {AuthenticationService, LoginRequest, UserDto, UserService} from "./swagger";
 import {TokenService} from "./token.service";
 import {catchError, map, Observable, of, switchMap, tap} from "rxjs";
+import {Role} from "./role.enum";
 
 const defaultPath = '/home';
 
@@ -119,6 +120,7 @@ export class AuthService {
 
   async logOut() {
     this._user = null;
+    this._lastAuthenticatedPath = defaultPath;
     this.tokenService.removeToken();
     this.router.navigate(['/login-form']);
   }
@@ -128,33 +130,60 @@ export class AuthService {
 export class AuthGuardService implements CanActivate {
   constructor(
     private router: Router,
+    private tokenService: TokenService,
     private authService: AuthService
   ) {
   }
 
-  canActivate(route: ActivatedRouteSnapshot): boolean {
-    const isLoggedIn = this.authService.loggedIn;
-    const isAuthForm = [
-      'login-form',
-      'reset-password',
-      'change-password',
-      'change-default-password'
-    ].includes(route.routeConfig?.path || defaultPath);
+  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
+    return this.authService.getUser().pipe(
+      map(result => {
+        const isLoggedIn = result.isOk && result.data !== null;
+        const user = result.data;
+        const role: Role | null = this.tokenService.getUserRole();
 
-    if (isLoggedIn && isAuthForm) {
-      this.authService.lastAuthenticatedPath = defaultPath;
-      this.router.navigate([defaultPath]);
-      return false;
-    }
+        const isAuthForm = [
+          'login-form',
+          'reset-password',
+          'change-password',
+          'change-default-password'
+        ].includes(route.routeConfig?.path || defaultPath);
 
-    if (!isLoggedIn && !isAuthForm) {
-      this.router.navigate(['/login-form']);
-    }
+        const patientAllowedPaths = [
+          'pages/test-result-view',
+          'pages/patient-tests'
+        ];
 
-    if (isLoggedIn) {
-      this.authService.lastAuthenticatedPath = route.routeConfig?.path || defaultPath;
-    }
+        // If user is logged in and on an auth form, redirect to home
+        if (isLoggedIn && isAuthForm) {
+          this.authService.lastAuthenticatedPath = defaultPath;
+          this.router.navigate([defaultPath]);
+          return false;
+        }
 
-    return isLoggedIn || isAuthForm;
+        // If user is not logged in and not on an auth form, redirect to login
+        if (!isLoggedIn && !isAuthForm) {
+          this.router.navigate(['/login-form']);
+          return false;
+        }
+
+        // If user is a patient, check if they're trying to access an allowed path
+        if (isLoggedIn && user && role === 'Patient') {
+          const currentPath = route.routeConfig?.path || '';
+          const isAllowedPath = patientAllowedPaths.some(path => currentPath.startsWith(path));
+
+          if (!isAllowedPath) {
+            this.router.navigate(['/pages/patient-tests', user.id]);
+            return false;
+          }
+        }
+
+        if (isLoggedIn) {
+          this.authService.lastAuthenticatedPath = route.routeConfig?.path || defaultPath;
+        }
+
+        return isLoggedIn || isAuthForm;
+      })
+    );
   }
 }
