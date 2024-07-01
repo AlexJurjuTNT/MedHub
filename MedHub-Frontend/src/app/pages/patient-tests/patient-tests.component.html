@@ -2,7 +2,7 @@
 <div class="content-block">
   <div class="dx-card responsive-paddings">
 
-    <ng-container *ngIf="role != Role.Patient">
+    <ng-container *ngIf="role != Role.Patient && role != Role.Admin">
       <dx-button
         (onClick)="this.createTestRequestPopupVisible=true;"
         text="Create Test Tequest"
@@ -12,7 +12,7 @@
         [(visible)]="createTestRequestPopupVisible"
         [doctor]="this.doctor"
         [laboratories]="laboratories"
-        [user]="user"
+        [patient]="user"
       ></app-test-request-create-popup>
     </ng-container>
 

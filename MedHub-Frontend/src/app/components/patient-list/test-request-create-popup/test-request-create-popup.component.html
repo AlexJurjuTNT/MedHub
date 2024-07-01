@@ -15,9 +15,10 @@
           <div class="dx-field-label">Patient</div>
           <div class="dx-field-value">
             <dx-text-box
-              [value]="user.username"
+              [value]="patient.firstName + ' ' + patient.familyName"
               [readOnly]="true"
-            ></dx-text-box>
+              [inputAttr]="{style: 'background-color: transparent; color: black;'}">
+            </dx-text-box>
           </div>
         </div>
 
@@ -25,9 +26,10 @@
           <div class="dx-field-label">Doctor</div>
           <div class="dx-field-value">
             <dx-text-box
-              [value]="doctor.username"
+              [value]="doctor.firstName + ' ' + doctor.familyName"
               [readOnly]="true"
-            ></dx-text-box>
+              [inputAttr]="{style: 'background-color: transparent; color: black;'}">
+            </dx-text-box>
           </div>
         </div>
 

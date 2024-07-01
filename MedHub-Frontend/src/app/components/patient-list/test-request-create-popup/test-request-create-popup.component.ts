@@ -9,7 +9,7 @@ import {CreateTestRequestRequest, LaboratoryDto, TestTypeDto, UserDto} from "../
 export class TestRequestCreatePopupComponent {
   @Input() visible: boolean = false;
   @Input() doctor: UserDto = {} as UserDto;
-  @Input() user: UserDto = {} as UserDto;
+  @Input() patient: UserDto = {} as UserDto;
   @Input() laboratories: LaboratoryDto[] = [];
 
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -40,7 +40,7 @@ export class TestRequestCreatePopupComponent {
     const createTestRequest: CreateTestRequestRequest = {
       testTypesId: this.selectedTestTypesIds,
       laboratoryId: this.selectedLaboratoryId,
-      patientId: this.user.id,
+      patientId: this.patient.id,
       doctorId: this.doctor.id,
     }
 
