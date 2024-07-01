@@ -22,7 +22,7 @@ import {
 } from "devextreme-angular";
 import {DxiColumnModule, DxoFilterRowModule, DxoPagerModule, DxoPagingModule} from "devextreme-angular/ui/nested";
 import {TestResultCreateComponent} from './pages/test-result-create/test-result-create.component';
-import {TestResultView} from './pages/test-result-view/test-result-view';
+import {TestResultViewComponent} from './pages/test-result-view/test-result-view.component';
 import {httpTokenInterceptor} from "./shared/services/http-token.interceptor";
 import {ChangeDefaultPasswordComponent} from './shared/components/change-default-password/change-default-password.component';
 import {PatientInfoComponent} from './pages/patient-info/patient-info.component';
@@ -31,7 +31,7 @@ import {PatientInfoComponent} from './pages/patient-info/patient-info.component'
   declarations: [
     AppComponent,
     TestResultCreateComponent,
-    TestResultView,
+    TestResultViewComponent,
     ChangeDefaultPasswordComponent,
     PatientInfoComponent,
   ],

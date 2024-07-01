@@ -29,7 +29,7 @@ import {LoadOptions} from "devextreme/data";
 })
 export class PatientTestsComponent implements OnInit {
   customDataSource: DataSource = {} as DataSource;
-  user: UserDto = {} as UserDto;
+  patient: UserDto = {} as UserDto;
   role: Role | null;
   remainingTestTypes: { [key: number]: TestTypeDto[] } = {};
 
@@ -53,11 +53,11 @@ export class PatientTestsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
-      map(params => Number(params.get('id'))),
+      map(params => Number(params.get('patientId'))),
       switchMap(userId => this.userService.getUserById(userId))
     ).subscribe({
       next: (user: UserDto) => {
-        this.user = user;
+        this.patient = user;
         this.initializeDataSource();
       },
       error: (error) => {
@@ -78,7 +78,7 @@ export class PatientTestsComponent implements OnInit {
           try {
             let response = await lastValueFrom(
               this.testRequestService.getAllTestRequestsOfUserInClinic(
-                this.user.id,
+                this.patient.id,
                 loadOptions.requireTotalCount,
                 loadOptions.requireGroupCount,
                 false, // isCountQuery
@@ -141,11 +141,11 @@ export class PatientTestsComponent implements OnInit {
   }
 
   navigateToViewTestResult(testResultId: number) {
-    this.router.navigate(['pages/test-result-view', testResultId]);
+    this.router.navigate(['pages/test-result-view', this.patient.id, testResultId]);
   }
 
-  navigateToAddTestResult(testRequestId: number, remainingTestTypes: TestTypeDto[]) {
-    this.router.navigate(['pages/test-result-create', testRequestId], {state: {remainingTestTypes}});
+  navigateToAddTestResult(testRequestId: number) {
+    this.router.navigate(['pages/test-result-create', this.patient.id, testRequestId]);
   }
 
   getDoctorName(testRequestDto: TestRequestDto): string {

@@ -19,7 +19,7 @@ import {PatientListComponent} from './pages/patient-list/patient-list.component'
 import {PatientTestsComponent} from "./pages/patient-tests/patient-tests.component";
 import {TestTypeListComponent} from './pages/test-type-list/test-type-list.component';
 import {TestResultCreateComponent} from "./pages/test-result-create/test-result-create.component";
-import {TestResultView} from "./pages/test-result-view/test-result-view";
+import {TestResultViewComponent} from "./pages/test-result-view/test-result-view.component";
 import {ClinicListComponent} from './pages/clinic-list/clinic-list.component';
 import {DoctorListComponent} from './pages/doctor-list/doctor-list.component';
 import {ChangeDefaultPasswordComponent} from "./shared/components/change-default-password/change-default-password.component";
@@ -58,17 +58,17 @@ const routes: Routes = [
     canActivate: [AuthGuardService]
   },
   {
-    path: 'pages/patient-tests/:id',
+    path: 'pages/patient-tests/:patientId',
     component: PatientTestsComponent,
     canActivate: [AuthGuardService]
   },
   {
-    path: 'pages/test-result-view/:testResultId',
-    component: TestResultView,
+    path: 'pages/test-result-view/:patientId/:testResultId',
+    component: TestResultViewComponent,
     canActivate: [AuthGuardService]
   },
   {
-    path: 'pages/test-result-create/:testRequestId',
+    path: 'pages/test-result-create/:patientId/:testRequestId',
     component: TestResultCreateComponent,
     canActivate: [AuthGuardService]
   },

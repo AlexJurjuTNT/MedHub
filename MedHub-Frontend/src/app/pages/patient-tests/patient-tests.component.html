@@ -3,9 +3,9 @@
   <div class="patient-info">
     <h2>Patient Information</h2>
     <div class="patient-details">
-      <p><strong>Name:</strong> {{ user.firstName }} {{ user.familyName }}</p>
-      <p><strong>Username:</strong> {{ user.username }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Name:</strong> {{ patient.firstName }} {{ patient.familyName }}</p>
+      <p><strong>Username:</strong> {{ patient.username }}</p>
+      <p><strong>Email:</strong> {{ patient.email }}</p>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
         [(visible)]="createTestRequestPopupVisible"
         [doctor]="this.doctor"
         [laboratories]="laboratories"
-        [patient]="user"
+        [patient]="patient"
       ></app-test-request-create-popup>
     </ng-container>
 
@@ -55,7 +55,7 @@
         <div *ngIf="remainingTestTypes[request.data.id]?.length!> 0">
           <span>Remaining Test Types: {{ getTestTypeNames(remainingTestTypes[request.data.id]) }}</span>
           <div *ngIf="role !== Role.Patient">
-            <dx-button (onClick)="navigateToAddTestResult(request.data.id, remainingTestTypes[request.data.id])"
+            <dx-button (onClick)="navigateToAddTestResult(request.data.id)"
                        [text]="'Add Test Result'">
             </dx-button>
           </div>

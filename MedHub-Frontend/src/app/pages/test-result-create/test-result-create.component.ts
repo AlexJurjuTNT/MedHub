@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {TestRequestService, TestResultService, TestTypeDto} from "../../shared/services/swagger";
-import {ActivatedRoute} from "@angular/router";
+import {TestRequestService, TestResultService, TestTypeDto, UserDto, UserService} from "../../shared/services/swagger";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NotificationService} from "../../shared/services/notification.service";
-import {Location} from "@angular/common";
-
+import {map, mergeMap} from 'rxjs/operators';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-test-result-create',
@@ -14,19 +14,44 @@ export class TestResultCreateComponent implements OnInit {
   selectedFiles: File[] = [];
   remainingTestTypes: TestTypeDto[] = [];
   selectedTestTypesIds: number[] = [];
-  testRequestId: number = 0;
+  testResultId: number = 0;
+  patientId: number = 0;
+  patient: UserDto = {} as UserDto;
 
   constructor(
     private route: ActivatedRoute,
-    private location: Location,
+    private router: Router,
     private testResultService: TestResultService,
     private testRequestService: TestRequestService,
+    private userService: UserService,
     private notificationService: NotificationService
   ) {
   }
 
   ngOnInit(): void {
-    this.getRemainingTestTypes();
+    this.route.paramMap.pipe(
+      map(params => ({
+        testRequestId: Number(params.get('testRequestId')),
+        patientId: Number(params.get('patientId'))
+      })),
+      mergeMap(({testRequestId, patientId}) => {
+        this.testResultId = testRequestId;
+        this.patientId = patientId;
+        return forkJoin({
+          remainingTestTypes: this.testRequestService.getRemainingTestTypes(testRequestId),
+          patient: this.userService.getUserById(patientId)
+        });
+      })
+    ).subscribe({
+      next: ({remainingTestTypes, patient}) => {
+        this.remainingTestTypes = remainingTestTypes;
+        this.patient = patient;
+        console.log('Patient details:', this.patient);
+      },
+      error: (error) => {
+        this.notificationService.error("Error fetching data", error);
+      }
+    });
   }
 
   uploadFile() {
@@ -35,10 +60,10 @@ export class TestResultCreateComponent implements OnInit {
     } else if (this.selectedTestTypesIds.length == 0) {
       this.notificationService.error("Please select at least one test type");
     } else {
-      this.testResultService.addTestResultForm(this.testRequestId, this.selectedTestTypesIds, this.selectedFiles[0]).subscribe({
+      this.testResultService.addTestResultForm(this.testResultId, this.selectedTestTypesIds, this.selectedFiles[0]).subscribe({
         next: () => {
           this.notificationService.success("Test result uploaded successfully");
-          this.location.back();
+          this.goBackToPatientTests();
         },
         error: err => {
           this.notificationService.error("Error uploading test result", err);
@@ -47,15 +72,7 @@ export class TestResultCreateComponent implements OnInit {
     }
   }
 
-  private getRemainingTestTypes(): void {
-    this.route.paramMap.subscribe(params => {
-      this.testRequestId = Number(params.get('testRequestId'));
-      this.testRequestService.getRemainingTestTypes(this.testRequestId).subscribe({
-        next: (result: TestTypeDto[]) => {
-          this.remainingTestTypes = result;
-        }
-      })
-    });
+  goBackToPatientTests() {
+    this.router.navigate(['/pages/patient-tests', this.patientId]);
   }
-
 }

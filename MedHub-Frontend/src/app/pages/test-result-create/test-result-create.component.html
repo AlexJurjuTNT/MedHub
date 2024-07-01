@@ -1,14 +1,29 @@
 <h2 class="content-block">Test Result Upload</h2>
 <div class="content-block">
+
+  <div class="patient-info">
+    <h2>Patient Information</h2>
+    <div class="patient-details">
+      <p><strong>Name:</strong> {{ patient.firstName }} {{ patient.familyName }}</p>
+      <p><strong>Username:</strong> {{ patient.username }}</p>
+      <p><strong>Email:</strong> {{ patient.email }}</p>
+    </div>
+  </div>
+
   <div class="dx-card responsive-paddings">
+
+    <dx-button
+      text="Back to Patient Tests"
+      (onClick)="goBackToPatientTests()"
+      icon="arrowback"
+    ></dx-button>
 
     <dx-file-uploader
       [(value)]="selectedFiles"
       accept=".pdf"
       labelText=""
       selectButtonText="Select PDF"
-      uploadMode="useForm"
-    >
+      uploadMode="useForm">
     </dx-file-uploader>
 
     <dx-tag-box
@@ -21,14 +36,12 @@
       [showClearButton]="true"
       [value]="selectedTestTypesIds"
       displayExpr="name"
-      valueExpr="id"
-    >
+      valueExpr="id">
     </dx-tag-box>
 
     <dx-button
       (onClick)="uploadFile()"
-      text="Upload"
-    >
+      text="Upload">
     </dx-button>
 
   </div>
