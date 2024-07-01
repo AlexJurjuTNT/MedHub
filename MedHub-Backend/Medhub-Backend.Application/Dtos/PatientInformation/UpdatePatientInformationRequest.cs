@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Medhub_Backend.Application.Dtos.Patient;
+namespace Medhub_Backend.Application.Dtos.PatientInformation;
 
 public class UpdatePatientInformationRequest
 {

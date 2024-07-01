@@ -1,6 +1,6 @@
 using Medhub_Backend.Application;
-using Medhub_Backend.Persistence;
-using Medhub_Backend.Persistence.Persistence;
+using Medhub_Backend.Infrastructure;
+using Medhub_Backend.Infrastructure.Persistence;
 using MedHub_Backend.WebApi;
 using Microsoft.EntityFrameworkCore;
 

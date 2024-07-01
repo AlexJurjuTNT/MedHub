@@ -75,9 +75,7 @@ public class TestResultController : ControllerBase
         if ((user.Role.Name == "Patient" && testResult.TestRequest.PatientId != user.Id) ||
             (user.Role.Name == "Doctor" && testResult.TestRequest.DoctorId != user.Id) ||
             (user.Role.Name != "Patient" && user.Role.Name != "Doctor"))
-        {
             return Unauthorized("User not authorized to access this result");
-        }
 
         var result = await _testResultService.DownloadTestResultPdf(resultId);
         if (result == null) return NotFound();
@@ -90,9 +88,7 @@ public class TestResultController : ControllerBase
     [HttpDelete("{testResultId}")]
     public async Task<IActionResult> DeleteTestResult([FromRoute] int testResultId)
     {
-        var result = await _testResultService.DeleteByIdAsync(testResultId);
-        if (!result) return NotFound($"Test result with id {testResultId} not found");
-
+        await _testResultService.DeleteByIdAsync(testResultId);
         return Ok();
     }
 

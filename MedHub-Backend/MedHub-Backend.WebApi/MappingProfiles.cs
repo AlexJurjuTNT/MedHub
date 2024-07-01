@@ -2,7 +2,7 @@
 using Medhub_Backend.Application.Dtos.Authentication;
 using Medhub_Backend.Application.Dtos.Clinic;
 using Medhub_Backend.Application.Dtos.Laboratory;
-using Medhub_Backend.Application.Dtos.Patient;
+using Medhub_Backend.Application.Dtos.PatientInformation;
 using Medhub_Backend.Application.Dtos.TestRequest;
 using Medhub_Backend.Application.Dtos.TestResult;
 using Medhub_Backend.Application.Dtos.TestType;

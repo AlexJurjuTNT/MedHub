@@ -30,7 +30,7 @@ public class AuthenticationController : ControllerBase
     [ProducesResponseType(200, Type = typeof(AuthenticationResponse))]
     public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
-        AuthenticationResponse authenticationResponse = await _authenticationService.LoginUserAsync(loginRequest);
+        var authenticationResponse = await _authenticationService.LoginUserAsync(loginRequest);
         return Ok(authenticationResponse);
     }
 

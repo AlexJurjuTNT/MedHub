@@ -31,7 +31,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Medhub-Backend.Application\Medhub-Backend.Application.csproj"/>
-        <ProjectReference Include="..\Medhub-Backend.Persistence\Medhub-Backend.Persistence.csproj"/>
+        <ProjectReference Include="..\Medhub-Backend.Infrastructure\Medhub-Backend.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>

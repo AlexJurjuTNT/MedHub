@@ -2,6 +2,7 @@ using Medhub_Backend.Application.Abstractions.Persistence;
 using Medhub_Backend.Application.Abstractions.Service;
 using Medhub_Backend.Application.Helper;
 using Medhub_Backend.Domain.Entities;
+using Medhub_Backend.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 
 namespace Medhub_Backend.Application.Service;
@@ -38,13 +39,11 @@ public class TestResultService : ITestResultService
         return await _testResultRepository.GetByIdAsync(testResultId);
     }
 
-    public async Task<bool> DeleteByIdAsync(int testResultId)
+    public async Task DeleteByIdAsync(int testResultId)
     {
         var testResult = await _testResultRepository.GetByIdAsync(testResultId);
-        if (testResult == null) return false;
-
-        _testResultRepository.Remove(testResult);
-        return true;
+        if (testResult is null) throw new TestResultNotFoundException(testResultId);
+        await _testResultRepository.Remove(testResult);
     }
 
     public async Task<TestResult> CreateTestResultWithFile(TestResult testResult, List<int> testTypeIds, TestRequest testRequest, IFormFile formFile)

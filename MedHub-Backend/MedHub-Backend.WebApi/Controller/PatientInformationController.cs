@@ -1,6 +1,6 @@
 using AutoMapper;
 using Medhub_Backend.Application.Abstractions.Service;
-using Medhub_Backend.Application.Dtos.Patient;
+using Medhub_Backend.Application.Dtos.PatientInformation;
 using Medhub_Backend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -62,7 +62,7 @@ public class PatientInformationController : ControllerBase
 
         return NoContent();
     }
-    
+
     [HttpGet("{userId}")]
     [ProducesResponseType(200, Type = typeof(PatientInformationDto))]
     public async Task<IActionResult> GetPatientInformationForUser([FromRoute] int userId)

@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedHub-Backend.WebApi", "Me
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medhub-Backend.Domain", "Medhub-Backend.Domain\Medhub-Backend.Domain.csproj", "{F3952913-B80D-416F-92AB-8EBCD5238658}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medhub-Backend.Persistence", "Medhub-Backend.Persistence\Medhub-Backend.Persistence.csproj", "{10978B30-F347-4F4A-BCAF-DCBEB8F28CD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medhub-Backend.Infrastructure", "Medhub-Backend.Infrastructure\Medhub-Backend.Infrastructure.csproj", "{10978B30-F347-4F4A-BCAF-DCBEB8F28CD2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medhub-Backend.Application", "Medhub-Backend.Application\Medhub-Backend.Application.csproj", "{46C24C96-B5F4-441F-99FB-F9B704506EAA}"
 EndProject

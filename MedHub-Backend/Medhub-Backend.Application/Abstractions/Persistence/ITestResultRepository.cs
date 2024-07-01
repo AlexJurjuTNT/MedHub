@@ -6,7 +6,7 @@ public interface ITestResultRepository
 {
     Task AddAsync(TestResult testResult);
     Task UpdateAsync(TestResult testResult);
-    void Remove(object testResult);
+    Task Remove(TestResult testResult);
     Task<TestResult?> GetByIdAsync(int testResultId);
     IQueryable<TestResult> GetAll();
 }
