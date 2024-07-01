@@ -1,24 +1,17 @@
 <h2 class="content-block">Test Type List</h2>
 <div class="content-block">
   <div class="dx-card responsive-paddings">
-    <ng-container *ngIf="isAdmin">
 
-      <dx-button (click)="this.createPopupVisible=true;"
-                 text="Add Test Type"></dx-button>
-      <app-create-test-type-popup
-        (createTestType)="createTestType($event)"
-        [(visible)]="createPopupVisible">
-      </app-create-test-type-popup>
+    <app-create-test-type-popup
+      (createTestType)="createTestType($event)"
+      [(visible)]="createPopupVisible">
+    </app-create-test-type-popup>
 
-      <dx-button (click)="this.updatePopupVisible = true"
-                 [disabled]="!this.selectedRow"
-                 text="Update Test Type"></dx-button>
-      <app-update-test-type-popup
-        (updateTestType)="updateTestType($event)"
-        [(visible)]="updatePopupVisible"
-        [selectedTestType]="selectedRow!">
-      </app-update-test-type-popup>
-    </ng-container>
+    <app-update-test-type-popup
+      (updateTestType)="updateTestType($event)"
+      [(visible)]="updatePopupVisible"
+      [selectedTestType]="selectedRow!">
+    </app-update-test-type-popup>
 
     <dx-data-grid
       (onSelectionChanged)="onSelectionChanged($event)"
@@ -30,13 +23,41 @@
       [showBorders]="true"
       class="dx-card wide-card">
 
+      <dxo-editing mode="popup"
+                   [allowAdding]="isAdmin"
+                   [allowUpdating]="isAdmin"
+                   [allowDeleting]="isAdmin" [confirmDelete]="true">
+      </dxo-editing>
+
+      <dxo-toolbar>
+        <dxi-item location="before">
+          <div *dxTemplate>
+            <dx-button
+              icon="edit"
+              text="Update Test Type"
+              (onClick)="this.updatePopupVisible = true"
+              [disabled]="!this.selectedRow">
+            </dx-button>
+          </div>
+        </dxi-item>
+
+        <dxi-item location="after">
+          <div *dxTemplate>
+            <dx-button
+              icon="plus"
+              (onClick)="this.createPopupVisible = true"
+              [disabled]="!isAdmin">
+            </dx-button>
+          </div>
+        </dxi-item>
+
+      </dxo-toolbar>
+
       <dxo-selection mode="single"></dxo-selection>
       <dxo-paging [pageSize]="10"></dxo-paging>
       <dxo-pager [showInfo]="true" [showPageSizeSelector]="true"></dxo-pager>
       <dxo-filter-row [visible]="true"></dxo-filter-row>
-      <dxo-editing [allowDeleting]="isAdmin" [confirmDelete]="true" mode="row"></dxo-editing>
 
-      <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
       <dxi-column [width]="250" caption="Test Name" dataField="name"></dxi-column>
     </dx-data-grid>
   </div>
