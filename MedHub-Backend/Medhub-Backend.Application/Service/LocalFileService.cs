@@ -7,44 +7,64 @@ namespace Medhub_Backend.Application.Service;
 
 public class LocalFileService : IFileService
 {
-    public async Task<string> UploadFile(IFormFile file, string uploadPath)
+    public async Task<string> UploadFile(IFormFile file, string clinicName, string patientName)
     {
-        string fullPath;
+        if (file == null || file.Length == 0)
+        {
+            throw new ArgumentException("Invalid file", nameof(file));
+        }
+
         try
         {
-            var fileInfo = new FileInfo(file.FileName);
-            var fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + DateTime.Now.Ticks + fileInfo.Extension;
-            var filePath = Path.Combine(uploadPath, fileName);
-            fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filePath);
+            var fileName = GenerateUniqueFileName(file.FileName);
+            var uploadPath = LocalStorageHelper.GetClinicUserPath(clinicName, patientName);
+            var fullPath = Path.Combine(uploadPath, fileName);
 
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(fileStream);
-            }
+            using var fileStream = new FileStream(fullPath, FileMode.Create);
+            await file.CopyToAsync(fileStream);
+
+            return fullPath;
         }
         catch (Exception ex)
         {
-            throw new Exception("File upload failed: " + ex.Message);
+            throw new IOException($"File upload failed: {ex.Message}", ex);
         }
-
-        return fullPath;
     }
 
-    public async Task<(byte[], string, string)> DownloadFile(string fileName)
+    public async Task<(byte[] Content, string ContentType, string FileName)> DownloadFile(string fileName)
     {
         try
         {
             var filePath = LocalStorageHelper.GetUploadFilePath(fileName);
-            var provider = new FileExtensionContentTypeProvider();
-            if (!provider.TryGetContentType(filePath, out var contentType)) contentType = "application/octet-stream";
 
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("File not found", fileName);
+            }
+
+            var contentType = GetContentType(filePath);
             var bytes = await File.ReadAllBytesAsync(filePath);
+
             return (bytes, contentType, Path.GetFileName(filePath));
         }
-
         catch (Exception ex)
         {
-            throw new Exception("File download failed: " + ex.Message);
+            throw new IOException($"File download failed: {ex.Message}", ex);
         }
+    }
+
+    private string GenerateUniqueFileName(string originalFileName)
+    {
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(originalFileName);
+        var fileExtension = Path.GetExtension(originalFileName);
+        return $"{fileNameWithoutExtension}_{DateTime.Now:yyyyMMddHHmmssfff}{fileExtension}";
+    }
+
+    private string GetContentType(string filePath)
+    {
+        var provider = new FileExtensionContentTypeProvider();
+        return provider.TryGetContentType(filePath, out var contentType)
+            ? contentType
+            : "application/octet-stream";
     }
 }

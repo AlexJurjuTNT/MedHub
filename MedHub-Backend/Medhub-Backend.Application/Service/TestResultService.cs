@@ -93,7 +93,6 @@ public class TestResultService : ITestResultService
 
     private async Task<string> UploadResultFile(IFormFile formFile, User patient, Clinic clinic)
     {
-        var uploadPath = LocalStorageHelper.GetClinicUserPath(clinic.Name, patient.Username);
-        return await _fileService.UploadFile(formFile, uploadPath);
+        return await _fileService.UploadFile(formFile, clinic.Name, patient.Username);
     }
 }
