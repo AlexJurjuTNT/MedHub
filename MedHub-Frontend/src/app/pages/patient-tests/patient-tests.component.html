@@ -1,7 +1,15 @@
-<h2 class="content-block">Patient Test Requests</h2>
 <div class="content-block">
-  <div class="dx-card responsive-paddings">
 
+  <div class="patient-info">
+    <h2>Patient Information</h2>
+    <div class="patient-details">
+      <p><strong>Name:</strong> {{ user.firstName }} {{ user.familyName }}</p>
+      <p><strong>Username:</strong> {{ user.username }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+    </div>
+  </div>
+
+  <div class="dx-card responsive-paddings">
     <ng-container *ngIf="role != Role.Patient && role != Role.Admin">
       <dx-button
         (onClick)="this.createTestRequestPopupVisible=true;"
