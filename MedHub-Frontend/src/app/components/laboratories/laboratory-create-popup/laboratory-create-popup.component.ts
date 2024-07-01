@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CreateLaboratoryRequest, LoadResult, TestTypeDto, TestTypeService} from "../../../shared/services/swagger";
+import {ClinicDto, CreateLaboratoryRequest, LoadResult, TestTypeDto, TestTypeService} from "../../../shared/services/swagger";
 
 @Component({
   selector: 'app-laboratory-create-popup',
@@ -8,7 +8,7 @@ import {CreateLaboratoryRequest, LoadResult, TestTypeDto, TestTypeService} from 
 })
 export class LaboratoryCreatePopupComponent {
   @Input() visible: boolean = false;
-  @Input() clinicId: number = 0;
+  @Input() clinic: ClinicDto = {} as ClinicDto;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() createLaboratory = new EventEmitter<CreateLaboratoryRequest>();
 
@@ -34,7 +34,7 @@ export class LaboratoryCreatePopupComponent {
 
     const createLaboratoryRequest: CreateLaboratoryRequest = {
       location: this.formData.location,
-      clinicId: this.clinicId,
+      clinicId: this.clinic.id,
       testTypesId: this.selectedTestTypesIds
     }
 

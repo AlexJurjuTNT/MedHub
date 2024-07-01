@@ -7,7 +7,6 @@ import {NotificationService} from "../../../shared/services/notification.service
   templateUrl: './laboratories-datagrid.component.html',
   styleUrl: './laboratories-datagrid.component.scss'
 })
-// todo: when adding or updating laboratory, make it so datagrid is reloaded
 export class LaboratoriesDatagridComponent {
   @Input() clinic: ClinicDto = {} as ClinicDto;
   createPopupVisible = false;
@@ -19,9 +18,6 @@ export class LaboratoriesDatagridComponent {
     private laboratoryService: LaboratoryService,
     private notificationService: NotificationService,
   ) {
-  }
-
-  private refreshLaboratories() {
   }
 
   createLaboratory(createLaboratoryRequest: CreateLaboratoryRequest) {

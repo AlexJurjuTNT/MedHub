@@ -1,11 +1,7 @@
-<div class="master-detail-caption">
-  {{ clinic.name }}
-</div>
-
 <dx-button (click)="this.createPopupVisible = true;" text="Add Laboratory"></dx-button>
 <app-laboratory-create-popup
   [(visible)]="createPopupVisible"
-  [clinicId]="clinic.id"
+  [clinic]="clinic"
   (createLaboratory)="createLaboratory($event)">
 </app-laboratory-create-popup>
 
@@ -33,7 +29,6 @@
   <dxo-filter-row [visible]="true"></dxo-filter-row>
   <dxo-editing mode="row" [allowDeleting]="true" [confirmDelete]="true"></dxo-editing>
 
-  <dxi-column caption="ID" dataField="id"></dxi-column>
   <dxi-column caption="Location" dataField="location"></dxi-column>
   <dxi-column caption="TestTypes" cellTemplate="testTypesTemplate"></dxi-column>
 

@@ -4,7 +4,7 @@
   [height]="600"
   [showCloseButton]="true"
   [showTitle]="true"
-  [width]="500"
+  [width]="600"
   title="Create Laboratory"
   (onHiding)="onHiding()">
   <div *dxTemplate="let data of 'content'">
@@ -12,6 +12,7 @@
     <form (submit)="onSubmit($event)">
       <dx-tag-box
         label="'Select TestTypes'"
+        labelMode="outside"
         (onValueChanged)="selectedTestTypesIds = $event.value"
         [applyValueMode]="'useButtons'"
         [dataSource]="testTypes"
@@ -30,9 +31,13 @@
           <dxo-label [visible]="true"></dxo-label>
         </dxi-item>
 
-        <dxi-item [editorOptions]="{ stylingMode: 'filled', placeholder: clinicId }" dataField="clinicId" editorType="dxTextBox">
-          <dxi-validation-rule message="ClinicId is required" type="required"></dxi-validation-rule>
-          <dxo-label [visible]="true"></dxo-label>
+        <dxi-item editorType="dxTextBox">
+          <dxo-label [visible]="true" text="Clinic"></dxo-label>
+          <dx-text-box
+            [readOnly]="true"
+            [value]="clinic.name"
+            [inputAttr]="{style: 'background-color: transparent; color: black;'}">
+          </dx-text-box>
         </dxi-item>
 
         <dxi-item itemType="button">
