@@ -17,6 +17,7 @@ import {UserDto} from './userDto';
 export interface TestRequestDto {
   id: number;
   requestDate: string;
+  updateTime: string;
   patientId: number;
   doctor: UserDto;
   laboratory: LaboratoryDto;

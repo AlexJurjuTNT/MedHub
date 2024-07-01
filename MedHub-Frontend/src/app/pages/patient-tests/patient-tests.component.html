@@ -30,8 +30,8 @@
       <dxo-editing [allowDeleting]="role !== Role.Patient" [confirmDelete]="true" mode="row"></dxo-editing>
 
       <!-- Define the columns for TestRequestDto data -->
-      <dxi-column [width]="90" caption="ID" dataField="id"></dxi-column>
       <dxi-column caption="Request Date" dataField="requestDate"></dxi-column>
+      <dxi-column caption="UpdateDate" dataField="updateTime" [sortOrder]="'desc'" [sortIndex]="0"></dxi-column>
       <dxi-column [calculateCellValue]="getDoctorName" caption="Doctor"></dxi-column>
       <dxi-column [calculateCellValue]="getLaboratoryLocation" caption="Laboratory"></dxi-column>
       <dxi-column caption="Test Types" cellTemplate="testTypesTemplate"></dxi-column>
