@@ -21,6 +21,5 @@ public class TestResult
     public int TestRequestId { get; set; }
 
     public virtual ICollection<TestType> TestTypes { get; set; } = null!;
-
     public virtual TestRequest TestRequest { get; set; } = null!;
 }

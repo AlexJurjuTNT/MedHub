@@ -47,14 +47,14 @@ public class TestResultController : ControllerBase
         var testResult = _mapper.Map<TestResult>(testResultRequest);
         var createdTestResult = await _testResultService.CreateTestResultWithFile(testResult, testResultRequest.TestTypesIds, testRequest, formFile);
         var testResultDto = _mapper.Map<TestResultDto>(createdTestResult);
-        
+
         return Ok(testResultDto);
     }
 
     [Authorize]
-    [HttpGet("{resultId}")]
+    [HttpGet("{testResultId}")]
     [ProducesResponseType(200, Type = typeof(FileResult))]
-    public async Task<IActionResult> DownloadPdf([FromRoute] int resultId)
+    public async Task<IActionResult> DownloadPdf([FromRoute] int testResultId)
     {
         var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(username))
@@ -64,7 +64,7 @@ public class TestResultController : ControllerBase
         if (user == null)
             return Unauthorized("Invalid user");
 
-        var testResult = await _testResultService.GetByIdAsync(resultId);
+        var testResult = await _testResultService.GetByIdAsync(testResultId);
         if (testResult == null) return NotFound();
 
         if ((user.Role.Name == "Patient" && testResult.TestRequest.PatientId != user.Id) ||
@@ -72,11 +72,23 @@ public class TestResultController : ControllerBase
             (user.Role.Name != "Patient" && user.Role.Name != "Doctor"))
             return Unauthorized("User not authorized to access this result");
 
-        var result = await _testResultService.DownloadTestResultPdf(resultId);
+        var result = await _testResultService.DownloadTestResultPdf(testResultId);
         if (result == null) return NotFound();
 
         var (fileBytes, contentType, fileName) = result.Value;
         return File(fileBytes, contentType, fileName);
+    }
+
+    [HttpGet("{testResultId}/info")]
+    [ProducesResponseType(200, Type = typeof(TestResultDto))]
+    [ProducesResponseType(4004)]
+    public async Task<IActionResult> GetTestResult([FromRoute] int testResultId)
+    {
+        var testResult = await _testResultService.GetByIdAsync(testResultId);
+        if (testResult is null) return NotFound($"Test Result with id {testResultId} not found");
+
+        var testResultDto = _mapper.Map<TestResultDto>(testResult);
+        return Ok(testResultDto);
     }
 
     [Authorize(Roles = "Admin, Doctor")]
