@@ -34,6 +34,7 @@ public static class DependencyInjection
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<ILaboratoryService, LaboratoryService>();
+        services.AddScoped<IPdfEncryptionService, PdfEncryptionService>();
 
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 

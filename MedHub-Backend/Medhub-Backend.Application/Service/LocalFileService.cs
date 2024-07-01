@@ -7,6 +7,13 @@ namespace Medhub_Backend.Application.Service;
 
 public class LocalFileService : IFileService
 {
+    private readonly IPdfEncryptionService _pdfEncryptionService;
+
+    public LocalFileService(IPdfEncryptionService pdfEncryptionService)
+    {
+        _pdfEncryptionService = pdfEncryptionService;
+    }
+
     public async Task<string> UploadFile(IFormFile file, string clinicName, string patientName)
     {
         if (file == null || file.Length == 0)
