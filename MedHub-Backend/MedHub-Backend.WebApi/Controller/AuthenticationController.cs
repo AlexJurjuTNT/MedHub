@@ -38,7 +38,7 @@ public class AuthenticationController : ControllerBase
     public async Task<IActionResult> RegisterAdmin([FromBody] UserRegisterRequest userRegisterRequest)
     {
         var clinic = await _clinicService.GetByIdAsync(userRegisterRequest.ClinicId);
-        if (clinic is null) return NotFound();
+        if (clinic is null) return NotFound($"Clinic with id {userRegisterRequest.ClinicId} not found");
 
         var user = _mapper.Map<User>(userRegisterRequest);
         var admin = await _authenticationService.RegisterAdminAsync(user);

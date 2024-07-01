@@ -8,12 +8,14 @@ namespace Medhub_Backend.Application.Service;
 public class TestRequestService : ITestRequestService
 {
     private readonly IEmailService _emailService;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly ITestRequestRepository _testRequestRepository;
 
-    public TestRequestService(ITestRequestRepository testRequestRepository, IEmailService emailService)
+    public TestRequestService(ITestRequestRepository testRequestRepository, IEmailService emailService, IDateTimeProvider dateTimeProvider)
     {
         _testRequestRepository = testRequestRepository;
         _emailService = emailService;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public IQueryable<TestRequest> GetAllAsync()
@@ -28,6 +30,7 @@ public class TestRequestService : ITestRequestService
 
     public async Task<TestRequest> CreateAsync(TestRequest testRequest, Clinic clinic)
     {
+        testRequest.UpdateTime = _dateTimeProvider.UtcNow;
         await _testRequestRepository.AddAsync(testRequest);
         await _emailService.SendCreatedTestRequestEmail(clinic, testRequest);
         return testRequest;
@@ -35,6 +38,7 @@ public class TestRequestService : ITestRequestService
 
     public async Task<TestRequest> UpdateAsync(TestRequest testRequest)
     {
+        testRequest.UpdateTime = _dateTimeProvider.UtcNow;
         await _testRequestRepository.UpdateAsync(testRequest);
         return testRequest;
     }

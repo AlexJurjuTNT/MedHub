@@ -40,7 +40,7 @@ public class AppDbContext : DbContext
             .UsingEntity(j => j.ToTable("test_result_test_type"));
     }
 
-    public async Task SeedRolesAsync()
+    public async Task SeedDbAsync()
     {
         if (!Roles.Any())
         {

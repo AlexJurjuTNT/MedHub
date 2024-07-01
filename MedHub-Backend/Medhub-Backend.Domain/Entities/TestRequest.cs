@@ -13,6 +13,9 @@ public class TestRequest
     [Column("request_date")]
     public DateTime RequestDate { get; set; }
 
+    [Column("update_time")]
+    public DateTime UpdateTime { get; set; }
+
     [Column("patient_id1")]
     [ForeignKey("Patient")]
     public int PatientId { get; set; }

@@ -37,7 +37,7 @@ var app = builder.Build();
         var services = scope.ServiceProvider;
         var context = services.GetRequiredService<AppDbContext>();
         context.Database.Migrate();
-        context.SeedRolesAsync().Wait();
+        context.SeedDbAsync().Wait();
     }
 
     app.Run();

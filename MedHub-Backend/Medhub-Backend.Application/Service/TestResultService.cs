@@ -12,6 +12,7 @@ public class TestResultService : ITestResultService
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IEmailService _emailService;
     private readonly IFileService _fileService;
+    private readonly ITestRequestService _testRequestService;
     private readonly ITestResultRepository _testResultRepository;
     private readonly ITestTypeService _testTypeService;
 
@@ -20,13 +21,14 @@ public class TestResultService : ITestResultService
         IFileService fileService,
         IEmailService emailService,
         ITestTypeService testTypeService,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider, ITestRequestService testRequestService)
     {
         _testResultRepository = testResultRepository;
         _fileService = fileService;
         _emailService = emailService;
         _testTypeService = testTypeService;
         _dateTimeProvider = dateTimeProvider;
+        _testRequestService = testRequestService;
     }
 
     public IQueryable<TestResult> GetAllAsync()
@@ -74,6 +76,7 @@ public class TestResultService : ITestResultService
         var createdTestResult = await CreateTestResultAsync(testResult);
 
         await _emailService.SendPatientResultsCompleteEmail(clinic, patientUser);
+        await _testRequestService.UpdateAsync(testRequest);
 
         return createdTestResult;
     }

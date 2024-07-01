@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedHub_Backend.WebApi.Controller;
 
-[Authorize]
+// [Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class ClinicController : ControllerBase
@@ -49,7 +49,7 @@ public class ClinicController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(ClinicDto))]
     public async Task<IActionResult> CreateClinic([FromBody] CreateClinicRequest clinicRequest)

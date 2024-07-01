@@ -15,6 +15,9 @@ public class TestRequestDto
     public string RequestDate { get; set; } = null!;
 
     [Required]
+    public string UpdateTime { get; set; } = null!;
+
+    [Required]
     public int PatientId { get; set; }
 
     [Required]

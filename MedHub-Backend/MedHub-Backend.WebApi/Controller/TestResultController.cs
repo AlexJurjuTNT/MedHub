@@ -35,25 +35,20 @@ public class TestResultController : ControllerBase
     [ProducesResponseType(200, Type = typeof(TestResultDto))]
     public async Task<IActionResult> AddTestResult([FromForm] CreateTestResultRequest testResultRequest, IFormFile formFile)
     {
-        if (!ModelState.IsValid || formFile == null) return BadRequest(ModelState);
+        if (formFile == null) return BadRequest(ModelState);
 
-        try
-        {
-            var testRequest = await _testRequestService.GetByIdAsync(testResultRequest.TestRequestId);
-            if (testRequest == null) return NotFound($"Test request with id {testResultRequest.TestRequestId} not found");
+        var testRequest = await _testRequestService.GetByIdAsync(testResultRequest.TestRequestId);
+        if (testRequest == null) return NotFound($"Test request with id {testResultRequest.TestRequestId} not found");
 
-            var validTestTypeIds = testRequest.TestTypes.Select(tt => tt.Id).ToList();
-            var invalidTestTypeIds = testResultRequest.TestTypesIds.Except(validTestTypeIds).ToList();
-            if (invalidTestTypeIds.Any()) return BadRequest("Invalid test type IDs for this test request");
+        var validTestTypeIds = testRequest.TestTypes.Select(tt => tt.Id).ToList();
+        var invalidTestTypeIds = testResultRequest.TestTypesIds.Except(validTestTypeIds).ToList();
+        if (invalidTestTypeIds.Any()) return BadRequest("Invalid test type IDs for this test request");
 
-            var testResult = _mapper.Map<TestResult>(testResultRequest);
-            var createdTestResult = await _testResultService.CreateTestResultWithFile(testResult, testResultRequest.TestTypesIds, testRequest, formFile);
-            return Ok(_mapper.Map<TestResultDto>(createdTestResult));
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var testResult = _mapper.Map<TestResult>(testResultRequest);
+        var createdTestResult = await _testResultService.CreateTestResultWithFile(testResult, testResultRequest.TestTypesIds, testRequest, formFile);
+        var testResultDto = _mapper.Map<TestResultDto>(createdTestResult);
+        
+        return Ok(testResultDto);
     }
 
     [Authorize]
